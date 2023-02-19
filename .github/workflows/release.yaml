@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags: [ v\d+\.\d+\.\d+ ]
+
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          strip_v: true
+
+      - name: Change version
+        run: sed -i -e "s/0\.1\.0/${{ steps.tag.outputs.tag }}/" src/info.json
+
+      - name: Package plugin
+        run: mkdir release && zip -j -r release/openai-translator-${{ steps.tag.outputs.tag }}.bobplugin ./src/*
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: release/openai-translator-${{ steps.tag.outputs.tag }}.bobplugin
+          asset_name: openai-translator-${{ steps.tag.outputs.tag }}.bobplugin
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Release OpenAI Translator Bob plugin v${{ steps.tag.outpus.tag}}!"

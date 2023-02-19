@@ -1,0 +1,36 @@
+{
+    "identifier": "yetone.openai.translator",
+    "version": "0.1.0",
+    "category": "translate",
+    "name": "OpenAI Translator",
+    "summary": "",
+    "icon": "",
+    "author": "yetone",
+    "homepage": "",
+    "appcast": "",
+    "minBobVersion": "0.5.0",
+    "options": [
+        {
+            "identifier": "api_keys",
+            "type": "text",
+            "title": "API KEY",
+            "desc": "可以用英文逗号分割多个 api key 以实现额度加倍及负载均衡"
+        },
+        {
+            "identifier": "model",
+            "type": "menu",
+            "title": "模型",
+            "defaultValue": "text-davinci-003",
+            "menuValues": [
+                {
+                    "title": "text-davinci-003",
+                    "value": "text-davinci-003"
+                },
+                {
+                    "title": "text-davinci-002",
+                    "value": "text-davinci-002"
+                }
+            ]
+        }
+    ]
+}
