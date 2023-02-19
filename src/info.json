@@ -14,7 +14,7 @@
             "identifier": "api_keys",
             "type": "text",
             "title": "API KEY",
-            "desc": "可以用英文逗号分割多个 api key 以实现额度加倍及负载均衡"
+            "desc": "可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡"
         },
         {
             "identifier": "model",

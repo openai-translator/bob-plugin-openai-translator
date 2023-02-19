@@ -33,4 +33,4 @@ jobs:
           asset_name: openai-translator-${{ steps.tag.outputs.tag }}.bobplugin
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Release OpenAI Translator Bob plugin v${{ steps.tag.outpus.tag}}!"
+          body: "Release OpenAI Translator Bob plugin v${{ steps.tag.outputs.tag}}!"
