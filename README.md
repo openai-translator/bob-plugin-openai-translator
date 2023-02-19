@@ -16,13 +16,13 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，我使用 OpenAI 的 API 
 2. 下载此插件: [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases)
 3. 安装此插件:
 
-![](https://user-images.githubusercontent.com/1206493/219936719-1b07594d-8eed-4b4f-8c11-cbcdd1a0338e.gif)
+![](https://user-images.githubusercontent.com/1206493/219937302-6be8d362-1520-4906-b8d6-284d01012837.gif)
 
 4. 去 [OpenAI](https://platform.openai.com/account/api-keys) 获取你的 API KEY
 5. 把 API KEY 填入 Bob 此插件配置界面的 API KEY
  输入框中
 
-![](https://user-images.githubusercontent.com/1206493/219936741-12fd64da-1e7f-4390-abfd-0e73e46a2b6d.gif)
+![](https://user-images.githubusercontent.com/1206493/219937398-8e5bb8d2-7dc8-404a-96e7-a937e08c939f.gif)
 
 6. 安装 [PopClip](https://bobtranslate.com/guide/integration/popclip.html) 实现划词后鼠标附近出现小图标
 
