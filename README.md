@@ -3,9 +3,9 @@ OpenAI Translator Bob Plugin
 
 # 简介
 
-ChatGPT 向我们展示了 GPT 模型的伟大之处，我使用 OpenAI 的 API 实现了这个翻译插件，虽然 OpenAI API 用的还是 GPT-3 模型（不是 ChatGPT 用的 GPT-3.5），但是其翻译效果已经很棒了。
+ChatGPT 向我们展示了 GPT 模型的伟大之处，我使用 OpenAI 的 API 实现了这个 Bob 的翻译插件，虽然 OpenAI API 用的还是 GPT-3 模型（不是 ChatGPT 用的 GPT-3.5），但是其翻译效果已经很棒了。
 
-基于 ChatGPT 的 Bob 翻译插件正在开发中！
+**基于 ChatGPT 的 Bob 翻译插件正在开发中！敬请期待！**
 
 # 使用截图
 
