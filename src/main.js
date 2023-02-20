@@ -49,8 +49,8 @@ function translate(query, completion) {
             completion({
                 error: {
                     type: reason,
-                    message: `接口响应错误 - ${response.data.msg}`,
-                    addtion: JSON.stringify(response),
+                    message: `接口响应错误 - ${resp.data.error.message}`,
+                    addtion: JSON.stringify(resp),
                 },
             });
         } else {
