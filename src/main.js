@@ -27,8 +27,8 @@ function translate(query, completion) {
         temperature: 0,
         max_tokens: 4000,
         top_p: 1,
-        frequency_penalty: 0.5,
-        presence_penalty: 0,
+        frequency_penalty: 1,
+        presence_penalty: 1,
     };
     (async () => {
         const resp = await $http.request({
