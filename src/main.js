@@ -25,7 +25,7 @@ function translate(query, completion) {
         model: $option.model,
         prompt: `translate to ${query.detectTo}:${query.text}`,
         temperature: 0,
-        max_tokens: 4000,
+        max_tokens: 1000,
         top_p: 1,
         frequency_penalty: 1,
         presence_penalty: 1,
