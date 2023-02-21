@@ -13,24 +13,38 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get tag
-        id: tag
-        uses: dawidd6/action-get-tag@v1
-        with:
-          strip_v: true
+      - name: Get version
+        id: get_version
+        uses: battila7/get-version-action@v2
 
       - name: Change version
-        run: sed -i -e "s/0\.1\.0/${{ steps.tag.outputs.tag }}/" src/info.json
+        run: sed -i -e "s/0\.1\.0/${{ steps.get_version.outputs.version-without-v }}/" src/info.json
 
       - name: Package plugin
-        run: mkdir release && zip -j -r release/openai-translator-${{ steps.tag.outputs.tag }}.bobplugin ./src/*
+        run: mkdir release && zip -j -r release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin ./src/*
+
+      - name: Update appcast.json
+        run: |
+          python3 scripts/update_appcast.py ${{ steps.get_version.outputs.version-without-v }}
+      
+      - name: Commit files
+        run: |
+          git config --global user.name 'OpenL'
+          git config --global user.email 'git@openl.club'
+          git add .
+          git commit -am 'update appcast.json'
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: release/openai-translator-${{ steps.tag.outputs.tag }}.bobplugin
-          asset_name: openai-translator-${{ steps.tag.outputs.tag }}.bobplugin
+          file: release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
+          asset_name: openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Release OpenAI Translator Bob plugin v${{ steps.tag.outputs.tag}}!"
+          body: "Release OpenAI Translator Bob plugin ${{ steps.get_version.outputs.version }}!"

@@ -3,11 +3,11 @@
     "version": "0.1.0",
     "category": "translate",
     "name": "OpenAI Translator",
-    "summary": "",
+    "summary": "GPT powered translator",
     "icon": "",
-    "author": "yetone",
-    "homepage": "",
-    "appcast": "",
+    "author": "yetone <yetoneful@gmail.com>",
+    "homepage": "https://github.com/yetone/bob-plugin-openai-translator",
+    "appcast": "https://raw.githubusercontent.com/yetone/bob-plugin-openai-translator/main/appcast.json",
     "minBobVersion": "0.5.0",
     "options": [
         {
