@@ -23,7 +23,7 @@ function translate(query, completion) {
     };
     const body = {
         model: $option.model,
-        prompt: `translate to ${query.detectTo}:${query.text}`,
+        prompt: `translate to ${query.detectTo}:\n\n${query.text} =>`,
         temperature: 0,
         max_tokens: 1000,
         top_p: 1,
