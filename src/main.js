@@ -1,17 +1,7 @@
-var items = [
-    ["auto", "auto"],
-    ["zh-Hans", "zh"],
-    ["zh-Hant", "zh"],
-    ["en", "en"],
-];
-
-var langMap = new Map(items);
-var langMapReverse = new Map(
-    items.map(([standardLang, lang]) => [lang, standardLang])
-);
+var lang = require("./lang.js");
 
 function supportLanguages() {
-    return items.map(([standardLang, lang]) => standardLang);
+    return lang.supportLanguages.map(([standardLang]) => standardLang);
 }
 
 function translate(query, completion) {
@@ -82,3 +72,6 @@ function translate(query, completion) {
         });
     });
 }
+
+exports.supportLanguages = supportLanguages;
+exports.translate = translate;
