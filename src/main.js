@@ -11,9 +11,15 @@ function translate(query, completion) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + api_key,
     };
+    let prompt = `translate to ${lang.langMap.get(query.detectTo) || query.detectTo
+        }:\n\n${query.text} =>`;
+    if (query.detectTo === "wyw" || query.detectTo === "yue") {
+        prompt = `请翻译成${lang.langMap.get(query.detectTo) || query.detectTo
+            }:\n\n${query.text} =>`;
+    }
     const body = {
         model: $option.model,
-        prompt: `translate to ${query.detectTo}:\n\n${query.text} =>`,
+        prompt,
         temperature: 0,
         max_tokens: 1000,
         top_p: 1,
