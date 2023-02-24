@@ -9,7 +9,7 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，我使用 OpenAI 的 API 
 
 # 使用截图
 
-![](https://user-images.githubusercontent.com/1206493/219938216-078ff6f2-5ba8-4636-af94-63d36997894b.gif)
+![](https://user-images.githubusercontent.com/1206493/221086195-f1ed941d-4dfa-4aa0-9d47-56c258a8f854.gif)
 
 # 使用方法
 
