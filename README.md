@@ -7,6 +7,8 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，我使用 OpenAI 的 API 
 
 **基于 ChatGPT 的 Bob 翻译插件正在开发中！敬请期待！**
 
+我这只是个小小的 Bob 插件，强大的是 Bob 本身，向它的开发者 [ripperhe](https://github.com/ripperhe) 致敬！
+
 # 使用截图
 
 ![](https://user-images.githubusercontent.com/1206493/221086195-f1ed941d-4dfa-4aa0-9d47-56c258a8f854.gif)
