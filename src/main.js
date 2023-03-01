@@ -11,11 +11,12 @@ function translate(query, completion) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + api_key,
     };
-    let prompt = `translate to ${lang.langMap.get(query.detectTo) || query.detectTo
-        }:\n\n${query.text} =>`;
+    let prompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom
+        } to ${lang.langMap.get(query.detectTo) || query.detectTo}:\n\n"${query.text
+        }"=>`;
     if (query.detectTo === "wyw" || query.detectTo === "yue") {
         prompt = `请翻译成${lang.langMap.get(query.detectTo) || query.detectTo
-            }:\n\n${query.text} =>`;
+            }:\n\n"${query.text}"=>`;
     }
     const body = {
         model: $option.model,
@@ -60,11 +61,18 @@ function translate(query, completion) {
                 });
                 return;
             }
+            let targetTxt = choices[0].text.trim();
+            if (targetTxt.startsWith('"')) {
+                targetTxt = targetTxt.slice(1);
+            }
+            if (targetTxt.endsWith('"')) {
+                targetTxt = targetTxt.slice(0, -1);
+            }
             completion({
                 result: {
                     from: query.detectFrom,
                     to: query.detectTo,
-                    toParagraphs: choices[0].text.trim().split("\n"),
+                    toParagraphs: targetTxt.split("\n"),
                 },
             });
         }
