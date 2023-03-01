@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.0.12",
+      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.12",
+      "sha256": "ce9f60c9a9282c083459af55719521cb7abd9b618681674290fe26f3d78b2b75",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.12/openai-translator-0.0.12.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.0.11",
       "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.11",
       "sha256": "a274fe29119ce4a5a4fb522f79f71db5a0867befd12d807a7f14d15643dc3481",
