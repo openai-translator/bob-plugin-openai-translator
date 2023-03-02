@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.1.2",
+      "desc": "Support Classical Chinese to Simple Chinese",
+      "sha256": "61f270491fd8b46cb67ae62c7fdec8aaa8d2e5942364b9ddb051621e18caecf9",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.2/openai-translator-0.1.2.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.1.1",
       "desc": "Fix buggy ChatGPT model detection logic",
       "sha256": "a2831405a2c2e5381ef89a9af2636a396645159b8f7e40294d77c209683b4e8d",
