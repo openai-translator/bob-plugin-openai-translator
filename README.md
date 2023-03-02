@@ -9,7 +9,7 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI �
 
 要使用 ChatGPT 的 API 需要在 Bob 的设置页面把此插件的模型改为 `gpt-3.5-turbo-0301` 或者 `gpt-3.5-turbo`:
 
-![how to use ChatGPT API](https://user-images.githubusercontent.com/1206493/222336275-1c0d671b-22fd-425c-bf69-1ba4396525d4.png)
+![how to use ChatGPT API](https://user-images.githubusercontent.com/1206493/222339607-d8f05042-4b65-495c-af58-849891de7434.png)
 
 我这只是个小小的 Bob 插件，强大的是 Bob 本身，向它的开发者 [ripperhe](https://github.com/ripperhe) 致敬！
 
