@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.1.3",
+      "desc": "Fine-tune the prompt to eliminate unnecessary symbols in the translation result.",
+      "sha256": "99a41cd9cb660c0389463dde5bf3c1a3077c3d45a54eec94b48f90927902fe25",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.3/openai-translator-0.1.3.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.1.2",
       "desc": "Support Classical Chinese to Simple Chinese",
       "sha256": "61f270491fd8b46cb67ae62c7fdec8aaa8d2e5942364b9ddb051621e18caecf9",
