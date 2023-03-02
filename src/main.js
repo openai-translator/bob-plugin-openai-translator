@@ -14,10 +14,10 @@ function translate(query, completion) {
     };
     let prompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom
         } to ${lang.langMap.get(query.detectTo) || query.detectTo}:\n\n"${query.text
-        }"=>`;
+        }" =>`;
     if (query.detectTo === "wyw" || query.detectTo === "yue") {
         prompt = `请翻译成${lang.langMap.get(query.detectTo) || query.detectTo
-            }:\n\n"${query.text}"=>`;
+            }:\n\n"${query.text}" =>`;
     }
     if (
         query.detectFrom === "wyw" ||
