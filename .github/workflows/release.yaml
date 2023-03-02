@@ -21,7 +21,7 @@ jobs:
         id: tag
         run: |
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-          echo "message=$(git tag -l --format='%(contents:subject)' v0.1.0)" >> $GITHUB_OUTPUT
+          echo "message=$(git tag -l --format='%(contents:subject)' ${{ steps.get_version.outputs.version }})" >> $GITHUB_OUTPUT
 
       - name: Change version
         run: sed -i -e "s/0\.1\.0/${{ steps.get_version.outputs.version-without-v }}/" src/info.json
