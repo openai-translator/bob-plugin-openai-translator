@@ -26,7 +26,7 @@ function translate(query, completion) {
         frequency_penalty: 1,
         presence_penalty: 1,
     };
-    if ($option.model === "gpt-3.5-turbo") {
+    if ($option.model === "gpt-3.5-turbo" || "gpt-3.5-turbo-0301") {
         body.messages = [{role: ("user"), content: prompt}];
     } else {
         body.prompt = prompt;
@@ -34,7 +34,7 @@ function translate(query, completion) {
     (async () => {
         const resp = await $http.request({
             method: "POST",
-            url: "https://api.openai.com/v1" + ($option.model === "gpt-3.5-turbo" ? "/chat/completions" : "/completions"),
+            url: "https://api.openai.com/v1" + ($option.model === "gpt-3.5-turbo" || "gpt-3.5-turbo-0301" ? "/chat/completions" : "/completions"),
             header,
             body,
         });
@@ -65,7 +65,7 @@ function translate(query, completion) {
                 });
                 return;
             }
-            if ($option.model === "gpt-3.5-turbo") {
+            if ($option.model === "gpt-3.5-turbo" || "gpt-3.5-turbo-0301") {
                 targetTxt = choices[0].message.content.trim();
             } else {
                 targetTxt = choices[0].text.trim();
