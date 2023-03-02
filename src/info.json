@@ -20,8 +20,12 @@
             "identifier": "model",
             "type": "menu",
             "title": "模型",
-            "defaultValue": "text-davinci-003",
+            "defaultValue": "gpt-3.5-turbo",
             "menuValues": [
+                {
+                    "title": "gpt-3.5-turbo",
+                    "value": "gpt-3.5-turbo"
+                },
                 {
                     "title": "text-davinci-003",
                     "value": "text-davinci-003"
