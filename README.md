@@ -3,9 +3,13 @@ OpenAI Translator Bob Plugin
 
 # 简介
 
-ChatGPT 向我们展示了 GPT 模型的伟大之处，我使用 OpenAI 的 API 实现了这个 Bob 的翻译插件，虽然 OpenAI API 用的还是 GPT-3 模型（不是 ChatGPT 用的 GPT-3.5），但是其翻译效果已经很棒了。
+ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI 的 API 实现了这个 Bob 的翻译插件，翻译效果拔群！
 
-**基于 ChatGPT 的 Bob 翻译插件正在开发中！敬请期待！**
+**重要更新：此插件现已支持 ChatGPT(GPT-3.5) 的 API！感谢 [Ukenn](https://github.com/Ukenn2112) 同学的 [贡献](https://github.com/yetone/bob-plugin-openai-translator/pull/6)！**
+
+要使用 ChatGPT 的 API 需要在 Bob 的设置页面把此插件的模型改为 `gpt-3.5-turbo-0301` 或者 `gpt-3.5-turbo`:
+
+![how to use ChatGPT API](https://user-images.githubusercontent.com/1206493/222336275-1c0d671b-22fd-425c-bf69-1ba4396525d4.png)
 
 我这只是个小小的 Bob 插件，强大的是 Bob 本身，向它的开发者 [ripperhe](https://github.com/ripperhe) 致敬！
 
