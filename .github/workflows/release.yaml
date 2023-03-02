@@ -50,6 +50,7 @@ jobs:
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
+          release_name: ${{ steps.get_version.outputs.version }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
           asset_name: openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
