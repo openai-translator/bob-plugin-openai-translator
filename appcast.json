@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.1.1",
+      "desc": "Fix buggy ChatGPT model detection logic",
+      "sha256": "a2831405a2c2e5381ef89a9af2636a396645159b8f7e40294d77c209683b4e8d",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.1/openai-translator-0.1.1.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.1.0",
       "desc": "feat: support ChatGPT API!!! Please change the model to \"gpt-3.5-turbo\" or \"gpt-3.5-turbo-0301\"",
       "sha256": "9f08257b46f864f514b1963f27fc240db654c355eb9bae3c25feef8b177202c4",
