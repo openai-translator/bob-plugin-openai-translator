@@ -19,6 +19,19 @@ function translate(query, completion) {
         prompt = `请翻译成${lang.langMap.get(query.detectTo) || query.detectTo
             }:\n\n"${query.text}"=>`;
     }
+    if (
+        query.detectFrom === "wyw" ||
+        query.detectFrom === "zh-Hans" ||
+        query.detectFrom === "zh-Hant"
+    ) {
+        if (query.detectTo === "zh-Hant") {
+            prompt = `请翻译成繁体白话文:\n\n"${query.text}"=>`;
+        } else if (query.detectTo === "zh-Hans") {
+            prompt = `请翻译成简体白话文:\n\n"${query.text}"=>`;
+        } else if (query.detectTo === "yue") {
+            prompt = `请翻译成粤语白话文:\n\n"${query.text}"=>`;
+        }
+    }
     const body = {
         model: $option.model,
         temperature: 0,
