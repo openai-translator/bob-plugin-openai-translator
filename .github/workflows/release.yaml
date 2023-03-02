@@ -17,6 +17,12 @@ jobs:
         id: get_version
         uses: battila7/get-version-action@v2
 
+      - name: Get tag message
+        id: tag
+        run: |
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+          echo "message=$(git tag -l --format='%(contents:subject)' v0.1.0)" >> $GITHUB_OUTPUT
+
       - name: Change version
         run: sed -i -e "s/0\.1\.0/${{ steps.get_version.outputs.version-without-v }}/" src/info.json
 
@@ -27,7 +33,7 @@ jobs:
 
       - name: Update appcast.json
         run: |
-          python3 scripts/update_appcast.py ${{ steps.get_version.outputs.version-without-v }}
+          python3 scripts/update_appcast.py ${{ steps.get_version.outputs.version-without-v }} '${{ steps.tag.outputs.message }}'
       
       - name: Commit files
         run: |
@@ -49,4 +55,4 @@ jobs:
           asset_name: openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Release OpenAI Translator Bob plugin ${{ steps.get_version.outputs.version }}!"
+          body: ${{ steps.tag.outputs.message }}
