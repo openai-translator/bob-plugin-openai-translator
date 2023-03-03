@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.2.2",
+      "desc": "Remove Chinese quotation marks prefix and suffix.",
+      "sha256": "eecf1248874f3b71a5884405d17c82320e0a3770af6dafe7249bad33defb567c",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.2/openai-translator-0.2.2.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.2.1",
       "desc": "Fixed an issue with some sentences not translating",
       "sha256": "8b847e9a33b2278d6ee8894e99c767f53166ab683e075a8ea5f6b43c5de7ef1f",
