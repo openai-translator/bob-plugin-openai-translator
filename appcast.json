@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.2.3",
+      "desc": "optimize: save token count",
+      "sha256": "31823ea32290783939ad5f69ea48137816479c127278664d741bfbc352ab2182",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.3/openai-translator-0.2.3.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.2.2",
       "desc": "Remove Chinese quotation marks prefix and suffix.",
       "sha256": "eecf1248874f3b71a5884405d17c82320e0a3770af6dafe7249bad33defb567c",
