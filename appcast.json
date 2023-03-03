@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.2.1",
+      "desc": "Fixed an issue with some sentences not translating",
+      "sha256": "8b847e9a33b2278d6ee8894e99c767f53166ab683e075a8ea5f6b43c5de7ef1f",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.1/openai-translator-0.2.1.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.2.0",
       "desc": "With the ability to use Grammarly, you can polish your sentences and correct grammar errors!",
       "sha256": "ee2165c49e82ffe553c66dff732b3ff8f2e9807b6e08629bba91f0827975147b",
