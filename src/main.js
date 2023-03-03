@@ -49,7 +49,7 @@ function translate(query, completion) {
     if (isChatGPTModel) {
         body.messages = [
             { role: "system", content: prompt },
-            { role: "user", content: query.text },
+            { role: "user", content: `"${query.text}"` },
         ];
     } else {
         body.prompt = `${prompt}:\n\n"${query.text}" =>`;
@@ -95,14 +95,14 @@ function translate(query, completion) {
             } else {
                 targetTxt = choices[0].text.trim();
             }
-            if (!isChatGPTModel) {
-                if (targetTxt.startsWith('"')) {
-                    targetTxt = targetTxt.slice(1);
-                }
-                if (targetTxt.endsWith('"')) {
-                    targetTxt = targetTxt.slice(0, -1);
-                }
+            
+            if (targetTxt.startsWith('"')) {
+                targetTxt = targetTxt.slice(1);
             }
+            if (targetTxt.endsWith('"')) {
+                targetTxt = targetTxt.slice(0, -1);
+            }
+            
             completion({
                 result: {
                     from: query.detectFrom,
