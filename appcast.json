@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.2.0",
+      "desc": "With the ability to use Grammarly, you can polish your sentences and correct grammar errors!",
+      "sha256": "ee2165c49e82ffe553c66dff732b3ff8f2e9807b6e08629bba91f0827975147b",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.0/openai-translator-0.2.0.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.1.4",
       "desc": "Recommend gpt-3.5-turbo model",
       "sha256": "56c56ff74e8902317b5554a29ecbb906f54bd0b48cc08e48d44ec3425efc7592",
