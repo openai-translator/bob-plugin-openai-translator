@@ -30,6 +30,13 @@ function translate(query, completion) {
             prompt = "请翻译成粤语白话文";
         }
     }
+    if (query.detectFrom === query.detectTo) {
+        if (query.detectTo === "zh-Hant" || query.detectTo === "zh-Hans") {
+            prompt = "请润色一下这句话";
+        } else {
+            prompt = "please polish this sentence";
+        }
+    }
     const body = {
         model: $option.model,
         temperature: 0,
