@@ -10,14 +10,12 @@ function translate(query, completion) {
     const api_key = api_keys[Math.floor(Math.random() * api_keys.length)];
     const header = {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + api_key,
+        Authorization: `Bearer ${api_key}`,
     };
     let prompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom
-        } to ${lang.langMap.get(query.detectTo) || query.detectTo}:\n\n"${query.text
-        }" =>`;
+        } to ${lang.langMap.get(query.detectTo) || query.detectTo}`;
     if (query.detectTo === "wyw" || query.detectTo === "yue") {
-        prompt = `请翻译成${lang.langMap.get(query.detectTo) || query.detectTo
-            }:\n\n"${query.text}" =>`;
+        prompt = `请翻译成${lang.langMap.get(query.detectTo) || query.detectTo}`;
     }
     if (
         query.detectFrom === "wyw" ||
@@ -25,11 +23,11 @@ function translate(query, completion) {
         query.detectFrom === "zh-Hant"
     ) {
         if (query.detectTo === "zh-Hant") {
-            prompt = `请翻译成繁体白话文:\n\n"${query.text}"=>`;
+            prompt = "请翻译成繁体白话文";
         } else if (query.detectTo === "zh-Hans") {
-            prompt = `请翻译成简体白话文:\n\n"${query.text}"=>`;
+            prompt = "请翻译成简体白话文";
         } else if (query.detectTo === "yue") {
-            prompt = `请翻译成粤语白话文:\n\n"${query.text}"=>`;
+            prompt = "请翻译成粤语白话文";
         }
     }
     const body = {
@@ -42,9 +40,12 @@ function translate(query, completion) {
     };
     const isChatGPTModel = ChatGPTModels.indexOf($option.model) > -1;
     if (isChatGPTModel) {
-        body.messages = [{ role: "user", content: prompt }];
+        body.messages = [
+            { role: "system", content: prompt },
+            { role: "user", content: query.text },
+        ];
     } else {
-        body.prompt = prompt;
+        body.prompt = `${prompt}:\n\n"${query.text}" =>`;
     }
     (async () => {
         const resp = await $http.request({
@@ -87,11 +88,13 @@ function translate(query, completion) {
             } else {
                 targetTxt = choices[0].text.trim();
             }
-            if (targetTxt.startsWith('"')) {
-                targetTxt = targetTxt.slice(1);
-            }
-            if (targetTxt.endsWith('"')) {
-                targetTxt = targetTxt.slice(0, -1);
+            if (!isChatGPTModel) {
+                if (targetTxt.startsWith('"')) {
+                    targetTxt = targetTxt.slice(1);
+                }
+                if (targetTxt.endsWith('"')) {
+                    targetTxt = targetTxt.slice(0, -1);
+                }
             }
             completion({
                 result: {
