@@ -1,6 +1,10 @@
 OpenAI Translator Bob Plugin
 ----------------------------
 
+# 使用截图
+
+![](https://user-images.githubusercontent.com/1206493/221086195-f1ed941d-4dfa-4aa0-9d47-56c258a8f854.gif)
+
 # 简介
 
 ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI 的 API 实现了这个 Bob 的翻译 + 润色 + 语法修改插件，效果拔群！
@@ -16,10 +20,6 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI �
 ![how to use ChatGPT API](https://user-images.githubusercontent.com/1206493/222339607-d8f05042-4b65-495c-af58-849891de7434.png)
 
 我这只是个小小的 Bob 插件，强大的是 Bob 本身，向它的开发者 [ripperhe](https://github.com/ripperhe) 致敬！
-
-# 使用截图
-
-![](https://user-images.githubusercontent.com/1206493/221086195-f1ed941d-4dfa-4aa0-9d47-56c258a8f854.gif)
 
 # 使用方法
 
