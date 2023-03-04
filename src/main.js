@@ -58,8 +58,8 @@ function translate(query, completion) {
         const resp = await $http.request({
             method: "POST",
             url:
-                "https://api.openai.com/v1" +
-                (isChatGPTModel ? "/chat/completions" : "/completions"),
+                $option.api_url +
+                (isChatGPTModel ? "/v1/chat/completions" : "/v1/completions"),
             header,
             body,
         });
