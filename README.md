@@ -9,8 +9,6 @@ OpenAI Translator Bob Plugin
 
 ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI 的 API 实现了这个 Bob 的翻译 + 润色 + 语法修改插件，效果拔群！
 
-**重要更新：此插件现已支持 ChatGPT(GPT-3.5) 的 API！感谢 [Ukenn](https://github.com/Ukenn2112) 同学的 [贡献](https://github.com/yetone/bob-plugin-openai-translator/pull/6)！**
-
 **重要更新：此插件已支持使用 ChatGPT API 对句子进行润色和语法修改，只需要把目标语言选成跟源语言一样即可，全面替代 Grammarly！而且理论上任何语言都可以润色，不只是英语。**
 
 **重要更新：非 macOS 用户可以使用我开发的基于 ChatGPT API 的划词翻译浏览器插件 [openai-translator](https://github.com/yetone/openai-translator) 以解燃眉之急。**
