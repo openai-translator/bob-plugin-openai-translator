@@ -13,6 +13,8 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI �
 
 **重要更新：此插件已支持使用 ChatGPT API 对句子进行润色和语法修改，只需要把目标语言选成跟源语言一样即可，全面替代 Grammarly！而且理论上任何语言都可以润色，不只是英语。**
 
+**重要更新：非 macOS 用户可以使用我开发的基于 ChatGPT API 的划词翻译浏览器插件 [openai-translator](https://github.com/yetone/openai-translator) 以解燃眉之急。**
+
 如果你不喜欢翻译功能和文本润色功能放在一起，这里单独拆分出了一个专门用来文本润色和语法纠错的插件: [bob-plugin-openai-polisher](https://github.com/yetone/bob-plugin-openai-polisher)，这个润色插件具有更高级的润色功能，比如解释修改原因等。
 
 要使用 ChatGPT 的 API 需要在 Bob 的设置页面把此插件的模型改为 `gpt-3.5-turbo-0301` 或者 `gpt-3.5-turbo`:
