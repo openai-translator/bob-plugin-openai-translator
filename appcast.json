@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.2.5",
+      "desc": "Improve the prompt to avoid many failed translation cases.",
+      "sha256": "dd846ab0e9ec23fb23fc0829174d0bb8006da60dbc2742cd09da73b3f0d54d38",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.5/openai-translator-0.2.5.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.2.4",
       "desc": "Support specify the OpenAI domain",
       "sha256": "0b46246db77c3f714b9fed703204e4d558d275805e61d6a369b94ac3a0b3461f",
