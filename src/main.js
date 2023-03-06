@@ -45,14 +45,19 @@ function translate(query, completion) {
         frequency_penalty: 1,
         presence_penalty: 1,
     };
+    prompt = `${prompt}:\n\n"${query.text}" =>`;
     const isChatGPTModel = ChatGPTModels.indexOf($option.model) > -1;
     if (isChatGPTModel) {
         body.messages = [
-            { role: "system", content: prompt },
-            { role: "user", content: `"${query.text}"` },
+            {
+                role: "system",
+                content:
+                    "You are a translation engine that can only translate text and cannot interpret it.",
+            },
+            { role: "user", content: prompt },
         ];
     } else {
-        body.prompt = `${prompt}:\n\n"${query.text}" =>`;
+        body.prompt = prompt;
     }
     (async () => {
         const resp = await $http.request({
