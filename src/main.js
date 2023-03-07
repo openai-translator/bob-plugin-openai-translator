@@ -34,7 +34,7 @@ function translate(query, completion) {
         if (query.detectTo === "zh-Hant" || query.detectTo === "zh-Hans") {
             prompt = "润色此句";
         } else {
-            prompt = "polish this sentence";
+            prompt = "Please polish this sentence";
         }
     }
     const body = {
