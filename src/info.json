@@ -8,7 +8,7 @@
     "author": "yetone <yetoneful@gmail.com>",
     "homepage": "https://github.com/yetone/bob-plugin-openai-translator",
     "appcast": "https://raw.githubusercontent.com/yetone/bob-plugin-openai-translator/main/appcast.json",
-    "minBobVersion": "0.5.0",
+    "minBobVersion": "0.6.0",
     "options": [
         {
             "identifier": "api_url",
@@ -44,6 +44,78 @@
                 {
                     "title": "text-davinci-002",
                     "value": "text-davinci-002"
+                }
+            ]
+        },
+        {
+            "identifier": "purpose",
+            "type": "menu",
+            "title": "工作模式",
+            "defaultValue": "auto",
+            "menuValues": [
+                {
+                    "title": "自动检测",
+                    "value": "auto"
+                },
+                {
+                    "title": "翻译",
+                    "value": "translate"
+                },
+                {
+                    "title": "润色",
+                    "value": "polish"
+                },
+                {
+                    "title": "字典查词",
+                    "value": "dictionary"
+                },
+                {
+                    "title": "模糊查词",
+                    "value": "guessWord"
+                },
+                {
+                    "title": "单词比较",
+                    "value": "compareWord"
+                },
+                {
+                    "title": "聊天",
+                    "value": "chat"
+                }
+            ]
+        },
+        {
+            "identifier": "polishOutputNum",
+            "type": "menu",
+            "title": "润色输出版本数",
+            "defaultValue": "onlyOne",
+            "menuValues": [
+                {
+                    "title": "仅提供一个版本",
+                    "value": "onlyOne"
+                },
+                {
+                    "title": "提供多个版本",
+                    "value": "multiple"
+                }
+            ]
+        },
+        {
+            "identifier": "polishMode",
+            "type": "menu",
+            "title": "润色模式",
+            "defaultValue": "Simple",
+            "menuValues": [
+                {
+                    "title": "简洁（只输出结果，不允许添加新内容）",
+                    "value": "Simple"
+                },
+                {
+                    "title": "详尽（解释修改原因，不允许添加新内容）",
+                    "value": "Detailed"
+                },
+                {
+                    "title": "丰富（解释修改原因，并允许添加新内容）",
+                    "value": "Enrich"
                 }
             ]
         }
