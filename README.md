@@ -1,7 +1,7 @@
 OpenAI Translator Bob Plugin
 ----------------------------
 
-**重要更新：非 macOS 用户可以使用我开发的基于 ChatGPT API 的划词翻译浏览器插件和桌面端应用 [openai-translator](https://github.com/yetone/openai-translator)，更好看更快更好用，欢迎使用。**
+**大家可以使用我开发的基于 ChatGPT API 的划词翻译浏览器插件和全平台桌面端应用 [openai-translator](https://github.com/yetone/openai-translator)，更快更好看更好用，欢迎使用。**
 
 
 # 使用截图
