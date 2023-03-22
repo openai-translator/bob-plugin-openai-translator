@@ -38,6 +38,22 @@
                     "value": "gpt-3.5-turbo"
                 },
                 {
+                    "title": "gpt-4",
+                    "value": "gpt-4"
+                },
+                {
+                    "title": "gpt-4-0314",
+                    "value": "gpt-4-0314"
+                },
+                {
+                    "title": "gpt-4-32k",
+                    "value": "gpt-4-32k"
+                },
+                {
+                    "title": "gpt-4-32k-0314",
+                    "value": "gpt-4-32k-0314"
+                },
+                {
                     "title": "text-davinci-003",
                     "value": "text-davinci-003"
                 },
