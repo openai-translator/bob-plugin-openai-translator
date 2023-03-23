@@ -5,13 +5,20 @@ function supportLanguages() {
 }
 
 function translate(query, completion) {
-    const ChatGPTModels = ["gpt-3.5-turbo", "gpt-3.5-turbo-0301"];
+    const ChatGPTModels = [
+        "gpt-3.5-turbo",
+        "gpt-3.5-turbo-0301",
+        "gpt-4",
+        "gpt-4-0314",
+        "gpt-4-32k",
+        "gpt-4-32k-0314"
+    ];
     const api_keys = $option.api_keys.split(",").map((key) => key.trim());
     const api_key = api_keys[Math.floor(Math.random() * api_keys.length)];
-    const header = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${api_key}`,
-    };
+    const isChatGPTModel = ChatGPTModels.indexOf($option.model) > -1;
+    const isAzureServiceProvider = $option.api_url.includes("openai.azure.com");
+    const apiUrlPath = $option.api_url_path ? $option.api_url_path :  (isChatGPTModel ? "/v1/chat/completions" : "/v1/completions");
+
     let systemPrompt =
         "You are a translation engine that can only translate text and cannot interpret it.";
     let userPrompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom
@@ -19,6 +26,7 @@ function translate(query, completion) {
     if (query.detectTo === "wyw" || query.detectTo === "yue") {
         userPrompt = `翻译成${lang.langMap.get(query.detectTo) || query.detectTo}`;
     }
+
     if (
         query.detectFrom === "wyw" ||
         query.detectFrom === "zh-Hans" ||
@@ -41,6 +49,10 @@ function translate(query, completion) {
             userPrompt = "polish this sentence";
         }
     }
+    
+    const header = {
+        "Content-Type": "application/json",
+    };
     const body = {
         model: $option.model,
         temperature: 0,
@@ -50,24 +62,33 @@ function translate(query, completion) {
         presence_penalty: 1,
     };
     userPrompt = `${userPrompt}:\n\n"${query.text}" =>`;
-    const isChatGPTModel = ChatGPTModels.indexOf($option.model) > -1;
+
+    if (isAzureServiceProvider) {
+        header["api-key"] = `${api_key}`
+    } else {
+        header["Authorization"] = `Bearer ${api_key}`
+    }
     if (isChatGPTModel) {
-        body.messages = [
+        body["messages"] = [
             {
                 role: "system",
                 content: systemPrompt,
             },
-            { role: "user", content: userPrompt },
+            {
+                role: "user",
+                content: userPrompt,
+            },
+            { role: "user", content: `"${query.text}"` },
         ];
     } else {
-        body.prompt = userPrompt;
+        body["prompt"] = userPrompt;
     }
+
     (async () => {
         const resp = await $http.request({
             method: "POST",
             url:
-                $option.api_url +
-                (isChatGPTModel ? "/v1/chat/completions" : "/v1/completions"),
+                $option.api_url + apiUrlPath,
             header,
             body,
         });
