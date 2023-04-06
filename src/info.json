@@ -11,20 +11,20 @@
     "minBobVersion": "0.5.0",
     "options": [
         {
-            "identifier": "api_url",
+            "identifier": "apiUrl",
             "type": "text",
             "title": "API URL",
             "defaultValue": "https://api.openai.com",
             "desc": "如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址，默认为 https://api.openai.com"
         },
         {
-            "identifier": "api_url_path",
+            "identifier": "deploymentName",
             "type": "text",
-            "title": "URL Path",
-            "desc": "如果您使用的是 Azure OpenAI Service，需要填写不同的 API URL Path，如 `/openai/deployments/{NAME}/completions?api-version={VERSION}`"
+            "title": "Dep. Name",
+            "desc": "如果您使用的是 Azure OpenAI Service，需要填写对应的 deployment ID"
         },
         {
-            "identifier": "api_keys",
+            "identifier": "apiKeys",
             "type": "text",
             "title": "API KEY",
             "desc": "可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡"

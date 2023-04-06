@@ -11,13 +11,32 @@ function translate(query, completion) {
         "gpt-4",
         "gpt-4-0314",
         "gpt-4-32k",
-        "gpt-4-32k-0314"
+        "gpt-4-32k-0314",
     ];
-    const api_keys = $option.api_keys.split(",").map((key) => key.trim());
-    const api_key = api_keys[Math.floor(Math.random() * api_keys.length)];
-    const isChatGPTModel = ChatGPTModels.indexOf($option.model) > -1;
-    const isAzureServiceProvider = $option.api_url.includes("openai.azure.com");
-    const apiUrlPath = $option.api_url_path ? $option.api_url_path :  (isChatGPTModel ? "/v1/chat/completions" : "/v1/completions");
+
+    const { model, apiKeys, apiUrl, deploymentName } = $option;
+
+    const apiKeySelection = apiKeys.split(",").map(key => key.trim());
+    const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
+    
+    const isChatGPTModel = ChatGPTModels.includes(model);
+    const isAzureServiceProvider = apiUrl.includes("openai.azure.com");
+    let apiUrlPath = isChatGPTModel ? "/v1/chat/completions" : "/v1/completions";
+    
+    if (isAzureServiceProvider) {
+        if (deploymentName) {
+            apiUrlPath = `/openai/deployments/${deploymentName}`;
+            apiUrlPath += isChatGPTModel ? '/chat/completions?api-version=2023-03-15-preview' : '/completions?api-version=2022-12-01';
+        } else {
+            completion({
+            error: {
+                type: "param",
+                message: `配置错误 - 未填写 Deployment Name`,
+                addition: "The name of your model deployment. You're required to first deploy a model before you can make calls",
+            },
+            });
+        } 
+    }
 
     let systemPrompt =
         "You are a translation engine that can only translate text and cannot interpret it.";
@@ -64,9 +83,9 @@ function translate(query, completion) {
     userPrompt = `${userPrompt}:\n\n"${query.text}" =>`;
 
     if (isAzureServiceProvider) {
-        header["api-key"] = `${api_key}`
+        header["api-key"] = `${apiKey}`
     } else {
-        header["Authorization"] = `Bearer ${api_key}`
+        header["Authorization"] = `Bearer ${apiKey}`
     }
     if (isChatGPTModel) {
         body["messages"] = [
@@ -87,8 +106,7 @@ function translate(query, completion) {
     (async () => {
         const resp = await $http.request({
             method: "POST",
-            url:
-                $option.api_url + apiUrlPath,
+            url: apiUrl + apiUrlPath,
             header,
             body,
         });
