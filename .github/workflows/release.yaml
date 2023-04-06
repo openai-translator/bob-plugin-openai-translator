@@ -41,8 +41,7 @@ jobs:
         run: |
           git config --global user.name 'Bryan Lee'
           git config --global user.email '38807139+liby@users.noreply.github.com'
-          git add .
-          git commit -am 'update appcast.json'
+          git commit -am 'chore: update appcast.json and info.json'
 
       - name: Push changes
         uses: ad-m/github-push-action@master

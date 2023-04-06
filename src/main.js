@@ -1,47 +1,28 @@
 var lang = require("./lang.js");
+var ChatGPTModels = [
+    "gpt-3.5-turbo",
+    "gpt-3.5-turbo-0301",
+    "gpt-4",
+    "gpt-4-0314",
+    "gpt-4-32k",
+    "gpt-4-32k-0314",
+];
 
 function supportLanguages() {
     return lang.supportLanguages.map(([standardLang]) => standardLang);
 }
 
-function translate(query, completion) {
-    const ChatGPTModels = [
-        "gpt-3.5-turbo",
-        "gpt-3.5-turbo-0301",
-        "gpt-4",
-        "gpt-4-0314",
-        "gpt-4-32k",
-        "gpt-4-32k-0314",
-    ];
+function buildHeader(isAzureServiceProvider, apiKey) {
+    return {
+        "Content-Type": "application/json",
+        [isAzureServiceProvider ? "api-key" : "Authorization"]: isAzureServiceProvider ? apiKey : `Bearer ${apiKey}`
+    };
+}
 
-    const { model, apiKeys, apiUrl, deploymentName } = $option;
+function generatePrompts(query) {
+    let systemPrompt = "You are a translation engine that can only translate text and cannot interpret it.";
+    let userPrompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom} to ${lang.langMap.get(query.detectTo) || query.detectTo}`;
 
-    const apiKeySelection = apiKeys.split(",").map(key => key.trim());
-    const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
-    
-    const isChatGPTModel = ChatGPTModels.includes(model);
-    const isAzureServiceProvider = apiUrl.includes("openai.azure.com");
-    let apiUrlPath = isChatGPTModel ? "/v1/chat/completions" : "/v1/completions";
-    
-    if (isAzureServiceProvider) {
-        if (deploymentName) {
-            apiUrlPath = `/openai/deployments/${deploymentName}`;
-            apiUrlPath += isChatGPTModel ? '/chat/completions?api-version=2023-03-15-preview' : '/completions?api-version=2022-12-01';
-        } else {
-            completion({
-            error: {
-                type: "param",
-                message: `配置错误 - 未填写 Deployment Name`,
-                addition: "The name of your model deployment. You're required to first deploy a model before you can make calls",
-            },
-            });
-        } 
-    }
-
-    let systemPrompt =
-        "You are a translation engine that can only translate text and cannot interpret it.";
-    let userPrompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom
-        } to ${lang.langMap.get(query.detectTo) || query.detectTo}`;
     if (query.detectTo === "wyw" || query.detectTo === "yue") {
         userPrompt = `翻译成${lang.langMap.get(query.detectTo) || query.detectTo}`;
     }
@@ -68,95 +49,139 @@ function translate(query, completion) {
             userPrompt = "polish this sentence";
         }
     }
-    
-    const header = {
-        "Content-Type": "application/json",
-    };
-    const body = {
-        model: $option.model,
+
+    userPrompt = `${userPrompt}
+    Text:
+    """
+    ${query.text}
+    """
+    `
+
+    return { systemPrompt, userPrompt };
+}
+
+function buildRequestBody(model, isChatGPTModel, query) {
+    const { systemPrompt, userPrompt } = generatePrompts(query);
+    const standardBody = {
+        model,
         temperature: 0,
         max_tokens: 1000,
         top_p: 1,
         frequency_penalty: 1,
         presence_penalty: 1,
     };
-    userPrompt = `${userPrompt}:\n\n"${query.text}" =>`;
-
-    if (isAzureServiceProvider) {
-        header["api-key"] = `${apiKey}`
-    } else {
-        header["Authorization"] = `Bearer ${apiKey}`
-    }
     if (isChatGPTModel) {
-        body["messages"] = [
-            {
-                role: "system",
-                content: systemPrompt,
-            },
-            {
-                role: "user",
-                content: userPrompt,
-            },
-            { role: "user", content: `"${query.text}"` },
-        ];
-    } else {
-        body["prompt"] = userPrompt;
+        return {
+            ...standardBody,
+            messages: [
+                {
+                    role: "system",
+                    content: systemPrompt,
+                },
+                {
+                    role: "user",
+                    content: userPrompt,
+                },
+            ],
+        };
     }
+    return {
+        ...standardBody,
+        prompt: userPrompt,
+    };
+}
+
+function handleError(completion, result) {
+    const { statusCode } = result.response;
+    const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
+    completion({
+        error: {
+            type: reason,
+            message: `接口响应错误 - ${result.data.error.message}`,
+            addition: JSON.stringify(result),
+        },
+    });
+}
+
+function handleResponse(completion, isChatGPTModel, query, result) {
+    const { choices } = result.data;
+
+    if (!choices || choices.length === 0) {
+        completion({
+            error: {
+                type: "api",
+                message: "接口未返回结果",
+            },
+        });
+        return;
+    }
+
+    let targetText = (isChatGPTModel ? choices[0].message.content : choices[0].text).trim();
+
+    if (targetText.startsWith('"') || targetText.startsWith("「")) {
+        targetText = targetText.slice(1);
+    }
+    if (targetText.endsWith('"') || targetText.endsWith("」")) {
+        targetText = targetText.slice(0, -1);
+    }
+
+    completion({
+        result: {
+            from: query.detectFrom,
+            to: query.detectTo,
+            toParagraphs: targetText.split("\n"),
+        },
+    });
+}
+
+function translate(query, completion) {
+    if (!lang.langMap.get(query.detectTo)) {
+        completion({
+            error: {
+                type: "unsupportLanguage",
+                message: "不支持该语种",
+            },
+        });
+    }
+
+    const { model, apiKeys, apiUrl, deploymentName } = $option;
+
+    const apiKeySelection = apiKeys.split(",").map(key => key.trim());
+    const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
+    
+    const isChatGPTModel = ChatGPTModels.includes(model);
+    const isAzureServiceProvider = apiUrl.includes("openai.azure.com");
+    let apiUrlPath = isChatGPTModel ? "/v1/chat/completions" : "/v1/completions";
+    
+    if (isAzureServiceProvider) {
+        if (deploymentName) {
+            apiUrlPath = `/openai/deployments/${deploymentName}`;
+            apiUrlPath += isChatGPTModel ? '/chat/completions?api-version=2023-03-15-preview' : '/completions?api-version=2022-12-01';
+        } else {
+            completion({
+                error: {
+                    type: "secretKey",
+                    message: `配置错误 - 未填写 Deployment Name`,
+                },
+            });
+        } 
+    }
+
+    const header = buildHeader(isAzureServiceProvider, apiKey);
+    const body = buildRequestBody(model, isChatGPTModel, query);
 
     (async () => {
-        const resp = await $http.request({
+        const result = await $http.request({
             method: "POST",
             url: apiUrl + apiUrlPath,
             header,
             body,
         });
 
-        if (resp.error) {
-            const { statusCode } = resp.response;
-            let reason;
-            if (statusCode >= 400 && statusCode < 500) {
-                reason = "param";
-            } else {
-                reason = "api";
-            }
-            completion({
-                error: {
-                    type: reason,
-                    message: `接口响应错误 - ${resp.data.error.message}`,
-                    addition: JSON.stringify(resp),
-                },
-            });
+        if (result.error) {
+            handleError(result);
         } else {
-            const { choices } = resp.data;
-            if (!choices || choices.length === 0) {
-                completion({
-                    error: {
-                        type: "api",
-                        message: "接口未返回结果",
-                    },
-                });
-                return;
-            }
-            if (isChatGPTModel) {
-                targetTxt = choices[0].message.content.trim();
-            } else {
-                targetTxt = choices[0].text.trim();
-            }
-
-            if (targetTxt.startsWith('"') || targetTxt.startsWith("「")) {
-                targetTxt = targetTxt.slice(1);
-            }
-            if (targetTxt.endsWith('"') || targetTxt.endsWith("」")) {
-                targetTxt = targetTxt.slice(0, -1);
-            }
-
-            completion({
-                result: {
-                    from: query.detectFrom,
-                    to: query.detectTo,
-                    toParagraphs: targetTxt.split("\n"),
-                },
-            });
+            handleResponse(completion, isChatGPTModel, query, result);
         }
     })().catch((err) => {
         completion({

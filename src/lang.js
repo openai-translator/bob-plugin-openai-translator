@@ -1,4 +1,4 @@
-var supportLanguages = [
+const supportLanguages = [
   ["auto", "auto"],
   ["zh-Hans", "zh-CN"],
   ["zh-Hant", "zh-TW"],
