@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.2.7",
+      "desc": "Add support for gpt-4 and Azure OpenAI service",
+      "sha256": "3e0a7b41ae117f95f3b2f9070bb59fc3a1bce4fd5ff7ac7e749617013ad026bd",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.7/openai-translator-0.2.7.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.2.6",
       "desc": "Fix incorrect polishing result",
       "sha256": "3cfbcd66d47ef41a9842d3d4e8bf156e9879842b8134f5d075aaa1cb8cc45b87",
