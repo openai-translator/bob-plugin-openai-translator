@@ -24,7 +24,9 @@ jobs:
           echo "message=$(git tag -l --format='%(contents:subject)' ${{ steps.get_version.outputs.version }})" >> $GITHUB_OUTPUT
 
       - name: Change version
-        run: sed -i -e "s/0\.1\.0/${{ steps.get_version.outputs.version-without-v }}/" src/info.json
+        run: |
+          OLD_VERSION=$(grep '"version":' src/info.json | awk -F\" '{print $4}')
+          sed -i "s/$OLD_VERSION/${{ steps.get_version.outputs.version-without-v }}/" src/info.json
 
       - name: Package plugin
         run: mkdir release && zip -j -r release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin ./src/*
@@ -33,7 +35,7 @@ jobs:
 
       - name: Update appcast.json
         run: |
-          python3 scripts/update_appcast.py ${{ steps.get_version.outputs.version-without-v }} '${{ steps.tag.outputs.message }}'
+          python3 scripts/update_release.py ${{ steps.get_version.outputs.version-without-v }} '${{ steps.tag.outputs.message }}'
       
       - name: Commit files
         run: |
