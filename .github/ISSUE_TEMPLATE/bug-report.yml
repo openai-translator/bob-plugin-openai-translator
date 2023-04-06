@@ -1,0 +1,111 @@
+name: Bug report
+description: Problems with the software
+title: '[Bug] {{请输入标题，不要留空 - Please enter a title, do not leave it blank.}}'
+labels: ['bug']
+body:
+    - type: markdown
+      attributes:
+          value: |
+            **非常感谢您的反馈！Thank you very much for your feedback!**
+
+            有关讨论、建议或者咨询的内容请去往[讨论区](https://github.com/yetone/bob-plugin-openai-translator/discussions)。
+
+            For suggestions or help, please consider using [Github Discussion](https://github.com/yetone/bob-plugin-openai-translator/discussions) instead.
+
+    - type: checkboxes
+      attributes:
+          label: Please search before asking
+          description: |
+            辛苦提 Bug 前，检索一下 [问题](https://github.com/yetone/bob-plugin-openai-translator/issues?q=) 列表是否已经存在类似问题。麻烦提供系统版本、录屏或者截图、复现步骤，有助于更好的解决问题。
+
+            非 Bug 相关，烦请移步 [讨论区](https://github.com/yetone/bob-plugin-openai-translator/discussions) 找寻有关讨论。
+
+            Please search [issues](https://github.com/yetone/bob-plugin-openai-translator/issues) to check if your issue has already been reported.
+            
+            Not related to bugs, please go to the [discussion area](https://github.com/yetone/bob-plugin-openai-translator/discussions) for relevant discussions.
+
+          options:
+              - label: >
+                    I searched in the [issues](https://github.com/yetone/bob-plugin-openai-translator/issues) and found nothing similar.
+                required: true
+    - type: checkboxes
+      attributes:
+          label: Please read README
+          description: |
+            辛苦提 Bug 前，请确定是按照 README 中的 [使用方法](https://github.com/yetone/bob-plugin-openai-translator/tree/main#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95) 部分安装的。
+            
+            Before reporting bugs, please carefully read the [usage instructions]((https://github.com/yetone/bob-plugin-openai-translator/tree/main#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95) section in README
+            
+          options:
+              - label: I have read the usage instructions section in README in detail.
+                required: true
+    - type: checkboxes
+      attributes:
+          label: Please check your network and OpenAI API quota
+          description: |
+            如果您遇到的报错是 Failed to fetch 或者 API quota exceed，则说明是网络问题或者 OpenAI API 使用量超过阈值，这些问题都与 OpenAI Translator Bob Plugin 无关，请自行解决。
+            
+            If you encounter error messages such as 'Failed to fetch' or 'API quota exceed', it means there is a network issue or the usage limit of OpenAI API has been exceeded. These issues are not related to OpenAI Translator Bob Plugin, please resolve them on your own.
+
+          options:
+              - label: I am sure it is not a network issue or an OpenAI API quota issue.
+                required: true
+    - type: input
+      attributes:
+          label: OpenAI Translator Bob Plugin version
+          description: |
+            请提供您正在使用的 OpenAI Translator Bob Plugin 的版本。
+            
+            Please provide the version of OpenAI Translator Bob Plugin you are using. For example, `v0.1.0`.
+      validations:
+          required: true
+    - type: input
+      attributes:
+          label: 系统版本 | System version
+          description: |
+            请提供您正在使用的系统/浏览器版本。
+            
+            Please provide the version of the System/Browser you are using. For example, `macOS 11.2.3`.
+      validations:
+          required: true
+    - type: input
+      attributes:
+          label: Bob version
+          description: |
+            请提供您正在使用的 Bob 版本。Please provide the version of the Bob you are using. For example, `Bob 1.6.0 [103]`.
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: 复现步骤 | Reproduce step
+          description: |
+            请提供完整且简明的复现步骤，以方便及时定位并解决问题。
+            
+            Please provide complete and concise reproduction steps to facilitate timely identification and resolution of the issue.
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: 你看到了什么错误？What errors do you see?
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: 你期望看到什么？What did you expect to see?
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: 还有其他的内容吗？Anything else?
+    - type: checkboxes
+      attributes:
+          label: 你是否愿意提交一份 PR 来修改这个错误？Are you willing to submit a PR?
+          description: |
+            我们期待开发人员和用户的帮助，以解决在 OpenAI Translator Bob Plugin 中发现的任何问题。 如果您愿意通过提交 PR 来解决此问题，请勾选。
+            
+            We eagerly anticipate developers' and users' support and collaboration in resolving any issues found in OpenAI Translator Bob Plugin. If you are willing to offer a solution by submitting a PR to fix this matter, kindly mark the checkbox provided.
+          options:
+              - label: 我愿意提供 PR! I'm willing to submit a PR!
+    - type: markdown
+      attributes:
+          value: '非常感谢您的反馈！Thank you very much for your feedback!'
