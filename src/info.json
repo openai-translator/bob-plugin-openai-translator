@@ -1,73 +1,73 @@
 {
-    "identifier": "yetone.openai.translator",
-    "version": "0.2.8",
-    "category": "translate",
-    "name": "OpenAI Translator",
-    "summary": "GPT powered translator",
-    "icon": "",
-    "author": "yetone <yetoneful@gmail.com>",
-    "homepage": "https://github.com/yetone/bob-plugin-openai-translator",
-    "appcast": "https://raw.githubusercontent.com/yetone/bob-plugin-openai-translator/main/appcast.json",
-    "minBobVersion": "0.5.0",
-    "options": [
+  "identifier": "yetone.openai.translator",
+  "version": "0.2.9",
+  "category": "translate",
+  "name": "OpenAI Translator",
+  "summary": "GPT powered translator",
+  "icon": "",
+  "author": "yetone <yetoneful@gmail.com>",
+  "homepage": "https://github.com/yetone/bob-plugin-openai-translator",
+  "appcast": "https://raw.githubusercontent.com/yetone/bob-plugin-openai-translator/main/appcast.json",
+  "minBobVersion": "0.5.0",
+  "options": [
+    {
+      "identifier": "apiUrl",
+      "type": "text",
+      "title": "API URL",
+      "defaultValue": "https://api.openai.com",
+      "desc": "如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址，默认为 https://api.openai.com"
+    },
+    {
+      "identifier": "deploymentName",
+      "type": "text",
+      "title": "Dep. Name",
+      "desc": "如果您使用的是 Azure OpenAI Service，需要填写对应的 deployment ID"
+    },
+    {
+      "identifier": "apiKeys",
+      "type": "text",
+      "title": "API KEY",
+      "desc": "可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡"
+    },
+    {
+      "identifier": "model",
+      "type": "menu",
+      "title": "模型",
+      "defaultValue": "gpt-3.5-turbo",
+      "menuValues": [
         {
-            "identifier": "apiUrl",
-            "type": "text",
-            "title": "API URL",
-            "defaultValue": "https://api.openai.com",
-            "desc": "如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址，默认为 https://api.openai.com"
+          "title": "gpt-3.5-turbo-0301",
+          "value": "gpt-3.5-turbo-0301"
         },
         {
-            "identifier": "deploymentName",
-            "type": "text",
-            "title": "Dep. Name",
-            "desc": "如果您使用的是 Azure OpenAI Service，需要填写对应的 deployment ID"
+          "title": "gpt-3.5-turbo (recommended)",
+          "value": "gpt-3.5-turbo"
         },
         {
-            "identifier": "apiKeys",
-            "type": "text",
-            "title": "API KEY",
-            "desc": "可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡"
+          "title": "gpt-4",
+          "value": "gpt-4"
         },
         {
-            "identifier": "model",
-            "type": "menu",
-            "title": "模型",
-            "defaultValue": "gpt-3.5-turbo",
-            "menuValues": [
-                {
-                    "title": "gpt-3.5-turbo-0301",
-                    "value": "gpt-3.5-turbo-0301"
-                },
-                {
-                    "title": "gpt-3.5-turbo (recommended)",
-                    "value": "gpt-3.5-turbo"
-                },
-                {
-                    "title": "gpt-4",
-                    "value": "gpt-4"
-                },
-                {
-                    "title": "gpt-4-0314",
-                    "value": "gpt-4-0314"
-                },
-                {
-                    "title": "gpt-4-32k",
-                    "value": "gpt-4-32k"
-                },
-                {
-                    "title": "gpt-4-32k-0314",
-                    "value": "gpt-4-32k-0314"
-                },
-                {
-                    "title": "text-davinci-003",
-                    "value": "text-davinci-003"
-                },
-                {
-                    "title": "text-davinci-002",
-                    "value": "text-davinci-002"
-                }
-            ]
+          "title": "gpt-4-0314",
+          "value": "gpt-4-0314"
+        },
+        {
+          "title": "gpt-4-32k",
+          "value": "gpt-4-32k"
+        },
+        {
+          "title": "gpt-4-32k-0314",
+          "value": "gpt-4-32k-0314"
+        },
+        {
+          "title": "text-davinci-003",
+          "value": "text-davinci-003"
+        },
+        {
+          "title": "text-davinci-002",
+          "value": "text-davinci-002"
         }
-    ]
+      ]
+    }
+  ]
 }
