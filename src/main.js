@@ -68,13 +68,7 @@ function generatePrompts(query) {
         }
     }
 
-    userPrompt = `${userPrompt}
-    Text:
-    """
-    ${query.text}
-    """
-    Result:\n
-    `
+    userPrompt = `$${userPrompt}:\n\n"${query.text}" =>`
 
     return { systemPrompt, userPrompt };
 }
