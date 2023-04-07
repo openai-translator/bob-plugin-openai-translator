@@ -8,9 +8,9 @@ body:
           value: |
             **非常感谢您的反馈！Thank you very much for your feedback!**
 
-            有关讨论、建议或者咨询的内容请去往[讨论区](https://github.com/yetone/bob-plugin-openai-translator/discussions)。
+            有关翻译错误的内容请附在此 [issue](https://github.com/yetone/bob-plugin-openai-translator/issues/30) 中。
 
-            For suggestions or help, please consider using [Github Discussion](https://github.com/yetone/bob-plugin-openai-translator/discussions) instead.
+            Please post any translation-related errors in this [issue](https://github.com/yetone/bob-plugin-openai-translator/issues/30).
 
     - type: checkboxes
       attributes:
@@ -18,11 +18,7 @@ body:
           description: |
             辛苦提 Bug 前，检索一下 [问题](https://github.com/yetone/bob-plugin-openai-translator/issues?q=) 列表是否已经存在类似问题。麻烦提供系统版本、录屏或者截图、复现步骤，有助于更好的解决问题。
 
-            非 Bug 相关，烦请移步 [讨论区](https://github.com/yetone/bob-plugin-openai-translator/discussions) 找寻有关讨论。
-
             Please search [issues](https://github.com/yetone/bob-plugin-openai-translator/issues) to check if your issue has already been reported.
-            
-            Not related to bugs, please go to the [discussion area](https://github.com/yetone/bob-plugin-openai-translator/discussions) for relevant discussions.
 
           options:
               - label: >

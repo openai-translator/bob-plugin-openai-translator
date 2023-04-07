@@ -117,7 +117,7 @@ const supportLanguages = [
 ];
 
 exports.supportLanguages = supportLanguages;
-exports.langMap = new Map(supportLanguages);
+exports.langMap = new Map(supportLanguages.map(([key, value]) => [key, value]));
 exports.langMapReverse = new Map(
   supportLanguages.map(([standardLang, lang]) => [lang, standardLang])
 );

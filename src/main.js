@@ -1,3 +1,5 @@
+//@ts-check
+
 var lang = require("./lang.js");
 var ChatGPTModels = [
     "gpt-3.5-turbo",
@@ -12,6 +14,15 @@ function supportLanguages() {
     return lang.supportLanguages.map(([standardLang]) => standardLang);
 }
 
+/**
+ * @param {boolean} isAzureServiceProvider - Indicates if the service provider is Azure.
+ * @param {string} apiKey - The authentication API key.
+ * @returns {{
+*   "Content-Type": string;
+*   "api-key"?: string;
+*   "Authorization"?: string;
+* }} The header object.
+*/
 function buildHeader(isAzureServiceProvider, apiKey) {
     return {
         "Content-Type": "application/json",
@@ -19,6 +30,13 @@ function buildHeader(isAzureServiceProvider, apiKey) {
     };
 }
 
+/**
+ * @param {Bob.TranslateQuery} query
+ * @returns {{ 
+ *  systemPrompt: string, 
+ *  userPrompt: string 
+ * }}
+*/
 function generatePrompts(query) {
     let systemPrompt = "You are a translation engine that can only translate text and cannot interpret it.";
     let userPrompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom} to ${lang.langMap.get(query.detectTo) || query.detectTo}`;
@@ -60,6 +78,24 @@ function generatePrompts(query) {
     return { systemPrompt, userPrompt };
 }
 
+/**
+ * @param {typeof ChatGPTModels[number]} model
+ * @param {boolean} isChatGPTModel
+ * @param {Bob.TranslateQuery} query
+ * @returns {{ 
+ *  model: typeof ChatGPTModels[number];
+ *  temperature: number;
+ *  max_tokens: number;
+ *  top_p: number;
+ *  frequency_penalty: number;
+ *  presence_penalty: number;
+ *  messages?: {
+ *    role: "system" | "user";
+ *    content: string;
+ *  }[];
+ *  prompt?: string;
+ * }}
+*/
 function buildRequestBody(model, isChatGPTModel, query) {
     const { systemPrompt, userPrompt } = generatePrompts(query);
     const standardBody = {
@@ -91,6 +127,11 @@ function buildRequestBody(model, isChatGPTModel, query) {
     };
 }
 
+/**
+ * @param {Bob.Completion} completion
+ * @param {Bob.HttpResponse} result
+ * @returns {void}
+*/
 function handleError(completion, result) {
     const { statusCode } = result.response;
     const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
@@ -98,11 +139,18 @@ function handleError(completion, result) {
         error: {
             type: reason,
             message: `接口响应错误 - ${result.data.error.message}`,
-            addition: JSON.stringify(result),
+            addtion: JSON.stringify(result),
         },
     });
 }
 
+/**
+ * @param {Bob.Completion} completion
+ * @param {boolean} isChatGPTModel
+ * @param {Bob.TranslateQuery} query
+ * @param {Bob.HttpResponse} result
+ * @returns {void}
+*/
 function handleResponse(completion, isChatGPTModel, query, result) {
     const { choices } = result.data;
 
@@ -111,6 +159,7 @@ function handleResponse(completion, isChatGPTModel, query, result) {
             error: {
                 type: "api",
                 message: "接口未返回结果",
+                addtion: JSON.stringify(result),
             },
         });
         return;
@@ -134,12 +183,16 @@ function handleResponse(completion, isChatGPTModel, query, result) {
     });
 }
 
+/**
+ * @type {Bob.Translate}
+ */
 function translate(query, completion) {
     if (!lang.langMap.get(query.detectTo)) {
         completion({
             error: {
                 type: "unsupportLanguage",
                 message: "不支持该语种",
+                addtion: "不支持该语种",
             },
         });
     }
@@ -162,6 +215,7 @@ function translate(query, completion) {
                 error: {
                     type: "secretKey",
                     message: `配置错误 - 未填写 Deployment Name`,
+                    addtion: "请在插件配置中填写 Deployment Name",
                 },
             });
         } 
@@ -179,7 +233,7 @@ function translate(query, completion) {
         });
 
         if (result.error) {
-            handleError(result);
+            handleError(completion, result);
         } else {
             handleResponse(completion, isChatGPTModel, query, result);
         }
@@ -188,7 +242,7 @@ function translate(query, completion) {
             error: {
                 type: err._type || "unknown",
                 message: err._message || "未知错误",
-                addition: err._addition,
+                addtion: err._addition,
             },
         });
     });
