@@ -68,6 +68,27 @@
                     "value": "text-davinci-002"
                 }
             ]
+        },
+        {
+            "identifier": "prompt_zh",
+            "type": "text",
+            "title": "Prompt",
+            "defaultValue": "润色此句",
+            "desc": "中文润色Prompt (比如：润色此句，更学术化)",
+        },
+        {
+            "identifier": "prompt_en",
+            "type": "text",
+            "title": "Prompt",
+            "defaultValue": "polish this sentence",
+            "desc": "英文润色Prompt (比如：polish this sentence, make it more academic)",
+        },
+        {
+            "identifier": "max_tokens",
+            "type": "text",
+            "title": "Max tokens",
+            "defaultValue": "1000",
+            "desc": "最大Token数 (max ~4000)",
         }
     ]
 }

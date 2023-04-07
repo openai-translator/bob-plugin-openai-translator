@@ -44,9 +44,9 @@ function generatePrompts(query) {
         systemPrompt =
             "You are a text embellisher, you can only embellish the text, don't interpret it.";
         if (query.detectTo === "zh-Hant" || query.detectTo === "zh-Hans") {
-            userPrompt = "润色此句";
+            userPrompt = $option.prompt_zh || "润色此句";
         } else {
-            userPrompt = "polish this sentence";
+            userPrompt = $option.prompt_en ||"polish this sentence";
         }
     }
 
@@ -65,7 +65,7 @@ function buildRequestBody(model, isChatGPTModel, query) {
     const standardBody = {
         model,
         temperature: 0,
-        max_tokens: 1000,
+        max_tokens: Number($option.max_tokens),
         top_p: 1,
         frequency_penalty: 1,
         presence_penalty: 1,
