@@ -73,6 +73,7 @@ function generatePrompts(query) {
     """
     ${query.text}
     """
+    Result:\n
     `
 
     return { systemPrompt, userPrompt };

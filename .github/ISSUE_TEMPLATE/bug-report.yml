@@ -1,5 +1,5 @@
-name: Bug report
-description: Problems with the software
+name: "Bug report"
+description: "Problems with the software"
 title: '[Bug] {{请输入标题，不要留空 - Please enter a title, do not leave it blank.}}'
 labels: ['bug']
 body:
@@ -68,7 +68,9 @@ body:
       attributes:
           label: Bob version
           description: |
-            请提供您正在使用的 Bob 版本。Please provide the version of the Bob you are using. For example, `Bob 1.6.0 [103]`.
+            请提供您正在使用的 Bob 版本。
+
+            Please provide the version of the Bob you are using. For example, `Bob 1.6.0 [103]`.
       validations:
           required: true
     - type: textarea
