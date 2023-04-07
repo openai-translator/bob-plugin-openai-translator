@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.3.0",
+      "desc": "Remove extra symbols from translation results",
+      "sha256": "ba6d79293c9091c368d5b720479f4729403c1a71486320ed6df36818f947621a",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.3.0/openai-translator-0.3.0.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.2.9",
       "desc": "Updated the format of Prompt",
       "sha256": "49f3d84f5831c745bdf28abe16baacf77c35ff796e81f055167a35a43cacb2c8",
