@@ -10,8 +10,15 @@ var ChatGPTModels = [
     "gpt-4-32k-0314",
 ];
 
-function supportLanguages() {
-    return lang.supportLanguages.map(([standardLang]) => standardLang);
+/**
+ * @param {string}  url
+ * @returns {string} 
+*/
+function ensureHttpsAndNoTrailingSlash(url) {
+    const hasProtocol = /^[a-z]+:\/\//i.test(url);
+    const modifiedUrl = hasProtocol ? url : 'https://' + url;
+
+    return modifiedUrl.endsWith('/') ? modifiedUrl.slice(0, -1) : modifiedUrl;
 }
 
 /**
@@ -193,23 +200,24 @@ function translate(query, completion) {
     }
 
     const { model, apiKeys, apiUrl, deploymentName } = $option;
+    const modifiedApiUrl = ensureHttpsAndNoTrailingSlash(apiUrl);
 
     const apiKeySelection = apiKeys.split(",").map(key => key.trim());
     const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
     
     const isChatGPTModel = ChatGPTModels.includes(model);
-    const isAzureServiceProvider = apiUrl.includes("openai.azure.com");
+    const isAzureServiceProvider = modifiedApiUrl.includes("openai.azure.com");
     let apiUrlPath = isChatGPTModel ? "/v1/chat/completions" : "/v1/completions";
     
     if (isAzureServiceProvider) {
         if (deploymentName) {
             apiUrlPath = `/openai/deployments/${deploymentName}`;
-            apiUrlPath += isChatGPTModel ? '/chat/completions?api-version=2023-03-15-preview' : '/completions?api-version=2022-12-01';
+            apiUrlPath += isChatGPTModel ? "/chat/completions?api-version=2023-03-15-preview" : "/completions?api-version=2022-12-01";
         } else {
             completion({
                 error: {
                     type: "secretKey",
-                    message: `配置错误 - 未填写 Deployment Name`,
+                    message: "配置错误 - 未填写 Deployment Name",
                     addtion: "请在插件配置中填写 Deployment Name",
                 },
             });
@@ -222,7 +230,7 @@ function translate(query, completion) {
     (async () => {
         const result = await $http.request({
             method: "POST",
-            url: apiUrl + apiUrlPath,
+            url: modifiedApiUrl + apiUrlPath,
             header,
             body,
         });
@@ -241,6 +249,10 @@ function translate(query, completion) {
             },
         });
     });
+}
+
+function supportLanguages() {
+    return lang.supportLanguages.map(([standardLang]) => standardLang);
 }
 
 exports.supportLanguages = supportLanguages;
