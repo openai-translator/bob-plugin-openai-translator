@@ -1,5 +1,6 @@
 name: "Feature"
 description: "Add new feature, improve code, and more"
+title: '[Feature] “请输入标题，不要留空 - Please enter a title, do not leave it blank.}}”'
 labels: [ "enhancement" ]
 body:
   - type: markdown

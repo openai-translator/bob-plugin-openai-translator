@@ -169,11 +169,12 @@ function handleResponse(completion, isChatGPTModel, query, result) {
 
     let targetText = (isChatGPTModel ? choices[0].message.content : choices[0].text).trim();
 
-    if (targetText.startsWith('"') || targetText.startsWith("「")) {
-        targetText = targetText.slice(1);
-    }
-    if (targetText.endsWith('"') || targetText.endsWith("」")) {
-        targetText = targetText.slice(0, -1);
+    // 使用正则表达式删除字符串开头和结尾的特殊字符
+    targetText = targetText.replace(/^(『|「|"|“)|(』|」|"|”)$/g, "");
+
+    // 判断并删除字符串末尾的 `" =>`
+    if (targetText.endsWith('" =>')) {
+        targetText = targetText.slice(0, -4);
     }
 
     completion({
@@ -200,10 +201,21 @@ function translate(query, completion) {
     }
 
     const { model, apiKeys, apiUrl, deploymentName } = $option;
-    const modifiedApiUrl = ensureHttpsAndNoTrailingSlash(apiUrl);
 
-    const apiKeySelection = apiKeys.split(",").map(key => key.trim());
+    if (!apiKeys) {
+        completion({
+            error: {
+                type: "secretKey",
+                message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
+                addtion: "请在插件配置中填写 API Keys",
+            },
+        });
+    }
+    const trimmedApiKeys = apiKeys.endsWith(",") ? apiKeys.slice(0, -1) : apiKeys;
+    const apiKeySelection = trimmedApiKeys.split(",").map(key => key.trim());
     const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
+
+    const modifiedApiUrl = ensureHttpsAndNoTrailingSlash(apiUrl);
     
     const isChatGPTModel = ChatGPTModels.includes(model);
     const isAzureServiceProvider = modifiedApiUrl.includes("openai.azure.com");

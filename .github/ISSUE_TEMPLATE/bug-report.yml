@@ -1,6 +1,6 @@
 name: "Bug report"
 description: "Problems with the software"
-title: '[Bug] {{请输入标题，不要留空 - Please enter a title, do not leave it blank.}}'
+title: '[Bug] “请输入标题，不要留空 - Please enter a title, do not leave it blank.}}”'
 labels: ['bug']
 body:
     - type: markdown
@@ -59,9 +59,9 @@ body:
       attributes:
           label: 系统版本 | System version
           description: |
-            请提供您正在使用的系统/浏览器版本。
+            请提供您正在使用的系统版本。
             
-            Please provide the version of the System/Browser you are using. For example, `macOS 11.2.3`.
+            Please provide the version of the System you are using. For example, `macOS 11.2.3`.
       validations:
           required: true
     - type: input
