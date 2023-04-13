@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.3.2",
+      "desc": "Remove trailing comma and handle empty API keys error",
+      "sha256": "87ad8574c9663595eefabe3c5497b19aeaee13f5353986557262f21345e023df",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.3.2/openai-translator-0.3.2.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.3.1",
       "desc": "Improve compatibility handling for API URL",
       "sha256": "94e250270acaf70d3cf12e339e1dbd843ce470dc2a1ed78257bee2dd03f6f552",
