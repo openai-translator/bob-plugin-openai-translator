@@ -215,7 +215,7 @@ function translate(query, completion) {
     const apiKeySelection = trimmedApiKeys.split(",").map(key => key.trim());
     const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
 
-    const modifiedApiUrl = ensureHttpsAndNoTrailingSlash(apiUrl);
+    const modifiedApiUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
     
     const isChatGPTModel = ChatGPTModels.includes(model);
     const isAzureServiceProvider = modifiedApiUrl.includes("openai.azure.com");
