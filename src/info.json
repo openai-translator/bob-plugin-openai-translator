@@ -15,19 +15,19 @@
       "type": "text",
       "title": "API URL",
       "defaultValue": "https://api.openai.com",
-      "desc": "如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址，默认为 https://api.openai.com"
+      "desc": "可选项。如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址，默认为 https://api.openai.com"
     },
     {
       "identifier": "deploymentName",
       "type": "text",
       "title": "Dep. Name",
-      "desc": "如果您使用的是 Azure OpenAI Service，需要填写对应的 deployment ID"
+      "desc": "可选项。如果您使用的是 Azure OpenAI Service，需要填写对应的 deployment ID"
     },
     {
       "identifier": "apiKeys",
       "type": "text",
       "title": "API KEY",
-      "desc": "可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡"
+      "desc": "必填项。可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡"
     },
     {
       "identifier": "model",
@@ -68,6 +68,18 @@
           "value": "text-davinci-002"
         }
       ]
+    },
+    {
+      "identifier": "customSystemPrompt",
+      "type": "text",
+      "title": "Sys PPT",
+      "desc": "可选项。自定义 System Prompt；必须开启明文显示才可输入中文"
+    },
+    {
+        "identifier": "customUserPrompt",
+        "type": "text",
+        "title": "User PPT",
+        "desc": "可选项。自定义 User Prompt，输入内容会自动拼接在句尾"
     }
   ]
 }

@@ -99,7 +99,14 @@ function generatePrompts(query) {
  * }}
 */
 function buildRequestBody(model, isChatGPTModel, query) {
-    const { systemPrompt, userPrompt } = generatePrompts(query);
+    const { customSystemPrompt, customUserPrompt } = $option;
+    const { systemPrompt, userPrompt } = customSystemPrompt || customUserPrompt 
+    ? {
+        systemPrompt: customSystemPrompt || "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully.",
+        userPrompt: `${customUserPrompt}:\n\n"${query.text}"`,
+    } 
+    : generatePrompts(query);
+
     const standardBody = {
         model,
         temperature: 0,
@@ -108,6 +115,7 @@ function buildRequestBody(model, isChatGPTModel, query) {
         frequency_penalty: 1,
         presence_penalty: 1,
     };
+
     if (isChatGPTModel) {
         return {
             ...standardBody,
