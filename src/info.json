@@ -1,6 +1,6 @@
 {
   "identifier": "yetone.openai.translator",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "category": "translate",
   "name": "OpenAI Translator",
   "summary": "GPT powered translator",
@@ -76,10 +76,10 @@
       "desc": "可选项。自定义 System Prompt；必须开启明文显示才可输入中文"
     },
     {
-        "identifier": "customUserPrompt",
-        "type": "text",
-        "title": "User PPT",
-        "desc": "可选项。自定义 User Prompt，输入内容会自动拼接在句尾"
+      "identifier": "customUserPrompt",
+      "type": "text",
+      "title": "User PPT",
+      "desc": "可选项。自定义 User Prompt，输入内容会自动拼接在句尾"
     }
   ]
 }
