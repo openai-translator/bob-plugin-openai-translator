@@ -66,10 +66,3 @@ To use the ChatGPT API, go to Bob's settings page and change the plugin model to
 ## Thanks
 
 I'm just a small Bob plugin, and the powerful part is Bob itself. I pay tribute to its developer [ripperhe](https://github.com/ripperhe)!
-
-### Buy me a coffee
-
-<div align="center">
-  <img height="360" src="https://user-images.githubusercontent.com/1206493/220753437-90e4039c-d95f-4b6a-9a08-b3d6de13211f.png" />
-  <img height="360" src="https://user-images.githubusercontent.com/1206493/220756036-d9ac4512-0375-4a32-8c2e-8697021058a2.png" />
-</div>
