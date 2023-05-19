@@ -10,6 +10,8 @@ var ChatGPTModels = [
     "gpt-4-32k-0314",
 ];
 
+var SYSTEM_PROMPT = "You are a translation engine that can only translate text and cannot interpret it."
+
 /**
  * @param {string}  url
  * @returns {string} 
@@ -40,44 +42,59 @@ function buildHeader(isAzureServiceProvider, apiKey) {
 /**
  * @param {Bob.TranslateQuery} query
  * @returns {{ 
- *  systemPrompt: string, 
- *  userPrompt: string 
+ *  generatedSystemPrompt: string, 
+ *  generatedUserPrompt: string 
  * }}
 */
 function generatePrompts(query) {
-    let systemPrompt = "You are a translation engine that can only translate text and cannot interpret it.";
-    let userPrompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom} to ${lang.langMap.get(query.detectTo) || query.detectTo}`;
+    let generatedSystemPrompt = SYSTEM_PROMPT;
+    const { detectFrom, detectTo } = query;
+    const sourceLang = lang.langMap.get(detectFrom) || detectFrom;
+    const targetLang = lang.langMap.get(detectTo) || detectTo;
+    let generatedUserPrompt = `translate from ${sourceLang} to ${targetLang}`;
 
-    if (query.detectTo === "wyw" || query.detectTo === "yue") {
-        userPrompt = `翻译成${lang.langMap.get(query.detectTo) || query.detectTo}`;
+    if (detectTo === "wyw" || detectTo === "yue") {
+        generatedUserPrompt = `翻译成${targetLang}`;
     }
 
     if (
-        query.detectFrom === "wyw" ||
-        query.detectFrom === "zh-Hans" ||
-        query.detectFrom === "zh-Hant"
+        detectFrom === "wyw" ||
+        detectFrom === "zh-Hans" ||
+        detectFrom === "zh-Hant"
     ) {
-        if (query.detectTo === "zh-Hant") {
-            userPrompt = "翻译成繁体白话文";
-        } else if (query.detectTo === "zh-Hans") {
-            userPrompt = "翻译成简体白话文";
-        } else if (query.detectTo === "yue") {
-            userPrompt = "翻译成粤语白话文";
+        if (detectTo === "zh-Hant") {
+            generatedUserPrompt = "翻译成繁体白话文";
+        } else if (detectTo === "zh-Hans") {
+            generatedUserPrompt = "翻译成简体白话文";
+        } else if (detectTo === "yue") {
+            generatedUserPrompt = "翻译成粤语白话文";
         }
     }
-    if (query.detectFrom === query.detectTo) {
-        systemPrompt =
+    if (detectFrom === detectTo) {
+        generatedSystemPrompt =
             "You are a text embellisher, you can only embellish the text, don't interpret it.";
-        if (query.detectTo === "zh-Hant" || query.detectTo === "zh-Hans") {
-            userPrompt = "润色此句";
+        if (detectTo === "zh-Hant" || detectTo === "zh-Hans") {
+            generatedUserPrompt = "润色此句";
         } else {
-            userPrompt = "polish this sentence";
+            generatedUserPrompt = "polish this sentence";
         }
     }
 
-    userPrompt = `${userPrompt}:\n\n"${query.text}" =>`
+    generatedUserPrompt = `${generatedUserPrompt}:\n\n${query.text}`
 
-    return { systemPrompt, userPrompt };
+    return { generatedSystemPrompt, generatedUserPrompt };
+}
+
+/**
+ * @param {string} prompt
+ * @param {Bob.TranslateQuery} query
+ * @returns {string}
+*/
+function replacePromptKeywords(prompt, query) {
+    if (!prompt) return prompt;
+    return prompt.replace("$text", query.text)
+        .replace("$sourceLang", query.detectFrom)
+        .replace("$targetLang", query.detectTo);
 }
 
 /**
@@ -99,17 +116,18 @@ function generatePrompts(query) {
  * }}
 */
 function buildRequestBody(model, isChatGPTModel, query) {
-    const { customSystemPrompt, customUserPrompt } = $option;
-    const { systemPrompt, userPrompt } = customSystemPrompt || customUserPrompt 
-    ? {
-        systemPrompt: customSystemPrompt || "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully.",
-        userPrompt: `${customUserPrompt}:\n\n"${query.text}"`,
-    } 
-    : generatePrompts(query);
+    let { customSystemPrompt, customUserPrompt } = $option;
+    const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
+
+    customSystemPrompt = replacePromptKeywords(customSystemPrompt, query);
+    customUserPrompt = replacePromptKeywords(customUserPrompt, query);
+
+    const systemPrompt = customSystemPrompt || generatedSystemPrompt;
+    const userPrompt = customUserPrompt || generatedUserPrompt;
 
     const standardBody = {
         model,
-        temperature: 0,
+        temperature: 0.2,
         max_tokens: 1000,
         top_p: 1,
         frequency_penalty: 1,
@@ -119,6 +137,7 @@ function buildRequestBody(model, isChatGPTModel, query) {
     if (isChatGPTModel) {
         return {
             ...standardBody,
+            model,
             messages: [
                 {
                     role: "system",
@@ -133,19 +152,21 @@ function buildRequestBody(model, isChatGPTModel, query) {
     }
     return {
         ...standardBody,
+        model,
         prompt: userPrompt,
     };
 }
 
+
 /**
- * @param {Bob.Completion} completion
+ * @param {Bob.TranslateQuery} query
  * @param {Bob.HttpResponse} result
  * @returns {void}
 */
-function handleError(completion, result) {
+function handleError(query, result) {
     const { statusCode } = result.response;
     const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
-    completion({
+    query.onCompletion({
         error: {
             type: reason,
             message: `接口响应错误 - ${result.data.error.message}`,
@@ -155,17 +176,16 @@ function handleError(completion, result) {
 }
 
 /**
- * @param {Bob.Completion} completion
  * @param {boolean} isChatGPTModel
  * @param {Bob.TranslateQuery} query
  * @param {Bob.HttpResponse} result
  * @returns {void}
 */
-function handleResponse(completion, isChatGPTModel, query, result) {
+function handleResponse(isChatGPTModel, query, result) {
     const { choices } = result.data;
 
     if (!choices || choices.length === 0) {
-        completion({
+        query.onCompletion({
             error: {
                 type: "api",
                 message: "接口未返回结果",
@@ -177,15 +197,7 @@ function handleResponse(completion, isChatGPTModel, query, result) {
 
     let targetText = (isChatGPTModel ? choices[0].message.content : choices[0].text).trim();
 
-    // 使用正则表达式删除字符串开头和结尾的特殊字符
-    targetText = targetText.replace(/^(『|「|"|“)|(』|」|"|”)$/g, "");
-
-    // 判断并删除字符串末尾的 `" =>`
-    if (targetText.endsWith('" =>')) {
-        targetText = targetText.slice(0, -4);
-    }
-
-    completion({
+    query.onCompletion({
         result: {
             from: query.detectFrom,
             to: query.detectTo,
@@ -197,9 +209,9 @@ function handleResponse(completion, isChatGPTModel, query, result) {
 /**
  * @type {Bob.Translate}
  */
-function translate(query, completion) {
+function translate(query) {
     if (!lang.langMap.get(query.detectTo)) {
-        completion({
+        query.onCompletion({
             error: {
                 type: "unsupportLanguage",
                 message: "不支持该语种",
@@ -211,7 +223,7 @@ function translate(query, completion) {
     const { model, apiKeys, apiUrl, deploymentName } = $option;
 
     if (!apiKeys) {
-        completion({
+        query.onCompletion({
             error: {
                 type: "secretKey",
                 message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
@@ -234,7 +246,7 @@ function translate(query, completion) {
             apiUrlPath = `/openai/deployments/${deploymentName}`;
             apiUrlPath += isChatGPTModel ? "/chat/completions?api-version=2023-03-15-preview" : "/completions?api-version=2022-12-01";
         } else {
-            completion({
+            query.onCompletion({
                 error: {
                     type: "secretKey",
                     message: "配置错误 - 未填写 Deployment Name",
@@ -256,12 +268,12 @@ function translate(query, completion) {
         });
 
         if (result.error) {
-            handleError(completion, result);
+            handleError(query, result);
         } else {
-            handleResponse(completion, isChatGPTModel, query, result);
+            handleResponse(isChatGPTModel, query, result);
         }
     })().catch((err) => {
-        completion({
+        query.onCompletion({
             error: {
                 type: err._type || "unknown",
                 message: err._message || "未知错误",

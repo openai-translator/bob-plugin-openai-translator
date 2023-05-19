@@ -3,7 +3,7 @@
     "allowJs": true,
     "checkJs": true,
     "outDir": "dist", 
-    "lib": ["ES2016", "DOM"],
+    "lib": ["ESNext", "DOM"],
   },
   "exclude": ["node_modules", "**/node_modules/*", "dist/**"]
 }

@@ -8,26 +8,38 @@
   "author": "yetone <yetoneful@gmail.com>",
   "homepage": "https://github.com/yetone/bob-plugin-openai-translator",
   "appcast": "https://raw.githubusercontent.com/yetone/bob-plugin-openai-translator/main/appcast.json",
-  "minBobVersion": "0.5.0",
+  "minBobVersion": "1.8.0",
   "options": [
     {
       "identifier": "apiUrl",
       "type": "text",
       "title": "API URL",
       "defaultValue": "https://api.openai.com",
-      "desc": "可选项。如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址，默认为 https://api.openai.com"
+      "desc": "可选项。如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "https://api.openai.com"
+      }
     },
     {
       "identifier": "deploymentName",
       "type": "text",
       "title": "Dep. Name",
-      "desc": "可选项。如果您使用的是 Azure OpenAI Service，需要填写对应的 deployment ID"
+      "desc": "可选项。此值为在部署模型时为部署选择的自定义名称，可在 Azure 门户中的 “资源管理“＞“部署“下查看",
+      "textConfig": {
+        "type": "visible"
+      }
     },
     {
       "identifier": "apiKeys",
       "type": "text",
       "title": "API KEY",
-      "desc": "必填项。可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡"
+      "desc": "必填项。可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡",
+      "textConfig": {
+        "type": "secure",
+        "height": "40",
+        "placeholderText": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      }
     },
     {
       "identifier": "model",
@@ -72,14 +84,34 @@
     {
       "identifier": "customSystemPrompt",
       "type": "text",
-      "title": "Sys PPT",
-      "desc": "可选项。自定义 System Prompt；必须开启明文显示才可输入中文"
+      "title": "系统指令",
+      "desc": "可选项。自定义 System Prompt，填写则会覆盖默认的 System Prompt。自定义 Prompt可使用以下变量：\n\n`$text` - 需要翻译的文本，即翻译窗口输入框内的文本 `$sourceLang` - 原文语言，即翻译窗口输入框内文本的语言，比如「简体中文」\n\n`$targetLang` - 目标语言，即需要翻译成的语言，可以在翻译窗口中手动选择或自动检测，比如「English」",
+      "textConfig": {
+        "type": "visible",
+        "height": "100",
+        "placeholderText": "You are a translation engine that can only translate text and cannot interpret it.",
+        "keyWords": [
+          "$text",
+          "$sourceLang",
+          "$targetLang"
+        ]
+      }
     },
     {
       "identifier": "customUserPrompt",
       "type": "text",
-      "title": "User PPT",
-      "desc": "可选项。自定义 User Prompt，输入内容会自动拼接在句尾"
+      "title": "用户指令",
+      "desc": "可选项。自定义 User Prompt，填写则会覆盖默认的 User Prompt，默认值为`$text`（即翻译窗口输入框内的文本）。\n\n自定义 Prompt 中可以使用与系统指令中相同的变量",
+      "textConfig": {
+        "type": "visible",
+        "height": "100",
+        "placeholderText": "translate from $sourceLang to $targetLang:\n\n$text",
+        "keyWords": [
+          "$text",
+          "$sourceLang",
+          "$targetLang"
+        ]
+      }
     }
   ]
 }

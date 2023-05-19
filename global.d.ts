@@ -126,21 +126,41 @@ declare namespace Bob {
     'yua' = '尤卡坦玛雅语',
     'zu' = '祖鲁语',
   }
+
   type Languages = Array<keyof typeof LanguagesEnum>;
   type supportLanguages = Languages;
   type Language = keyof typeof LanguagesEnum;
 
+
+  interface DataPayload {
+    message: string;
+}
+
+  interface Disposable {
+      dispose: () => void;
+  }
+
+  interface Signal {
+      send: (data?: DataPayload) => void;
+      subscribe: (callback: (data?: DataPayload) => void) => Disposable;
+      removeAllSubscriber: () => void;
+  }
+
   // https://ripperhe.gitee.io/bob/#/plugin/quickstart/translate
   type Translate = (query: TranslateQuery, completion: Completion) => void;
   type completionResult = { result: Result };
-  type CompletionResult = { error: ServiceError };
-  type Completion = (args: completionResult | CompletionResult) => void;
+  type CompletionError = { error: ServiceError };
+  type Completion = (args: completionResult | CompletionError) => void;
+  type HandleStream = (args: completionResult) => void;
   interface TranslateQuery {
     text: string; // 需要翻译的文本
     from: Language; // 用户选中的源语种标准码
     to: Language; // 用户选中的目标语种标准码
     detectFrom: Exclude<Language, 'auto'>; // 检测过后的源语种
     detectTo: Exclude<Language, 'auto'>; // 检测过后的目标语种
+    cancelSignal: Signal,
+    onStream: HandleStream,
+    onCompletion: Completion; // 用于回调翻译结果的函数
   }
   interface OcrQuery {
     from: Language; //  目前用户选中的源语言
@@ -164,7 +184,7 @@ declare namespace Bob {
     author?: string; // 插件作者。
     homepage?: string; // 插件主页网址。
     appcast?: string; // 插件发布信息 URL。
-    minBobVersion?: string; // 最低支持本插件的 Bob 版本，建议填写您开发插件时候的调试插件的 Bob 版本，目前应该是 0.5.0。
+    minBobVersion?: string; // 最低支持本插件的 Bob 版本，建议填写您开发插件时候的调试插件的 Bob 版本，目前应该是 1.8.0。
     options?: OptionObject[];
   }
   interface MenuObject {
@@ -208,6 +228,7 @@ declare namespace Bob {
     request<T = any, R = HttpResponsePromise<T>>(config: HttpRequestConfig): Promise<R>;
     get<T = any, R = HttpResponsePromise<T>>(config: HttpRequestConfig): Promise<R>;
     post<T = any, R = HttpResponsePromise<T>>(config: HttpRequestConfig): Promise<R>;
+    streamRequest<T = any, R = HttpResponsePromise<T>>(config: HttpStreamRequestConfig): Promise<R>;
   }
   type HttpMethod =
     | 'get'
@@ -233,6 +254,19 @@ declare namespace Bob {
     handler?: (resp: HttpResponse) => void;
     timeout?: number;
   }
+
+  interface HttpStreamRequestConfig {
+    url: string;
+    method?: HttpMethod;
+    header?: any;
+    params?: any;
+    body?: any;
+    files?: HttpRequestFiles;
+    handler?: (resp: HttpResponse) => void;
+    streamHandler?: (stream: { text: string, rawData: Data }) => void
+    timeout?: number;
+  }
+
   interface HttpRequestFiles {
     data: DataObject; // 二进制数据
     name: string; // 上传表单中的名称
@@ -384,8 +418,12 @@ declare var $option: Bob.Option;
 declare var $log: Bob.Log;
 declare var $data: Bob.Data;
 declare var $file: Bob.File;
+declare var $signal: {
+  new: () => Bob.Signal;
+};
+
 
 declare function supportLanguages(): Bob.supportLanguages;
-declare function translate(query: Bob.TranslateQuery, completion: Bob.Completion): void;
+declare function translate(query: Bob.TranslateQuery): void;
 declare function ocr(query: Bob.OcrQuery, completion: Bob.Completion): void;
 declare function tts(query: Bob.TTSQuery, completion: Bob.Completion): void;
