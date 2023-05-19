@@ -48,7 +48,7 @@ To use the ChatGPT API, go to Bob's settings page and change the plugin model to
 
 ## Usage
 
-1. Install [Bob](https://bobtranslate.com/guide/#%E5%AE%89%E8%A3%85) (version >= 0.50), a macOS translation and OCR software
+1. Install [Bob](https://bobtranslate.com/guide/#%E5%AE%89%E8%A3%85), a translation and OCR software for macOS platform; [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases/latest) >= 0.50 enables streaming output by default after installation, requiring Bob version >= 1.8.0.
 
 2. Download this plugin: [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases/latest)
 
