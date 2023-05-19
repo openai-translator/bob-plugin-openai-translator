@@ -127,6 +127,7 @@ function buildRequestBody(model, isChatGPTModel, query) {
 
     const standardBody = {
         model,
+        stream: true,
         temperature: 0.2,
         max_tokens: 1000,
         top_p: 1,
@@ -170,40 +171,57 @@ function handleError(query, result) {
         error: {
             type: reason,
             message: `接口响应错误 - ${result.data.error.message}`,
-            addtion: JSON.stringify(result),
+            addtion: `${statusCode}: ${JSON.stringify(result)}`,
         },
     });
 }
 
+
 /**
- * @param {boolean} isChatGPTModel
  * @param {Bob.TranslateQuery} query
- * @param {Bob.HttpResponse} result
- * @returns {void}
+ * @param {boolean} isChatGPTModel
+ * @param {string} targetText
+ * @param {string} textFromResponse
+ * @returns {string}
 */
-function handleResponse(isChatGPTModel, query, result) {
-    const { choices } = result.data;
+function handleResponse(query, isChatGPTModel, targetText, textFromResponse) {
+    if (textFromResponse !== '[DONE]') {
+        try {
+            const dataObj = JSON.parse(textFromResponse);
+            const { choices } = dataObj;
+            if (!choices || choices.length === 0) {
+                query.onCompletion({
+                    error: {
+                        type: "api",
+                        message: "接口未返回结果",
+                        addtion: textFromResponse,
+                    },
+                });
+                return targetText;
+            }
 
-    if (!choices || choices.length === 0) {
-        query.onCompletion({
-            error: {
-                type: "api",
-                message: "接口未返回结果",
-                addtion: JSON.stringify(result),
-            },
-        });
-        return;
+            const content = isChatGPTModel ? choices[0].delta.content : choices[0].text;
+            if (content !== undefined) {
+                targetText += content;
+                query.onStream({
+                    result: {
+                        from: query.detectFrom,
+                        to: query.detectTo,
+                        toParagraphs: [targetText],
+                    },
+                });
+            }
+        } catch (err) {
+            query.onCompletion({
+                error: {
+                    type: err._type || "param",
+                    message: err._message || "Failed to parse JSON",
+                    addtion: err._addition,
+                },
+            });
+        }
     }
-
-    let targetText = (isChatGPTModel ? choices[0].message.content : choices[0].text).trim();
-
-    query.onCompletion({
-        result: {
-            from: query.detectFrom,
-            to: query.detectTo,
-            toParagraphs: targetText.split("\n"),
-        },
-    });
+    return targetText;
 }
 
 /**
@@ -258,20 +276,50 @@ function translate(query) {
 
     const header = buildHeader(isAzureServiceProvider, apiKey);
     const body = buildRequestBody(model, isChatGPTModel, query);
-
+    
+    // 初始化拼接结果变量
+    let targetText = "";
     (async () => {
-        const result = await $http.request({
+        await $http.streamRequest({
             method: "POST",
             url: modifiedApiUrl + apiUrlPath,
             header,
             body,
+            cancelSignal: query.cancelSignal,
+            streamHandler: (streamData) => {
+                if (streamData.text.includes("Invalid token")) {
+                    query.onCompletion({
+                        error: {
+                            type: "secretKey",
+                            message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
+                            addtion: "请在插件配置中填写正确的 API Keys",
+                        },
+                    });
+                } else {
+                    const lines = streamData.text.split('\n').filter(line => line);
+                    lines.forEach(line => {
+                        const match = line.match(/^data: (.*)/);
+                        if (match) {
+                            const textFromResponse = match[1].trim();
+                            targetText = handleResponse(query, isChatGPTModel, targetText, textFromResponse);
+                        }
+                    });
+                }
+            },
+            handler: (result) => {
+                if (result.response.statusCode >= 400) {
+                    handleError(query, result);
+                } else {
+                    query.onCompletion({
+                        result: {
+                            from: query.detectFrom,
+                            to: query.detectTo,
+                            toParagraphs: [targetText],
+                        },
+                    });
+                }
+            }
         });
-
-        if (result.error) {
-            handleError(query, result);
-        } else {
-            handleResponse(isChatGPTModel, query, result);
-        }
     })().catch((err) => {
         query.onCompletion({
             error: {

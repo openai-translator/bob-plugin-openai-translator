@@ -263,6 +263,7 @@ declare namespace Bob {
     body?: any;
     files?: HttpRequestFiles;
     handler?: (resp: HttpResponse) => void;
+    cancelSignal?: Signal;
     streamHandler?: (stream: { text: string, rawData: Data }) => void
     timeout?: number;
   }
