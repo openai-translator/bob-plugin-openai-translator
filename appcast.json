@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "1.0.1",
+      "desc": "Update the error handling logic",
+      "sha256": "9b2c2f0e2afe844f0fd19952fbebdb41a3715f838e701f25ee58860fc7f367d0",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.0.1/openai-translator-1.0.1.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "1.0.0",
       "desc": "Supports streaming output, requires Bob version >= 1.8.0",
       "sha256": "6a5843cd08244554f2e07f6ac5a57c6ff508fce6e70f0fc0f635e0a25055fecf",
