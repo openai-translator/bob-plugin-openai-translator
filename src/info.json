@@ -85,6 +85,7 @@
       "identifier": "customSystemPrompt",
       "type": "text",
       "title": "系统指令",
+      "defaultValue": "You are a translation engine that can only translate text and cannot interpret it.",
       "desc": "可选项。自定义 System Prompt，填写则会覆盖默认的 System Prompt。自定义 Prompt可使用以下变量：\n\n`$text` - 需要翻译的文本，即翻译窗口输入框内的文本 `$sourceLang` - 原文语言，即翻译窗口输入框内文本的语言，比如「简体中文」\n\n`$targetLang` - 目标语言，即需要翻译成的语言，可以在翻译窗口中手动选择或自动检测，比如「English」",
       "textConfig": {
         "type": "visible",
@@ -101,6 +102,7 @@
       "identifier": "customUserPrompt",
       "type": "text",
       "title": "用户指令",
+      "defaultValue": "translate from $sourceLang to $targetLang:\n\n$text",
       "desc": "可选项。自定义 User Prompt，填写则会覆盖默认的 User Prompt，默认值为`$text`（即翻译窗口输入框内的文本）。\n\n自定义 Prompt 中可以使用与系统指令中相同的变量",
       "textConfig": {
         "type": "visible",
