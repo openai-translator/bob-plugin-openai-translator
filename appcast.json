@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "1.0.0",
+      "desc": "Supports streaming output, requires Bob version >= 1.8.0",
+      "sha256": "6a5843cd08244554f2e07f6ac5a57c6ff508fce6e70f0fc0f635e0a25055fecf",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.0.0/openai-translator-1.0.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "0.4.0",
       "desc": "Support custom prompts",
       "sha256": "74791057b4d804137105ecdf0e26abe25f972db1372416ba8ff1cc8a0f8debc0",
