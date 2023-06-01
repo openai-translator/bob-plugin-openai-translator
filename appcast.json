@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "1.1.0",
+      "desc": "Handle fragmented stream data from OpenAI API",
+      "sha256": "4dd2f5f30c6571c82134d48f2502bd524e768480ba5b2c99bb32d8ced7ad090e",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.0/openai-translator-1.1.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "1.0.1",
       "desc": "Update the error handling logic",
       "sha256": "9b2c2f0e2afe844f0fd19952fbebdb41a3715f838e701f25ee58860fc7f367d0",
