@@ -318,8 +318,9 @@ function translate(query) {
     const header = buildHeader(isAzureServiceProvider, apiKey);
     const body = buildRequestBody(model, isChatGPTModel, query);
     
-    // 初始化拼接结果变量
-    let targetText = "";
+
+    let targetText = ""; // 初始化拼接结果变量
+    let buffer = ""; // 新增 buffer 变量
     (async () => {
         await $http.streamRequest({
             method: "POST",
@@ -337,14 +338,21 @@ function translate(query) {
                         },
                     });
                 } else {
-                    const lines = streamData.text.split('\n').filter(line => line);
-                    lines.forEach(line => {
-                        const match = line.match(/^data: (.*)/);
+                    // 将新的数据添加到缓冲变量中
+                    buffer += streamData.text;
+                    // 检查缓冲变量是否包含一个完整的消息
+                    while (true) {
+                        const match = buffer.match(/data: (.*?})\n/);
                         if (match) {
+                            // 如果是一个完整的消息，处理它并从缓冲变量中移除
                             const textFromResponse = match[1].trim();
                             targetText = handleResponse(query, isChatGPTModel, targetText, textFromResponse);
+                            buffer = buffer.slice(match[0].length);
+                        } else {
+                            // 如果没有完整的消息，等待更多的数据
+                            break;
                         }
-                    });
+                    }
                 }
             },
             handler: (result) => {
