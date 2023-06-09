@@ -12,12 +12,12 @@ body:
     attributes:
       label: Search before asking
       description: |
-        请在提交前搜索 [issues](https://github.com/yetone/openai-translator/issues)，以查看您的问题是否已经被提交。
+        请在提交前搜索 [issues](https://github.com/openai-translator/bob-plugin-openai-translator/issues?q=is%3Aissue+sort%3Aupdated-desc+)，以查看您的问题是否已经被提交。
 
-        Please search [issues](https://github.com/yetone/openai-translator/issues) to check if your issue has already been reported.
+        Please search [issues](https://github.com/openai-translator/bob-plugin-openai-translator/issues?q=is%3Aissue+sort%3Aupdated-desc+) to check if your issue has already been reported.
       options:
         - label: >
-            在 [issues](https://github.com/yetone/openai-translator/issues) 中没有找到类似的内容。I searched in the [issues](https://github.com/yetone/openai-translator/issues) and found nothing similar.
+            在 [issues](https://github.com/openai-translator/bob-plugin-openai-translator/issues?q=is%3Aissue+sort%3Aupdated-desc+) 中没有找到类似的内容。I searched in the [issues](https://github.com/openai-translator/bob-plugin-openai-translator/issues?q=is%3Aissue+sort%3Aupdated-desc+) and found nothing similar.
           required: true
   - type: input
     attributes:

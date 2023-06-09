@@ -16,13 +16,13 @@ body:
       attributes:
           label: Please search before asking
           description: |
-            辛苦提 Bug 前，检索一下 [问题](https://github.com/yetone/bob-plugin-openai-translator/issues?q=) 列表是否已经存在类似问题。麻烦提供系统版本、录屏或者截图、复现步骤，有助于更好的解决问题。
+            辛苦提 Bug 前，检索一下 [问题](https://github.com/openai-translator/bob-plugin-openai-translator/issues?q=is%3Aissue+sort%3Aupdated-desc+) 列表是否已经存在类似问题。麻烦提供系统版本、录屏或者截图、复现步骤，有助于更好的解决问题。
 
-            Please search [issues](https://github.com/yetone/bob-plugin-openai-translator/issues) to check if your issue has already been reported.
+            Please search [issues](https://github.com/openai-translator/bob-plugin-openai-translator/issues?q=is%3Aissue+sort%3Aupdated-desc+) to check if your issue has already been reported.
 
           options:
               - label: >
-                    I searched in the [issues](https://github.com/yetone/bob-plugin-openai-translator/issues) and found nothing similar.
+                    I searched in the [issues](https://github.com/openai-translator/bob-plugin-openai-translator/issues?q=is%3Aissue+sort%3Aupdated-desc+) and found nothing similar.
                 required: true
     - type: checkboxes
       attributes:
