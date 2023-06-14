@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "1.1.1",
+      "desc": "Supports the latest GPT-4 and 3.5 Turbo models",
+      "sha256": "eac85470b36bf3766ab225859198f0d3c8245d4e32695bf99db091eb7ee48cac",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.1/openai-translator-1.1.1.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "1.1.0",
       "desc": "Handle fragmented stream data from OpenAI API",
       "sha256": "4dd2f5f30c6571c82134d48f2502bd524e768480ba5b2c99bb32d8ced7ad090e",
