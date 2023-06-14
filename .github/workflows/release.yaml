@@ -52,6 +52,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: 'maintenance'
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
