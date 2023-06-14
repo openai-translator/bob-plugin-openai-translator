@@ -48,11 +48,19 @@
       "defaultValue": "gpt-3.5-turbo",
       "menuValues": [
         {
+          "title": "gpt-3.5-turbo-0613 (recommended)",
+          "value": "gpt-3.5-turbo-0613"
+        },
+        {
           "title": "gpt-3.5-turbo-0301",
           "value": "gpt-3.5-turbo-0301"
         },
         {
-          "title": "gpt-3.5-turbo (recommended)",
+          "title": "gpt-3.5-turbo-16k",
+          "value": "gpt-3.5-turbo-16k"
+        },
+        {
+          "title": "gpt-3.5-turbo",
           "value": "gpt-3.5-turbo"
         },
         {
@@ -64,12 +72,20 @@
           "value": "gpt-4-0314"
         },
         {
+          "title": "gpt-4-0613",
+          "value": "gpt-4-0613"
+        },
+        {
           "title": "gpt-4-32k",
           "value": "gpt-4-32k"
         },
         {
           "title": "gpt-4-32k-0314",
           "value": "gpt-4-32k-0314"
+        },
+        {
+          "title": "gpt-4-32k-0613",
+          "value": "gpt-4-32k-0613"
         },
         {
           "title": "text-davinci-003",
