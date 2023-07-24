@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "1.1.2",
+      "desc": "优化 HTTP Error 429 的错误信息",
+      "sha256": "8fa7ec7e5686ac1940ac4caf165dfeb3857cb417105d6b1b6533c42f06993f37",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.2/openai-translator-1.1.2.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "1.1.1",
       "desc": "Supports the latest GPT-4 and 3.5 Turbo models",
       "sha256": "eac85470b36bf3766ab225859198f0d3c8245d4e32695bf99db091eb7ee48cac",
