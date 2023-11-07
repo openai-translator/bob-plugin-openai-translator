@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "1.1.3",
+      "desc": "Supports the latest GPT-3.5 Turbo model",
+      "sha256": "830554d6751a759aab65d6358452e9e2a98cc0a0e1d65d3b8599a182ddd12ee2",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.3/openai-translator-1.1.3.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "1.1.2",
       "desc": "优化 HTTP Error 429 的错误信息",
       "sha256": "8fa7ec7e5686ac1940ac4caf165dfeb3857cb417105d6b1b6533c42f06993f37",
