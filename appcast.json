@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.4.3",
+      "desc": "Fixed a bad judgment about a model issue",
+      "sha256": "deb241f6bf4568db466ef03356827a257007e46bf0a942255019b9a6d29fd126",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.4.3/openai-translator-0.4.3.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.4.2",
       "desc": "Supports the latest GPT-3.5 Turbo model",
       "sha256": "ffdc109fca8c863d89ed45eea6020187d3cde944f2d517c798d5010e7e000828",
