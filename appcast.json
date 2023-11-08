@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.0.0",
+      "desc": "Support for custom models, drop of support for v1/completions",
+      "sha256": "c515fe5ee1e6602a2f879fc8ae76ef586b85d854badad87143c1c7cde639b754",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.0.0/openai-translator-2.0.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "1.1.4",
       "desc": "Fixed a bad judgment about a model issue",
       "sha256": "6408b89c3e1f5406616716ca743c2dd8231c5326c5b40179bac8771a571bda36",
