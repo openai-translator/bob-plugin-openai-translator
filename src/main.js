@@ -212,7 +212,10 @@ function handleResponse(query, targetText, textFromResponse) {
     if (textFromResponse !== '[DONE]') {
         try {
             const dataObj = JSON.parse(textFromResponse);
-            const { choices } = dataObj;
+            const { choices, prompt_filter_results} = dataObj;
+            if (prompt_filter_results) {
+                return targetText;
+            }
             if (!choices || choices.length === 0) {
                 query.onCompletion({
                     error: {
