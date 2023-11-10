@@ -48,7 +48,7 @@ To use the ChatGPT API, go to Bob's settings page and change the plugin model to
 
 ## Usage
 
-1. Install [Bob](https://bobtranslate.com/guide/#%E5%AE%89%E8%A3%85), a translation and OCR software for macOS platform; [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases/latest) >= **1.0.0** enables streaming output by default after installation, requiring Bob version >= **1.8.0**.
+1. Install [Bob](https://bobtranslate.com/guide/#%E5%AE%89%E8%A3%85) (version >= 0.50), a macOS translation and OCR software
 
 2. Download this plugin: [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases/latest)
 
@@ -62,6 +62,10 @@ To use the ChatGPT API, go to Bob's settings page and change the plugin model to
 
 6. Install [PopClip](https://bobtranslate.com/guide/integration/popclip.html) for highlighted text mouse proximity floating icon:
   ![PopClip](https://user-images.githubusercontent.com/1206493/219933584-d0c2b6cf-8fa0-40a6-858f-8f4bf05f38ef.gif)
+
+## Contributing
+
+If you want to contribute to Renovate or get a local copy running, please read the instructions in [contributing guidelines](.github/contributing.md). To get started look at the list of [good first issues](https://github.com/openai-translator/bob-plugin-openai-translator/contribute).
 
 ## Thanks
 
