@@ -65,7 +65,7 @@ To use the ChatGPT API, go to Bob's settings page and change the plugin model to
 
 ## Contributing
 
-If you want to contribute to Renovate or get a local copy running, please read the instructions in [contributing guidelines](.github/contributing.md). To get started look at the list of [good first issues](https://github.com/openai-translator/bob-plugin-openai-translator/contribute).
+If you want to contribute to Renovate or get a local copy running, please read the instructions in [contributing guidelines](../.github/contributing.md). To get started look at the list of [good first issues](https://github.com/openai-translator/bob-plugin-openai-translator/contribute).
 
 ## Thanks
 
