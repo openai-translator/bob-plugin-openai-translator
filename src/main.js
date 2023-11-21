@@ -291,12 +291,11 @@ function translate(query) {
     const apiKeySelection = trimmedApiKeys.split(",").map(key => key.trim());
     const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
 
-    const modifiedApiUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
-    
-    const isAzureServiceProvider = modifiedApiUrl.includes("openai.azure.com");
-    let apiUrlPath =  "/v1/chat/completions";
+    const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
+    let apiUrlPath = baseUrl.includes("gateway.ai.cloudflare.com") ? "/chat/completions" : "/v1/chat/completions";
     const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-08-01-preview";
     
+    const isAzureServiceProvider = baseUrl.includes("openai.azure.com");
     if (isAzureServiceProvider) {
         if (deploymentName) {
             apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions${apiVersionQuery}`;
@@ -320,7 +319,7 @@ function translate(query) {
     (async () => {
         await $http.streamRequest({
             method: "POST",
-            url: modifiedApiUrl + apiUrlPath,
+            url: baseUrl + apiUrlPath,
             header,
             body,
             cancelSignal: query.cancelSignal,
