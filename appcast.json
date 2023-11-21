@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.1.0",
+      "desc": "Support Cloudflare AI Gateway and update default Azure API version",
+      "sha256": "8724ab8305ab09e241e60cab072cefb8d93385863e9ecdd62d7606ea089f8d71",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.1.0/openai-translator-2.1.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.0.0",
       "desc": "Support for custom models, drop of support for v1/completions",
       "sha256": "c515fe5ee1e6602a2f879fc8ae76ef586b85d854badad87143c1c7cde639b754",
