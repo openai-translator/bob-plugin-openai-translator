@@ -34,10 +34,11 @@
       "identifier": "apiVersion",
       "type": "text",
       "title": "API Version",
+      "defaultValue": "2023-03-15-preview",
       "desc": "可选项。此值为在使用 Azure 模型时采用的 Chat completions API 版本，不支持 2023-03-15-preview 之前的版本",
       "textConfig": {
         "type": "visible",
-        "placeholderText": "2023-08-01-preview"
+        "placeholderText": "2023-03-15-preview"
       }
     },
     {

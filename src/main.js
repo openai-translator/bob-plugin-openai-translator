@@ -293,7 +293,7 @@ function translate(query) {
 
     const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
     let apiUrlPath = baseUrl.includes("gateway.ai.cloudflare.com") ? "/chat/completions" : "/v1/chat/completions";
-    const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-08-01-preview";
+    const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-03-15-preview";
     
     const isAzureServiceProvider = baseUrl.includes("openai.azure.com");
     if (isAzureServiceProvider) {
