@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.1.2",
+      "desc": "Compress the logo",
+      "sha256": "98cc3116f451050792ce2338e819641f55c78146f3c92b1a23c8f6b23c6803cb",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.1.2/openai-translator-2.1.2.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.1.1",
       "desc": "Update logo",
       "sha256": "38d58027894be6df22a9e90286a67c918c23bc90ad901d5b102585d688addc9f",
