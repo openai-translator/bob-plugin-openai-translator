@@ -226,7 +226,7 @@ function translate(query, completion) {
     const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
 
     const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
-    let apiUrlPath = "/v1/chat/completions";
+    let apiUrlPath = baseUrl.includes("gateway.ai.cloudflare.com") ? "/chat/completions" : "/v1/chat/completions";
 
     const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-03-15-preview";
     
