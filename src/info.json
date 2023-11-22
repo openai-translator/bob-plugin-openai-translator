@@ -21,7 +21,14 @@
       "identifier": "deploymentName",
       "type": "text",
       "title": "Dep. Name",
-      "desc": "可选项。如果您使用的是 Azure OpenAI Service，需要填写对应的 deployment ID"
+      "desc": "可选项。此值为在部署 Azure 模型时为部署选择的自定义名称，可在 Azure 门户中的 “资源管理”＞“部署” 下查看"
+    },
+    {
+      "identifier": "apiVersion",
+      "type": "text",
+      "title": "API Version",
+      "defaultValue": "2023-03-15-preview",
+      "desc": "可选项。此值为在使用 Azure 模型时采用的 Chat completions API 版本，不支持 2023-03-15-preview 之前的版本"
     },
     {
       "identifier": "apiKeys",
@@ -35,6 +42,10 @@
       "title": "模型",
       "defaultValue": "gpt-3.5-turbo",
       "menuValues": [
+        {
+          "title": "custom",
+          "value": "custom"
+        },
         {
           "title": "gpt-3.5-turbo-1106 (recommended)",
           "value": "gpt-3.5-turbo-1106"
@@ -78,28 +89,28 @@
         {
           "title": "gpt-4-32k-0613",
           "value": "gpt-4-32k-0613"
-        },
-        {
-          "title": "text-davinci-003",
-          "value": "text-davinci-003"
-        },
-        {
-          "title": "text-davinci-002",
-          "value": "text-davinci-002"
         }
       ]
     },
     {
+      "identifier": "customModel",
+      "type": "text",
+      "title": "自定义模型",
+      "desc": "可选项。当 Model 选择为 custom 时，此项为必填项。请填写有效的模型名称"
+    },
+    {
       "identifier": "customSystemPrompt",
       "type": "text",
-      "title": "Sys PPT",
-      "desc": "可选项。自定义 System Prompt；必须开启明文显示才可输入中文"
+      "title": "系统指令",
+      "defaultValue": "You are a translation engine that can only translate text and cannot interpret it.",
+      "desc": "可选项。自定义 System Prompt，填写则会覆盖默认的 System Prompt。自定义 Prompt可使用以下变量：\n\n`$text` - 需要翻译的文本，即翻译窗口输入框内的文本 `$sourceLang` - 原文语言，即翻译窗口输入框内文本的语言，比如「简体中文」\n\n`$targetLang` - 目标语言，即需要翻译成的语言，可以在翻译窗口中手动选择或自动检测，比如「English」"
     },
     {
       "identifier": "customUserPrompt",
       "type": "text",
-      "title": "User PPT",
-      "desc": "可选项。自定义 User Prompt，输入内容会自动拼接在句尾"
+      "title": "用户指令",
+      "defaultValue": "translate from $sourceLang to $targetLang:\n\n$text",
+      "desc": "可选项。自定义 User Prompt，填写则会覆盖默认的 User Prompt，默认值为`$text`（即翻译窗口输入框内的文本）。\n\n自定义 Prompt 中可以使用与系统指令中相同的变量"
     }
   ]
 }

@@ -1,19 +1,8 @@
 //@ts-check
 
 var lang = require("./lang.js");
-var ChatGPTModels = [
-    "gpt-3.5-turbo",
-    "gpt-3.5-turbo-16k",
-    "gpt-3.5-turbo-0301",
-    "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-1106",
-    "gpt-4",
-    "gpt-4-0314",
-    "gpt-4-0613",
-    "gpt-4-32k",
-    "gpt-4-32k-0314",
-    "gpt-4-32k-0613",
-];
+
+var SYSTEM_PROMPT = "You are a translation engine that can only translate text and cannot interpret it."
 
 /**
  * @param {string}  url
@@ -45,52 +34,66 @@ function buildHeader(isAzureServiceProvider, apiKey) {
 /**
  * @param {Bob.TranslateQuery} query
  * @returns {{ 
- *  systemPrompt: string, 
- *  userPrompt: string 
+ *  generatedSystemPrompt: string, 
+ *  generatedUserPrompt: string 
  * }}
 */
 function generatePrompts(query) {
-    let systemPrompt = "You are a translation engine that can only translate text and cannot interpret it.";
-    let userPrompt = `translate from ${lang.langMap.get(query.detectFrom) || query.detectFrom} to ${lang.langMap.get(query.detectTo) || query.detectTo}`;
+    let generatedSystemPrompt = SYSTEM_PROMPT;
+    const { detectFrom, detectTo } = query;
+    const sourceLang = lang.langMap.get(detectFrom) || detectFrom;
+    const targetLang = lang.langMap.get(detectTo) || detectTo;
+    let generatedUserPrompt = `translate from ${sourceLang} to ${targetLang}`;
 
-    if (query.detectTo === "wyw" || query.detectTo === "yue") {
-        userPrompt = `翻译成${lang.langMap.get(query.detectTo) || query.detectTo}`;
+    if (detectTo === "wyw" || detectTo === "yue") {
+        generatedUserPrompt = `翻译成${targetLang}`;
     }
 
     if (
-        query.detectFrom === "wyw" ||
-        query.detectFrom === "zh-Hans" ||
-        query.detectFrom === "zh-Hant"
+        detectFrom === "wyw" ||
+        detectFrom === "zh-Hans" ||
+        detectFrom === "zh-Hant"
     ) {
-        if (query.detectTo === "zh-Hant") {
-            userPrompt = "翻译成繁体白话文";
-        } else if (query.detectTo === "zh-Hans") {
-            userPrompt = "翻译成简体白话文";
-        } else if (query.detectTo === "yue") {
-            userPrompt = "翻译成粤语白话文";
+        if (detectTo === "zh-Hant") {
+            generatedUserPrompt = "翻译成繁体白话文";
+        } else if (detectTo === "zh-Hans") {
+            generatedUserPrompt = "翻译成简体白话文";
+        } else if (detectTo === "yue") {
+            generatedUserPrompt = "翻译成粤语白话文";
         }
     }
-    if (query.detectFrom === query.detectTo) {
-        systemPrompt =
+    if (detectFrom === detectTo) {
+        generatedSystemPrompt =
             "You are a text embellisher, you can only embellish the text, don't interpret it.";
-        if (query.detectTo === "zh-Hant" || query.detectTo === "zh-Hans") {
-            userPrompt = "润色此句";
+        if (detectTo === "zh-Hant" || detectTo === "zh-Hans") {
+            generatedUserPrompt = "润色此句";
         } else {
-            userPrompt = "polish this sentence";
+            generatedUserPrompt = "polish this sentence";
         }
     }
 
-    userPrompt = `${userPrompt}:\n\n"${query.text}" =>`
+    generatedUserPrompt = `${generatedUserPrompt}:\n\n${query.text}`
 
-    return { systemPrompt, userPrompt };
+    return { generatedSystemPrompt, generatedUserPrompt };
 }
 
 /**
- * @param {typeof ChatGPTModels[number]} model
- * @param {boolean} isChatGPTModel
+ * @param {string} prompt
+ * @param {Bob.TranslateQuery} query
+ * @returns {string}
+*/
+function replacePromptKeywords(prompt, query) {
+    if (!prompt) return prompt;
+    return prompt.replace("$text", query.text)
+        .replace("$sourceLang", query.detectFrom)
+        .replace("$targetLang", query.detectTo);
+}
+
+/**
+ * @param {string} model
  * @param {Bob.TranslateQuery} query
  * @returns {{ 
- *  model: typeof ChatGPTModels[number];
+ *  model: string;
  *  temperature: number;
  *  max_tokens: number;
  *  top_p: number;
@@ -103,42 +106,37 @@ function generatePrompts(query) {
  *  prompt?: string;
  * }}
 */
-function buildRequestBody(model, isChatGPTModel, query) {
-    const { customSystemPrompt, customUserPrompt } = $option;
-    const { systemPrompt, userPrompt } = customSystemPrompt || customUserPrompt 
-    ? {
-        systemPrompt: customSystemPrompt || "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully.",
-        userPrompt: `${customUserPrompt}:\n\n"${query.text}"`,
-    } 
-    : generatePrompts(query);
+function buildRequestBody(model, query) {
+    let { customSystemPrompt, customUserPrompt } = $option;
+    const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
+
+    customSystemPrompt = replacePromptKeywords(customSystemPrompt, query);
+    customUserPrompt = replacePromptKeywords(customUserPrompt, query);
+
+    const systemPrompt = customSystemPrompt || generatedSystemPrompt;
+    const userPrompt = customUserPrompt || generatedUserPrompt;
 
     const standardBody = {
-        model,
-        temperature: 0,
+        model: model,
+        temperature: 0.2,
         max_tokens: 1000,
         top_p: 1,
         frequency_penalty: 1,
         presence_penalty: 1,
     };
 
-    if (isChatGPTModel) {
-        return {
-            ...standardBody,
-            messages: [
-                {
-                    role: "system",
-                    content: systemPrompt,
-                },
-                {
-                    role: "user",
-                    content: userPrompt,
-                },
-            ],
-        };
-    }
     return {
         ...standardBody,
-        prompt: userPrompt,
+        messages: [
+            {
+                role: "system",
+                content: systemPrompt,
+            },
+            {
+                role: "user",
+                content: userPrompt,
+            },
+        ],
     };
 }
 
@@ -161,12 +159,11 @@ function handleError(completion, result) {
 
 /**
  * @param {Bob.Completion} completion
- * @param {boolean} isChatGPTModel
  * @param {Bob.TranslateQuery} query
  * @param {Bob.HttpResponse} result
  * @returns {void}
 */
-function handleResponse(completion, isChatGPTModel, query, result) {
+function handleResponse(completion, query, result) {
     const { choices } = result.data;
 
     if (!choices || choices.length === 0) {
@@ -180,7 +177,7 @@ function handleResponse(completion, isChatGPTModel, query, result) {
         return;
     }
 
-    let targetText = (isChatGPTModel ? choices[0].message.content : choices[0].text).trim();
+    let targetText = choices[0].message.content.trim();
 
     // 使用正则表达式删除字符串开头和结尾的特殊字符
     targetText = targetText.replace(/^(『|「|"|“)|(』|」|"|”)$/g, "");
@@ -213,7 +210,7 @@ function translate(query, completion) {
         });
     }
 
-    const { model, apiKeys, apiUrl, deploymentName } = $option;
+    const { model, apiKeys, apiUrl, apiVersion, deploymentName } = $option;
 
     if (!apiKeys) {
         completion({
@@ -228,16 +225,15 @@ function translate(query, completion) {
     const apiKeySelection = trimmedApiKeys.split(",").map(key => key.trim());
     const apiKey = apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
 
-    const modifiedApiUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
+    const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
+    let apiUrlPath = "/v1/chat/completions";
+
+    const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-03-15-preview";
     
-    const isChatGPTModel = ChatGPTModels.includes(model);
-    const isAzureServiceProvider = modifiedApiUrl.includes("openai.azure.com");
-    let apiUrlPath = isChatGPTModel ? "/v1/chat/completions" : "/v1/completions";
-    
+    const isAzureServiceProvider = baseUrl.includes("openai.azure.com");
     if (isAzureServiceProvider) {
         if (deploymentName) {
-            apiUrlPath = `/openai/deployments/${deploymentName}`;
-            apiUrlPath += isChatGPTModel ? "/chat/completions?api-version=2023-03-15-preview" : "/completions?api-version=2022-12-01";
+            apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions${apiVersionQuery}`;
         } else {
             completion({
                 error: {
@@ -250,12 +246,12 @@ function translate(query, completion) {
     }
 
     const header = buildHeader(isAzureServiceProvider, apiKey);
-    const body = buildRequestBody(model, isChatGPTModel, query);
+    const body = buildRequestBody(model, query);
 
     (async () => {
         const result = await $http.request({
             method: "POST",
-            url: modifiedApiUrl + apiUrlPath,
+            url: baseUrl + apiUrlPath,
             header,
             body,
         });
@@ -263,7 +259,7 @@ function translate(query, completion) {
         if (result.error) {
             handleError(completion, result);
         } else {
-            handleResponse(completion, isChatGPTModel, query, result);
+            handleResponse(completion, query, result);
         }
     })().catch((err) => {
         completion({
