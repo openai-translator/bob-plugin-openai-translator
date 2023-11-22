@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "0.4.4",
+      "desc": "1. Support for custom models 2. Drop of support for `v1/completions` 3. Support Cloudflare AI Gateway 4. Update logo",
+      "sha256": "4c44fd8d717bb45e23e3817ad52f69909562056c13d491dac34057369452a182",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.4.4/openai-translator-0.4.4.bobplugin",
+      "minBobVersion": "0.5.0"
+    },
+    {
       "version": "0.4.3",
       "desc": "Fixed a bad judgment about a model issue",
       "sha256": "deb241f6bf4568db466ef03356827a257007e46bf0a942255019b9a6d29fd126",

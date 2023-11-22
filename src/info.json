@@ -1,6 +1,6 @@
 {
   "identifier": "yetone.openai.translator",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "category": "translate",
   "name": "OpenAI Translator",
   "summary": "GPT powered translator",
