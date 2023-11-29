@@ -212,9 +212,11 @@ function handleResponse(query, targetText, textFromResponse) {
     if (textFromResponse !== '[DONE]') {
         try {
             const dataObj = JSON.parse(textFromResponse);
+            // https://github.com/openai/openai-node/blob/master/src/resources/chat/completions.ts#L190
             const { choices } = dataObj;
-            if (choices && choices[0] && choices[0].delta.content) {
-                targetText += choices[0].delta.content;
+            const delta = choices[0]?.delta?.content;
+            if (delta) {
+                targetText += delta;
                 query.onStream({
                     result: {
                         from: query.detectFrom,
