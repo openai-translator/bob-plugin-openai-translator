@@ -213,20 +213,8 @@ function handleResponse(query, targetText, textFromResponse) {
         try {
             const dataObj = JSON.parse(textFromResponse);
             const { choices } = dataObj;
-            if (!choices || choices.length === 0) {
-                query.onCompletion({
-                    error: {
-                        type: "api",
-                        message: "接口未返回结果",
-                        addtion: textFromResponse,
-                    },
-                });
-                return targetText;
-            }
-
-            const content = choices[0].delta.content;
-            if (content !== undefined) {
-                targetText += content;
+            if (choices && choices[0] && choices[0].delta.content) {
+                targetText += choices[0].delta.content;
                 query.onStream({
                     result: {
                         from: query.detectFrom,
