@@ -3,12 +3,15 @@
 var lang = require("./lang.js");
 var SYSTEM_PROMPT = require("./const.js").SYSTEM_PROMPT;
 
-var buildHeader = require("./utils.js").buildHeader;
-var ensureHttpsAndNoTrailingSlash = require("./utils.js").ensureHttpsAndNoTrailingSlash;
-var getApiKey = require("./utils.js").getApiKey;
-var handleError = require("./utils.js").handleError;
-var handleValidateError = require("./utils.js").handleValidateError;
-var replacePromptKeywords = require("./utils.js").replacePromptKeywords;
+var {
+    buildHeader,
+    ensureHttpsAndNoTrailingSlash,
+    getApiKey,
+    handleGeneralError,
+    handleValidateError,
+    replacePromptKeywords
+} = require("./utils.js");
+
 
 /**
  * @param {Bob.TranslateQuery} query
@@ -85,7 +88,6 @@ function buildRequestBody(model, query) {
 
     const standardBody = {
         model: model,
-        stream: true,
         temperature: 0.2,
         max_tokens: 1000,
         top_p: 1,
@@ -115,7 +117,7 @@ function buildRequestBody(model, query) {
  * @param {string} textFromResponse
  * @returns {string}
 */
-function handleResponse(query, targetText, textFromResponse) {
+function handleStreamResponse(query, targetText, textFromResponse) {
     if (textFromResponse !== '[DONE]') {
         try {
             const dataObj = JSON.parse(textFromResponse);
@@ -133,7 +135,7 @@ function handleResponse(query, targetText, textFromResponse) {
                 });
             }
         } catch (err) {
-            handleError(query, {
+            handleGeneralError(query, {
                 type: err.type || "param",
                 message: err.message || "Failed to parse JSON",
                 addition: err.addition,
@@ -144,22 +146,66 @@ function handleResponse(query, targetText, textFromResponse) {
 }
 
 /**
+ * @param {Bob.TranslateQuery} query
+ * @param {Bob.HttpResponse} result
+ * @returns {void}
+*/
+function handleGeneralResponse( query, result) {
+    const { choices } = result.data;
+
+    if (!choices || choices.length === 0) {
+        handleGeneralError(query, {
+            type: "api",
+            message: "接口未返回结果",
+            addition: JSON.stringify(result),
+        });
+        return;
+    }
+
+    let targetText = choices[0].message.content.trim();
+
+    // 使用正则表达式删除字符串开头和结尾的特殊字符
+    targetText = targetText.replace(/^(『|「|"|“)|(』|」|"|”)$/g, "");
+
+    // 判断并删除字符串末尾的 `" =>`
+    if (targetText.endsWith('" =>')) {
+        targetText = targetText.slice(0, -4);
+    }
+
+    query.onCompletion({
+        result: {
+            from: query.detectFrom,
+            to: query.detectTo,
+            toParagraphs: targetText.split("\n"),
+        },
+    });
+}
+
+/**
  * @type {Bob.Translate}
  */
 function translate(query) {
     if (!lang.langMap.get(query.detectTo)) {
-        handleError(query, {
+        handleGeneralError(query, {
             type: "unsupportLanguage",
             message: "不支持该语种",
             addition: "不支持该语种",
         });
     }
 
-    const { model, customModel, apiKeys, apiVersion, apiUrl, deploymentName } = $option;
+    const { 
+        apiKeys, 
+        apiUrl, 
+        apiVersion, 
+        customModel, 
+        deploymentName,
+        model,
+        stream,
+    } = $option;
 
     const isCustomModelRequired = model === "custom";
     if (isCustomModelRequired && !customModel) {
-        handleError(query, {
+        handleGeneralError(query, {
             type: "param",
             message: "配置错误 - 请确保您在插件配置中填入了正确的自定义模型名称",
             addition: "请在插件配置中填写自定义模型名称",
@@ -167,7 +213,7 @@ function translate(query) {
     }
 
     if (!apiKeys) {
-        handleError(query, {
+        handleGeneralError(query, {
             type: "secretKey",
             message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
             addition: "请在插件配置中填写 API Keys",
@@ -187,7 +233,7 @@ function translate(query) {
         if (deploymentName) {
             apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions${apiVersionQuery}`;
         } else {
-            handleError(query,{
+            handleGeneralError(query,{
                 type: "secretKey",
                 message: "配置错误 - 未填写 Deployment Name",
                 addition: "请在插件配置中填写 Deployment Name",
@@ -198,59 +244,76 @@ function translate(query) {
 
     const header = buildHeader(isAzureServiceProvider, apiKey);
     const body = buildRequestBody(modelValue, query);
-    
 
     let targetText = ""; // 初始化拼接结果变量
     let buffer = ""; // 新增 buffer 变量
     (async () => {
-        await $http.streamRequest({
-            method: "POST",
-            url: baseUrl + apiUrlPath,
-            header,
-            body,
-            cancelSignal: query.cancelSignal,
-            streamHandler: (streamData) => {
-                if (streamData.text?.includes("Invalid token")) {
-                    handleError(query, {
-                        type: "secretKey",
-                        message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
-                        addition: "请在插件配置中填写正确的 API Keys",
-                        troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html"
-                    });
-                } else if (streamData.text !== undefined) {
-                    // 将新的数据添加到缓冲变量中
-                    buffer += streamData.text;
-                    // 检查缓冲变量是否包含一个完整的消息
-                    while (true) {
-                        const match = buffer.match(/data: (.*?})\n/);
-                        if (match) {
-                            // 如果是一个完整的消息，处理它并从缓冲变量中移除
-                            const textFromResponse = match[1].trim();
-                            targetText = handleResponse(query, targetText, textFromResponse);
-                            buffer = buffer.slice(match[0].length);
-                        } else {
-                            // 如果没有完整的消息，等待更多的数据
-                            break;
+        if (stream) {
+            await $http.streamRequest({
+                method: "POST",
+                url: baseUrl + apiUrlPath,
+                header,
+                body: {
+                    ...body,
+                    stream: true,
+                },
+                cancelSignal: query.cancelSignal,
+                streamHandler: (streamData) => {
+                    if (streamData.text?.includes("Invalid token")) {
+                        handleGeneralError(query, {
+                            type: "secretKey",
+                            message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
+                            addition: "请在插件配置中填写正确的 API Keys",
+                            troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html"
+                        });
+                    } else if (streamData.text !== undefined) {
+                        // 将新的数据添加到缓冲变量中
+                        buffer += streamData.text;
+                        // 检查缓冲变量是否包含一个完整的消息
+                        while (true) {
+                            const match = buffer.match(/data: (.*?})\n/);
+                            if (match) {
+                                // 如果是一个完整的消息，处理它并从缓冲变量中移除
+                                const textFromResponse = match[1].trim();
+                                targetText = handleStreamResponse(query, targetText, textFromResponse);
+                                buffer = buffer.slice(match[0].length);
+                            } else {
+                                // 如果没有完整的消息，等待更多的数据
+                                break;
+                            }
                         }
                     }
+                },
+                handler: (result) => {
+                    if (result.response.statusCode >= 400) {
+                        handleGeneralError(query, result);
+                    } else {
+                        query.onCompletion({
+                            result: {
+                                from: query.detectFrom,
+                                to: query.detectTo,
+                                toParagraphs: [targetText],
+                            },
+                        });
+                    }
                 }
-            },
-            handler: (result) => {
-                if (result.response.statusCode >= 400) {
-                    handleError(query, result);
-                } else {
-                    query.onCompletion({
-                        result: {
-                            from: query.detectFrom,
-                            to: query.detectTo,
-                            toParagraphs: [targetText],
-                        },
-                    });
-                }
+            });
+        } else {
+            const result = await $http.request({
+                method: "POST",
+                url: baseUrl + apiUrlPath,
+                header,
+                body,
+            });
+    
+            if (result.error) {
+                handleGeneralError(query, result);
+            } else {
+                handleGeneralResponse(query, result);
             }
-        });
+        }
     })().catch((err) => {
-        handleError(query, err);
+        handleGeneralError(query, err);
     });
 }
 

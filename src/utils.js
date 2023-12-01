@@ -41,7 +41,7 @@ function getApiKey(apiKeys) {
  * @param {Bob.TranslateQuery} query
  * @param {Bob.ServiceError | Bob.HttpResponse} error
  */
-function handleError(query, error) {
+function handleGeneralError(query, error) {
   if ('response' in error) {
       // 处理 HTTP 响应错误
       const { statusCode } = error.response;
@@ -96,6 +96,6 @@ function replacePromptKeywords(prompt, query) {
 exports.buildHeader = buildHeader;
 exports.ensureHttpsAndNoTrailingSlash = ensureHttpsAndNoTrailingSlash;
 exports.getApiKey = getApiKey;
-exports.handleError = handleError;
+exports.handleGeneralError = handleGeneralError;
 exports.handleValidateError = handleValidateError;
 exports.replacePromptKeywords = replacePromptKeywords;

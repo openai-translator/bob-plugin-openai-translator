@@ -151,6 +151,22 @@
           "$targetLang"
         ]
       }
+    },
+    {
+      "identifier": "stream",
+      "type": "menu",
+      "title": "流式输出",
+      "defaultValue": "1",
+      "menuValues": [
+        {
+          "title": "Enable",
+          "value": "1"
+        },
+        {
+          "title": "Disable",
+          "value": ""
+        }
+      ]
     }
   ]
 }
