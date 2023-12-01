@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.2.0",
+      "desc": "Added Custom API Key Validation and Stream Output Settings",
+      "sha256": "f34651fdead53927d366af2f0968c2d78b5f96992a480256adf249fc1f6fb612",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.0/openai-translator-2.2.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.1.3",
       "desc": "Simplify JSON parsing and response handling in the streaming process.",
       "sha256": "526074b41a5296f2b0cd450ecb6ce726c5dab611f6f5de44cdc80eb4e2bfcf94",
