@@ -152,6 +152,8 @@ declare namespace Bob {
   type CompletionError = { error: ServiceError };
   type Completion = (args: completionResult | CompletionError) => void;
   type HandleStream = (args: completionResult) => void;
+  type ValidateCompletion = (args: { result: boolean, error?: ServiceError }) => void;
+  type PluginValidate = (completion: ValidateCompletion) => void;
   interface TranslateQuery {
     text: string; // 需要翻译的文本
     from: Language; // 用户选中的源语种标准码
@@ -337,7 +339,8 @@ declare namespace Bob {
   interface ServiceError {
     type: ServiceErrorType; // 错误类型
     message: string; // 错误描述，用于展示给用户看
-    addtion: string; // 附加信息，可以是任何可 json 序列化的数据类型，用于 debug
+    addition?: string; // 附加信息，可以是任何可 json 序列化的数据类型，用于 debug
+    troubleshootingLink?: string; // 附加的故障排除链接，用于指导用户解决问题
   }
   enum ServiceErrorEnum {
     unknown = '未知错误',
@@ -422,9 +425,3 @@ declare var $file: Bob.File;
 declare var $signal: {
   new: () => Bob.Signal;
 };
-
-
-declare function supportLanguages(): Bob.supportLanguages;
-declare function translate(query: Bob.TranslateQuery): void;
-declare function ocr(query: Bob.OcrQuery, completion: Bob.Completion): void;
-declare function tts(query: Bob.TTSQuery, completion: Bob.Completion): void;
