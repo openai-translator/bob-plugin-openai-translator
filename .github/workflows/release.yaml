@@ -40,8 +40,11 @@ jobs:
       - run: git checkout -- src/
 
       - name: Update appcast.json
+        env:
+          VERSION: ${{ steps.get_version.outputs.version-without-v }}
+          MESSAGE: ${{ steps.tag.outputs.message }}
         run: |
-          python3 scripts/update_release.py ${{ steps.get_version.outputs.version-without-v }} '${{ steps.tag.outputs.message }}'
+          python3 scripts/update_release.py "$VERSION" "$MESSAGE"
       
       - name: Commit files
         run: |
