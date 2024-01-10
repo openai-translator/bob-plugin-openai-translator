@@ -326,7 +326,7 @@ function supportLanguages() {
  * @type {Bob.PluginValidate}
  */
 function pluginValidate(completion) {
-    const { apiKeys, apiUrl, deploymentName } = $option;
+    const { apiKeys, apiUrl, apiVersion, deploymentName } = $option;
     if (!apiKeys) {
         handleValidateError(completion, {
             type: "secretKey",
@@ -338,46 +338,78 @@ function pluginValidate(completion) {
     }
 
     const apiKey = getApiKey(apiKeys);
-
+    const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-03-15-preview";
     const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
     let apiUrlPath = baseUrl.includes("gateway.ai.cloudflare.com") ? "/models" : "/v1/models";
 
     const isAzureServiceProvider = apiUrl.includes("openai.azure.com");
-    if (isAzureServiceProvider && !deploymentName) {
-        handleValidateError(completion, {
-            type: "secretKey",
-            message: "配置错误 - 未填写 Deployment Name",
-            addition: "请在插件配置中填写 Deployment Name",
-            troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
-        });
-        return;
+    if (isAzureServiceProvider) {
+        if (!deploymentName) {
+            handleValidateError(completion, {
+                type: "secretKey",
+                message: "配置错误 - 未填写 Deployment Name",
+                addition: "请在插件配置中填写 Deployment Name",
+                troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
+            });
+            return;
+        }
+        apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions${apiVersionQuery}`;
     }
 
     const header = buildHeader(isAzureServiceProvider, apiKey);
     (async () => {
-        $http.request({
-            method: "GET",
-            url: baseUrl+apiUrlPath,
-            header: header,
-            handler: function(resp) {
-                if (resp.data.error) {
-                    const { statusCode } = resp.response;
-                    const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
-                    handleValidateError(completion, {
-                        type: reason,
-                        message: resp.data.error,
-                        troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html"
-                    });
-                    return;
+        if (isAzureServiceProvider) {
+            $http.request({
+                method: "POST",
+                url: baseUrl+apiUrlPath,
+                header: header,
+                body: {
+                    prompt: "Once upon a time",
+                    max_tokens: 5
+                },
+                handler: function(resp) {
+                    if (resp.data.error) {
+                        const { statusCode } = resp.response;
+                        const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
+                        handleValidateError(completion, {
+                            type: reason,
+                            message: resp.data.error,
+                            troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
+                        });
+                        return;
+                    }
+                    if (resp.data.choices) {
+                        completion({
+                            result: true,
+                        })
+                    }
                 }
-                const modelList = resp.data
-                if (modelList.data?.length > 0) {
-                    completion({
-                        result: true,
-                    })
+            });
+        } else {
+            $http.request({
+                method: "GET",
+                url: baseUrl+apiUrlPath,
+                header: header,
+                handler: function(resp) {
+                    if (resp.data.error) {
+                        const { statusCode } = resp.response;
+                        const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
+                        handleValidateError(completion, {
+                            type: reason,
+                            message: resp.data.error,
+                            troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html"
+                        });
+                        return;
+                    }
+                    const modelList = resp.data
+                    if (modelList.data?.length > 0) {
+                        completion({
+                            result: true,
+                        })
+                    }
                 }
-            }
-        });
+            });
+        }
     })().catch((err) => {
         handleValidateError(completion, err);
     });
