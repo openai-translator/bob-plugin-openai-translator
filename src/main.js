@@ -338,7 +338,6 @@ function pluginValidate(completion) {
     }
 
     const apiKey = getApiKey(apiKeys);
-    const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-03-15-preview";
     const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
     let apiUrlPath = baseUrl.includes("gateway.ai.cloudflare.com") ? "/models" : "/v1/models";
 
@@ -353,7 +352,7 @@ function pluginValidate(completion) {
             });
             return;
         }
-        apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions${apiVersionQuery}`;
+        apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions?api-version=2023-05-15`;
     }
 
     const header = buildHeader(isAzureServiceProvider, apiKey);
@@ -378,7 +377,7 @@ function pluginValidate(completion) {
                         });
                         return;
                     }
-                    if (resp.data.choices) {
+                    if (resp.data.choices.length > 0) {
                         completion({
                             result: true,
                         })
