@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.2.2",
+      "desc": "Update API version query in Azure OpenAI key validation",
+      "sha256": "f7b0b7a756d54b9ee97889ddde16e1d332e6382e49d6c75096acdd09a40e9f57",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.2/openai-translator-2.2.2.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.2.0",
       "desc": "Added Custom API Key Validation and Stream Output Settings",
       "sha256": "f34651fdead53927d366af2f0968c2d78b5f96992a480256adf249fc1f6fb612",
