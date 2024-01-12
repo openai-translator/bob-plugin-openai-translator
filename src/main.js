@@ -363,7 +363,13 @@ function pluginValidate(completion) {
                 url: baseUrl+apiUrlPath,
                 header: header,
                 body: {
-                    prompt: "Once upon a time",
+                    "messages":[{
+                        "content": "You are a helpful assistant.",
+                        "role": "system",
+                    }, {
+                        "content": "Test connection.",
+                        "role": "user",
+                    }],
                     max_tokens: 5
                 },
                 handler: function(resp) {
