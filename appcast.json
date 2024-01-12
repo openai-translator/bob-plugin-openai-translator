@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.2.3",
+      "desc": "Replace Completions with Chat in Azure OpenAI key validation",
+      "sha256": "1b072b4ee23cec060e748d8e9cc5cea4345246de5661d09c2ad2d714d6e0a9fa",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.3/openai-translator-2.2.3.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.2.2",
       "desc": "Update API version query in Azure OpenAI key validation",
       "sha256": "f7b0b7a756d54b9ee97889ddde16e1d332e6382e49d6c75096acdd09a40e9f57",
