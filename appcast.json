@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.2.4",
+      "desc": "Update 429 error code message",
+      "sha256": "8f81063cc9962b01f30b0f5f0e5c481a235b55e695dc29d5ce7618611298ac5e",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.4/openai-translator-2.2.4.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.2.3",
       "desc": "Replace Completions with Chat in Azure OpenAI key validation",
       "sha256": "1b072b4ee23cec060e748d8e9cc5cea4345246de5661d09c2ad2d714d6e0a9fa",
