@@ -26,7 +26,7 @@ var HttpErrorCodes = {
   "425": "Too Early",
   "426": "Upgrade Required",
   "428": "Precondition Required",
-  "429": "请求过于频繁，请慢一点。OpenAI 对您在 API 上的请求实施速率限制。这些限制适用于每分钟 tokens 数、每分钟请求数（某些情况下是每天请求数）。访问 https://platform.openai.com/account/rate-limits 了解更多信息，或参考 OpenAI 模型的默认速率限制",
+  "429": "请求过于频繁，请慢一点。OpenAI 对您在 API 上的请求实施速率限制。或是您的 API credits 已超支，需要充值。好消息是您仍然可以使用官方的 Web 端聊天页面",
   "431": "Request Header Fields Too Large",
   "451": "Unavailable For Legal Reasons",
   "500": "Internal Server Error",
