@@ -53,15 +53,20 @@ To use the ChatGPT API, go to Bob's settings page and change the plugin model to
 2. Download this plugin: [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases/latest)
 
 3. Install this plugin:
-  ![Installation Steps](https://user-images.githubusercontent.com/1206493/219937302-6be8d362-1520-4906-b8d6-284d01012837.gif)
+
+    ![Installation Steps](https://user-images.githubusercontent.com/1206493/219937302-6be8d362-1520-4906-b8d6-284d01012837.gif)
 
 4. Get your API KEY from [OpenAI](https://platform.openai.com/account/api-keys)
 
 5. Enter the API KEY in Bob Preferences > Services > This plugin configuration interface's API KEY input box:
-  ![Settings Steps](https://user-images.githubusercontent.com/1206493/219937398-8e5bb8d2-7dc8-404a-96e7-a937e08c939f.gif)
+    - If you would like to learn more about other settings, please refer to the [Configuration Manual](./docs/configuration_manual_EN.md)
+
+      ![Settings Steps](https://user-images.githubusercontent.com/1206493/219937398-8e5bb8d2-7dc8-404a-96e7-a937e08c939f.gif)
+
 
 6. Install [PopClip](https://bobtranslate.com/guide/integration/popclip.html) for highlighted text mouse proximity floating icon:
-  ![PopClip](https://user-images.githubusercontent.com/1206493/219933584-d0c2b6cf-8fa0-40a6-858f-8f4bf05f38ef.gif)
+
+    ![PopClip](https://user-images.githubusercontent.com/1206493/219933584-d0c2b6cf-8fa0-40a6-858f-8f4bf05f38ef.gif)
 
 ## Contributing
 

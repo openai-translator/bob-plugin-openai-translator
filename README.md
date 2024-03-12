@@ -51,15 +51,19 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI �
 2. 下载此插件: [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases/latest)
 
 3. 安装此插件:
-  ![安装步骤](https://user-images.githubusercontent.com/1206493/219937302-6be8d362-1520-4906-b8d6-284d01012837.gif)
+
+    ![安装步骤](https://user-images.githubusercontent.com/1206493/219937302-6be8d362-1520-4906-b8d6-284d01012837.gif)
 
 4. 去 [OpenAI](https://platform.openai.com/account/api-keys) 获取你的 API KEY
 
 5. 把 API KEY 填入 Bob 偏好设置 > 服务 > 此插件配置界面的 API KEY 的输入框中
-  ![设置步骤](https://user-images.githubusercontent.com/1206493/219937398-8e5bb8d2-7dc8-404a-96e7-a937e08c939f.gif)
+    - 如果你想了解关于其他设置的更多信息，请查看[配置手册](./docs/configuration_manual_CN.md)
+    
+      ![设置步骤](https://user-images.githubusercontent.com/1206493/219937398-8e5bb8d2-7dc8-404a-96e7-a937e08c939f.gif)
 
 6. 安装 [PopClip](https://bobtranslate.com/guide/integration/popclip.html) 实现划词后鼠标附近出现悬浮图标
-  ![PopClip](https://user-images.githubusercontent.com/1206493/219933584-d0c2b6cf-8fa0-40a6-858f-8f4bf05f38ef.gif)
+
+    ![PopClip](https://user-images.githubusercontent.com/1206493/219933584-d0c2b6cf-8fa0-40a6-858f-8f4bf05f38ef.gif)
 
 
 ## 贡献
