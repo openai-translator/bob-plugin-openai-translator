@@ -9,6 +9,11 @@
 
 - 可选项
 - 默认值: `https://api.openai.com`
+- 说明
+  - 自定义 API URL 可以解决服务不稳定以及 IP 被封禁的问题，切换到反向代理服务来提高稳定性，并保护我们的 IP 地址不被 OpenAI 封禁
+  - 或者是使用一些云服务商提供的 API 网关服务，比如 Cloudflare AI Gateway，除了可以代理 OpenAI 的 API 请求外，还额外增加了缓存、调用分析以及日志管理等功能
+    - 将 API URL 设置为 `https://gateway.ai.cloudflare.com/v1/${ACCOUNT_TAG}/${GATEWAY}/openai` 即可体验
+    - 更多信息请参阅 [Cloudflare AI Gateway 官方文档](https://developers.cloudflare.com/ai-gateway/)
 
 ### Dep. Name
 

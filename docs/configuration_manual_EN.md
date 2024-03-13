@@ -9,6 +9,11 @@
 
 - Optional
 - Default value: `https://api.openai.com`
+- Description
+  - Customizing the API URL can address issues of service instability and IP bans by switching to a reverse proxy service to enhance stability and protect our IP address from being banned by OpenAI.
+  - Alternatively, using API gateway services provided by cloud vendors, such as Cloudflare AI Gateway, not only proxies OpenAI API requests but also adds extra features like caching, call analytics, and log management.
+    - Set the API URL to `https://gateway.ai.cloudflare.com/v1/${ACCOUNT_TAG}/${GATEWAY}/openai` to experience it.
+    - For more information, please refer to [Cloudflare AI Gateway Official Documentation](https://developers.cloudflare.com/ai-gateway/).
 
 ### Dep. Name
 
