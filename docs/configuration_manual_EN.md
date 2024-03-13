@@ -9,6 +9,8 @@
 
 - Optional
 - Default value: `https://api.openai.com`
+- Description
+  - If using Cloudflare AI Gateway, you need to switch the API Endpoint to OpenAI. e.g. https://gateway.ai.cloudflare.com/v1/xxx/YOUR_ENDPOINT_NAME/openai.
 
 ### Dep. Name
 

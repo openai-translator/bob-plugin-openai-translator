@@ -9,6 +9,8 @@
 
 - 可选项
 - 默认值: `https://api.openai.com`
+- 说明
+  - 如果使用 Cloudflare AI Gateway，需要将 API Endpoint 切换为 OpenAI，示例：https://gateway.ai.cloudflare.com/v1/xxx/YOUR_ENDPOINT_NAME/openai 。
 
 ### Dep. Name
 
