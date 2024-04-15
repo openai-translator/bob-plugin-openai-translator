@@ -77,7 +77,7 @@ function generatePrompts(query) {
  * }}
 */
 function buildRequestBody(model, query) {
-    let { customSystemPrompt, customUserPrompt } = $option;
+    let { customSystemPrompt, customUserPrompt, temperature } = $option;
     const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
 
     customSystemPrompt = replacePromptKeywords(customSystemPrompt, query);
@@ -86,9 +86,11 @@ function buildRequestBody(model, query) {
     const systemPrompt = customSystemPrompt || generatedSystemPrompt;
     const userPrompt = customUserPrompt || generatedUserPrompt;
 
+    const modelTemperature = Number(temperature || 0.2);
+
     const standardBody = {
         model: model,
-        temperature: 0.2,
+        temperature: modelTemperature,
         max_tokens: 1000,
         top_p: 1,
         frequency_penalty: 1,
