@@ -167,6 +167,17 @@
           "value": ""
         }
       ]
+    },
+    {
+      "identifier": "temperature",
+      "type": "text",
+      "title": "温度",
+      "defaultValue": "0.2",
+      "desc": "可选项。温度值越高，生成的文本越随机。默认值为 0.2",
+      "textConfig": {
+        "type": "visible",
+        "placeholderText": "0.2"
+      }
     }
   ]
 }
