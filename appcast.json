@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.3.0",
+      "desc": "Add temperature configuration",
+      "sha256": "b82396b6f6c72e946325388ec0c93a683d5c1330a7635d7e5149d16c608533be",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.3.0/openai-translator-2.3.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.2.4",
       "desc": "Update 429 error code message",
       "sha256": "8f81063cc9962b01f30b0f5f0e5c481a235b55e695dc29d5ce7618611298ac5e",
