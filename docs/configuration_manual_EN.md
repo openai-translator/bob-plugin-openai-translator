@@ -70,3 +70,11 @@
 - Description
   - Customize User Prompt, filling this will override the default User Prompt
   - Can use the same variables as in the system command
+
+### Temperature
+
+- Optional
+- Default value: `0.2`
+- Description
+  - The higher the temperature value, the more random and creative the generated text will be.
+  - For translation tasks, it is recommended to set around `0.2`; for polishing tasks, it can be appropriately increased. If accuracy is highly required, it can be set to `0`.
