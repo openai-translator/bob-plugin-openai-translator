@@ -86,7 +86,7 @@ function buildRequestBody(model, query) {
     const systemPrompt = customSystemPrompt || generatedSystemPrompt;
     const userPrompt = customUserPrompt || generatedUserPrompt;
 
-    const modelTemperature = Number(temperature || 0.2);
+    const modelTemperature = Number(temperature ?? 0.2);
 
     const standardBody = {
         model: model,
