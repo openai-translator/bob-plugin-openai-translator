@@ -87,6 +87,10 @@
           "value": "gpt-4"
         },
         {
+          "title": "gpt-4o",
+          "value": "gpt-4o"
+        },
+        {
           "title": "gpt-4-0314",
           "value": "gpt-4-0314"
         },
