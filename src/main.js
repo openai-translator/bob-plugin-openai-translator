@@ -328,7 +328,7 @@ function supportLanguages() {
  * @type {Bob.PluginValidate}
  */
 function pluginValidate(completion) {
-    const { apiKeys, apiUrl, apiVersion, deploymentName } = $option;
+    const { apiKeys, apiUrl, deploymentName } = $option;
     if (!apiKeys) {
         handleValidateError(completion, {
             type: "secretKey",

@@ -34,7 +34,6 @@
       "identifier": "apiVersion",
       "type": "text",
       "title": "API Version",
-      "defaultValue": "2023-03-15-preview",
       "desc": "可选项。此值为在使用 Azure 模型时采用的 Chat completions API 版本，不支持 2023-03-15-preview 之前的版本",
       "textConfig": {
         "type": "visible",
@@ -59,56 +58,28 @@
       "defaultValue": "gpt-3.5-turbo",
       "menuValues": [
         {
-          "title": "custom",
+          "title": "Custom",
           "value": "custom"
         },
         {
-          "title": "gpt-3.5-turbo-1106 (recommended)",
-          "value": "gpt-3.5-turbo-1106"
-        },
-        {
-          "title": "gpt-3.5-turbo-0613",
-          "value": "gpt-3.5-turbo-0613"
-        },
-        {
-          "title": "gpt-3.5-turbo-0301",
-          "value": "gpt-3.5-turbo-0301"
-        },
-        {
-          "title": "gpt-3.5-turbo-16k",
-          "value": "gpt-3.5-turbo-16k"
-        },
-        {
-          "title": "gpt-3.5-turbo",
+          "title": "GPT-3.5 Turbo",
           "value": "gpt-3.5-turbo"
         },
         {
-          "title": "gpt-4",
+          "title": "GPT-4",
           "value": "gpt-4"
         },
         {
-          "title": "gpt-4o",
+          "title": "GPT-4o",
           "value": "gpt-4o"
         },
         {
-          "title": "gpt-4-0314",
-          "value": "gpt-4-0314"
+          "title": "GPT-4 Turbo",
+          "value": "gpt-4-turbo"
         },
         {
-          "title": "gpt-4-0613",
-          "value": "gpt-4-0613"
-        },
-        {
-          "title": "gpt-4-32k",
+          "title": "GPT-4 32K",
           "value": "gpt-4-32k"
-        },
-        {
-          "title": "gpt-4-32k-0314",
-          "value": "gpt-4-32k-0314"
-        },
-        {
-          "title": "gpt-4-32k-0613",
-          "value": "gpt-4-32k-0613"
         }
       ]
     },
@@ -116,7 +87,7 @@
       "identifier": "customModel",
       "type": "text",
       "title": "自定义模型",
-      "desc": "可选项。当 Model 选择为 custom 时，此项为必填项。请填写有效的模型名称",
+      "desc": "可选项。当 Model 选择 Custom 时，此项为必填项。请填写有效的模型名称",
       "textConfig": {
         "type": "visible",
         "placeholderText": "gpt-3.5-turbo"
