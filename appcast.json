@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.3.2",
+      "desc": "Add support for GPT-4o mini",
+      "sha256": "8990a720c38c8e23f91cacc6e320845c27f12abffefe95ca51472507ff28a7d2",
+      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.3.2/openai-translator-2.3.2.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.3.1",
       "desc": "Added new models to provide more options for users",
       "sha256": "fd7e6da0062d907d27aaf932ab5c93c5daac3056eea68be2fe960390aa7e7c14",
