@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "2.4.2",
+      "desc": "Refactor OpenAI Translator Bob Plugin to improve performance and maintainability",
+      "sha256": "0e928eb70da9e7b421ef5af46f15d3330136bc4f8edd1be3db4cc0de90c1467f",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.4.2/openai-translator-2.4.2.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.3.2",
       "desc": "Add support for GPT-4o mini",
       "sha256": "8990a720c38c8e23f91cacc6e320845c27f12abffefe95ca51472507ff28a7d2",
