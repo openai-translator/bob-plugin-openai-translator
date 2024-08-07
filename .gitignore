@@ -1,1 +1,4 @@
 *.bobplugin
+*.log*
+dist
+node_modules

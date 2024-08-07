@@ -1,20 +1,20 @@
 <h4 align="right">
-  <a href="https://github.com/yetone/bob-plugin-openai-translator/blob/main/README.md">简体中文</a> | <strong>English</strong>
+  <a href="https://github.com/openai-translator/bob-plugin-openai-translator/blob/main/README.md">简体中文</a> | <strong>English</strong>
 </h4>
 
 <div>
   <h1 align="center">OpenAI Translator Bob Plugin</h1>
   <p align="center">
-    <a href="https://github.com/yetone/bob-plugin-openai-translator/releases" target="_blank">
-        <img src="https://github.com/yetone/bob-plugin-openai-translator/actions/workflows/release.yaml/badge.svg" alt="release">
+    <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases" target="_blank">
+        <img src="https://github.com/openai-translator/bob-plugin-openai-translator/actions/workflows/release.yaml/badge.svg" alt="release">
     </a>
-    <a href="https://github.com/yetone/bob-plugin-openai-translator/releases">
-        <img alt="GitHub Repo stars" src="https://img.shields.io/github/Stars/yetone/bob-plugin-openai-translator?style=flat">
+    <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases">
+        <img alt="GitHub Repo stars" src="https://img.shields.io/github/Stars/openai-translator/bob-plugin-openai-translator?style=flat">
     </a>
-    <a href="https://github.com/yetone/bob-plugin-openai-translator/releases">
+    <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases">
         <img alt="GitHub Repo stars" src="https://img.shields.io/badge/OpenAI-Bob-brightgreen?style=flat">
     </a>
-    <a href="https://github.com/yetone/bob-plugin-openai-translator/releases">
+    <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases">
         <img alt="GitHub Repo stars" src="https://img.shields.io/badge/Langurage-JavaScript-brightgreen?style=flat&color=blue">
     </a>
   </p>
@@ -22,7 +22,7 @@
 
 > **Note**
 >
-> Important update: Non-macOS users can use my browser extension based on ChatGPT API for word translation [openai-translator](https://github.com/yetone/openai-translator) to solve urgent needs.
+> Important update: Non-macOS users can use my browser extension based on OpenAI API for word translation [openai-translator](https://github.com/yetone/openai-translator) to solve urgent needs.
 
 
 ## Demonstration
@@ -36,21 +36,21 @@ ChatGPT showcases the greatness of GPT models, so I have implemented the Bob tra
 
 ### Polishing Feature
 
-This plugin supports polishing sentences and modifying grammar using the ChatGPT API. To do so, just set the target language to be the same as the source language. It's a comprehensive alternative to Grammarly! And in theory, any language can be polished, not just English.
+This plugin supports polishing sentences and modifying grammar using the OpenAI API. To do so, just set the target language to be the same as the source language. It's a comprehensive alternative to Grammarly! And in theory, any language can be polished, not just English.
 
 If you don't like combining translation functionality and text polishing, a separate plugin specifically for text polishing and grammar correction is available: [bob-plugin-openai-polisher](https://github.com/yetone/bob-plugin-openai-polisher). This polishing plugin has more advanced polishing features, such as explaining the modification reasons, etc.
 
 ### Language Model
 
-To use the ChatGPT API, go to Bob's settings page and change the plugin model to `gpt-3.5-turbo-0301` or `gpt-3.5-turbo`:
+To use the OpenAI API, go to Bob's settings page and change the plugin model to `gpt-3.5-turbo-0301` or `gpt-3.5-turbo`:
 
-![how to use ChatGPT API](https://user-images.githubusercontent.com/1206493/222339607-d8f05042-4b65-495c-af58-849891de7434.png)
+![how to use OpenAI API](https://user-images.githubusercontent.com/1206493/222339607-d8f05042-4b65-495c-af58-849891de7434.png)
 
 ## Usage
 
 1. Install [Bob](https://bobtranslate.com/guide/#%E5%AE%89%E8%A3%85) (version >= 0.50), a macOS translation and OCR software
 
-2. Download this plugin: [openai-translator.bobplugin](https://github.com/yetone/bob-plugin-openai-translator/releases/latest)
+2. Download this plugin: [openai-translator.bobplugin](https://github.com/openai-translator/bob-plugin-openai-translator/releases/latest)
 
 3. Install this plugin:
 

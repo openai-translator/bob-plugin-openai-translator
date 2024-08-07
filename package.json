@@ -1,0 +1,29 @@
+{
+  "name": "bob-plugin-openai-translator",
+  "version": "1.0.0",
+  "description": "基于 OpenAI API 的文本翻译、文本润色、语法纠错 Bob 插件，让我们一起迎接不需要巴别塔的新时代！",
+  "type": "module",
+  "license": "CC BY-NC-SA 4.0",
+  "main": "dist/main.js",
+  "keywords": [
+    "bob-plugin",
+    "openai",
+    "translator"
+  ],
+  "homepage": "https://github.com/openai-translator/bob-plugin-openai-translator",
+  "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin typescript"
+  },
+  "devDependencies": {
+    "typescript": "5.5.4",
+    "@rollup/plugin-terser": "0.4.4",
+    "@rollup/plugin-typescript": "11.1.6",
+    "rollup": "4.20.0",
+    "rollup-plugin-copy": "3.5.0",
+    "tslib": "2.6.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.6.0+sha512.38dc6fba8dba35b39340b9700112c2fe1e12f10b17134715a4aa98ccf7bb035e76fd981cf0bb384dfa98f8d6af5481c2bef2f4266a24bfa20c34eb7147ce0b5e"
+}

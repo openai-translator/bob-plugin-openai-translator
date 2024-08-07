@@ -1,9 +1,14 @@
-name: Release
+name: Bump Version and Release
 
 on:
-  push:
-    tags: [ v\d+\.\d+\.\d+ ]
-
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tag version (e.g., 1.0.0 or v1.0.0)'
+        required: true
+      message:
+        description: 'Tag message'
+        required: true
 
 jobs:
   release:
@@ -14,56 +19,77 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PAT }}
 
-      - name: Get version
-        id: get_version
-        uses: battila7/get-version-action@v2
-
-      - name: Get tag message
-        id: tag
+      - name: Set up Git
         run: |
-          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-          echo "message=$(git tag -l --format='%(contents:subject)' ${{ steps.get_version.outputs.version }})" >> $GITHUB_OUTPUT
+          git config --global user.name 'GitHub Actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Change version
+      - name: Determine tag version
+        id: determine_version
         run: |
-          OLD_VERSION=$(grep '"version":' src/info.json | awk -F\" '{print $4}')
-          sed -i "s/$OLD_VERSION/${{ steps.get_version.outputs.version-without-v }}/" src/info.json
+          VERSION="${{ github.event.inputs.version }}"
+          if [[ $VERSION != v* ]]; then
+            VERSION="v$VERSION"
+          fi
+          VERSION_NUMBER="${VERSION#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION_NUMBER=$VERSION_NUMBER" >> $GITHUB_ENV
+
+      - name: Update info.json
+        run: |
+          OLD_VERSION=$(grep '"version":' public/info.json | awk -F\" '{print $4}')
+          sed -i "s/$OLD_VERSION/${{ env.VERSION_NUMBER }}/" public/info.json
+
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - run: pnpm install
+      - run: pnpm run build
 
       - name: Package plugin
-        run: mkdir release && zip -j -r release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin ./src/*
-
-      - run: git checkout -- src/
+        run: |
+          zip -j -r dist/openai-translator-${{ env.VERSION_NUMBER }}.bobplugin ./dist/*
+          echo "Packaged file: dist/openai-translator-${{ env.VERSION_NUMBER }}.bobplugin"
 
       - name: Update appcast.json
         env:
-          VERSION: ${{ steps.get_version.outputs.version-without-v }}
-          MESSAGE: ${{ steps.tag.outputs.message }}
+          VERSION_NUMBER: ${{ env.VERSION_NUMBER }}
+          MESSAGE: ${{ github.event.inputs.message }}
         run: |
-          python3 scripts/update_release.py "$VERSION" "$MESSAGE"
-      
+          python3 scripts/update_appcast.py "$VERSION_NUMBER" "$MESSAGE"
+
       - name: Commit files
         run: |
-          git config --global user.name 'Bryan Lee'
-          git config --global user.email '38807139+liby@users.noreply.github.com'
-          git commit -am 'chore: update appcast.json and info.json'
+          git commit -a -m 'chore: update appcast.json and info.json'
+
+      - name: Create tag
+        env:
+          VERSION: ${{ env.VERSION }}
+          MESSAGE: ${{ github.event.inputs.message }}
+        run: |
+          git tag -a "$VERSION" -m "$MESSAGE"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT }}
+          tags: true
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
-          release_name: ${{ steps.get_version.outputs.version }}
+          release_name: ${{ env.VERSION }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
-          asset_name: openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
-          tag: ${{ github.ref }}
+          file: dist/openai-translator-${{ env.VERSION_NUMBER }}.bobplugin
+          asset_name: openai-translator-${{ env.VERSION_NUMBER }}.bobplugin
+          tag: ${{ env.VERSION }}
           overwrite: true
-          body: ${{ steps.tag.outputs.message }}
+          body: ${{ github.event.inputs.message }}
