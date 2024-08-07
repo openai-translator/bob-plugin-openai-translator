@@ -3,7 +3,6 @@ import hashlib
 import json
 from pathlib import Path
 
-
 def update_appcast(version, desc):
     release_file = Path(f'release/openai-translator-{version}.bobplugin')
     assert release_file.is_file(), 'Release file not exist'
@@ -14,7 +13,7 @@ def update_appcast(version, desc):
         'version': version,
         'desc': desc,
         'sha256': file_hash,
-        'url': f'https://github.com/yetone/bob-plugin-openai-translator/releases/download/v{version}/{release_file.name}',
+        'url': f'https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v{version}/{release_file.name}',
         'minBobVersion': '1.8.0'
     }
     appcast_file = Path('appcast.json')
@@ -28,7 +27,7 @@ def update_appcast(version, desc):
         json.dump(appcast, f, ensure_ascii=False, indent=2)
 
 def update_info_json(version):
-    info_file = Path('src/info.json')
+    info_file = Path('public/info.json')
     with open(info_file, 'r') as f:
         info = json.load(f)
     info['version'] = version

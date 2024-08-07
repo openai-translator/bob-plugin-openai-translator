@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags: [ v\d+\.\d+\.\d+ ]
-
+    tags:
+      - 'v*'
 
 jobs:
   release:
@@ -14,56 +14,30 @@ jobs:
       packages: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT }}
-
-      - name: Get version
-        id: get_version
-        uses: battila7/get-version-action@v2
-
-      - name: Get tag message
-        id: tag
-        run: |
-          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-          echo "message=$(git tag -l --format='%(contents:subject)' ${{ steps.get_version.outputs.version }})" >> $GITHUB_OUTPUT
-
-      - name: Change version
-        run: |
-          OLD_VERSION=$(grep '"version":' src/info.json | awk -F\" '{print $4}')
-          sed -i "s/$OLD_VERSION/${{ steps.get_version.outputs.version-without-v }}/" src/info.json
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm run build
 
       - name: Package plugin
-        run: mkdir release && zip -j -r release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin ./src/*
-
-      - run: git checkout -- src/
-
-      - name: Update appcast.json
-        env:
-          VERSION: ${{ steps.get_version.outputs.version-without-v }}
-          MESSAGE: ${{ steps.tag.outputs.message }}
         run: |
-          python3 scripts/update_release.py "$VERSION" "$MESSAGE"
-      
-      - name: Commit files
-        run: |
-          git config --global user.name 'Bryan Lee'
-          git config --global user.email '38807139+liby@users.noreply.github.com'
-          git commit -am 'chore: update appcast.json and info.json'
-
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT }}
+          VERSION="${GITHUB_REF##*/}"
+          mkdir release && zip -j -r release/openai-translator-${VERSION#v}.bobplugin ./dist/*
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
-          release_name: ${{ steps.get_version.outputs.version }}
+          release_name: ${{ github.ref_name }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: release/openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
-          asset_name: openai-translator-${{ steps.get_version.outputs.version-without-v }}.bobplugin
-          tag: ${{ github.ref }}
+          file: release/openai-translator-${GITHUB_REF_NAME#v}.bobplugin
+          asset_name: openai-translator-${GITHUB_REF_NAME#v}.bobplugin
+          tag: ${{ github.ref_name }}
           overwrite: true
-          body: ${{ steps.tag.outputs.message }}
+          body: ${{ github.event.inputs.message }}

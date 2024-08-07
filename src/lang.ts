@@ -1,4 +1,4 @@
-const supportLanguages = [
+export const supportLanguageList = [
   ["auto", "auto"],
   ["zh-Hans", "zh-CN"],
   ["zh-Hant", "zh-TW"],
@@ -114,10 +114,13 @@ const supportLanguages = [
   ["yi", "yi"],
   ["yo", "yo"],
   ["zu", "zu"],
-];
+] as const;
 
-exports.supportLanguages = supportLanguages;
-exports.langMap = new Map(supportLanguages.map(([key, value]) => [key, value]));
-exports.langMapReverse = new Map(
-  supportLanguages.map(([standardLang, lang]) => [lang, standardLang])
+export type Language = typeof supportLanguageList[number][0];
+
+export const langMap = new Map(supportLanguageList.map(([key, value]) => [key, value]));
+
+export const langMapReverse = new Map(
+  supportLanguageList.map(([standardLang, lang]) => [lang, standardLang])
 );
+

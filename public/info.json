@@ -6,8 +6,8 @@
   "summary": "GPT powered translator",
   "icon": "",
   "author": "yetone <yetoneful@gmail.com>",
-  "homepage": "https://github.com/yetone/bob-plugin-openai-translator",
-  "appcast": "https://raw.githubusercontent.com/yetone/bob-plugin-openai-translator/main/appcast.json",
+  "homepage": "https://github.com/openai-translator/bob-plugin-openai-translator",
+  "appcast": "https://raw.githubusercontent.com/openai-translator/bob-plugin-openai-translator/main/appcast.json",
   "minBobVersion": "1.8.0",
   "options": [
     {

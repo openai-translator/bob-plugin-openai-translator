@@ -1,9 +1,20 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
-    "outDir": "dist", 
-    "lib": ["ESNext", "DOM"],
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmitOnError": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "useDefineForClassFields": false,
   },
-  "exclude": ["node_modules", "**/node_modules/*", "dist/**"],
+  "exclude": [
+    "dist",
+    "node_modules",
+  ]
 }

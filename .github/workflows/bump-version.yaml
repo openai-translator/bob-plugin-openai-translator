@@ -1,0 +1,62 @@
+name: Bump Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tag version (e.g., 1.0.0 or v1.0.0)'
+        required: true
+      message:
+        description: 'Tag message'
+        required: true
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'GitHub Actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Determine tag version
+        id: determine_version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          if [[ $VERSION != v* ]]; then
+            VERSION="v$VERSION"
+          fi
+          echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Update appcast.json and info.json
+        env:
+          VERSION: ${{ env.version#v }}
+          MESSAGE: ${{ github.event.inputs.message }}
+        run: |
+          python3 scripts/update_release.py "$VERSION" "$MESSAGE"
+
+      - name: Commit files
+        run: |
+          git commit -a -m 'chore: update appcast.json and info.json'
+
+      - name: Create tag
+        env:
+          VERSION: ${{ env.version }}
+          MESSAGE: ${{ github.event.inputs.message }}
+        run: |
+          git tag -a "$VERSION" -m "$MESSAGE"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tags: true

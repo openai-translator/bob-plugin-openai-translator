@@ -8,9 +8,9 @@ body:
           value: |
             **非常感谢您的反馈！Thank you very much for your feedback!**
 
-            有关翻译错误的内容请附在此 [issue](https://github.com/yetone/bob-plugin-openai-translator/issues/30) 中。
+            有关翻译错误的内容请附在此 [issue](https://github.com/openai-translator/bob-plugin-openai-translator/issues/30) 中。
 
-            Please post any translation-related errors in this [issue](https://github.com/yetone/bob-plugin-openai-translator/issues/30).
+            Please post any translation-related errors in this [issue](https://github.com/openai-translator/bob-plugin-openai-translator/issues/30).
 
     - type: checkboxes
       attributes:
@@ -28,10 +28,10 @@ body:
       attributes:
           label: Please read README
           description: |
-            辛苦提 Bug 前，请确定是按照 README 中的 [使用方法](https://github.com/yetone/bob-plugin-openai-translator/tree/main#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95) 部分安装的。
-            
-            Before reporting bugs, please carefully read the [usage instructions]((https://github.com/yetone/bob-plugin-openai-translator/tree/main#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95) section in README
-            
+            辛苦提 Bug 前，请确定是按照 README 中的 [使用方法](https://github.com/openai-translator/bob-plugin-openai-translator/tree/main#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95) 部分安装的。
+
+            Before reporting bugs, please carefully read the [usage instructions]((https://github.com/openai-translator/bob-plugin-openai-translator/tree/main#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95) section in README
+
           options:
               - label: I have read the usage instructions section in README in detail.
                 required: true
@@ -40,7 +40,7 @@ body:
           label: Please check your network and OpenAI API quota
           description: |
             如果您遇到的报错是 Failed to fetch 或者 API quota exceed，则说明是网络问题或者 OpenAI API 使用量超过阈值，这些问题都与 OpenAI Translator Bob Plugin 无关，请自行解决。
-            
+
             If you encounter error messages such as 'Failed to fetch' or 'API quota exceed', it means there is a network issue or the usage limit of OpenAI API has been exceeded. These issues are not related to OpenAI Translator Bob Plugin, please resolve them on your own.
 
           options:
@@ -51,7 +51,7 @@ body:
           label: OpenAI Translator Bob Plugin version
           description: |
             请提供您正在使用的 OpenAI Translator Bob Plugin 的版本。
-            
+
             Please provide the version of OpenAI Translator Bob Plugin you are using. For example, `v0.1.0`.
       validations:
           required: true
@@ -60,7 +60,7 @@ body:
           label: 系统版本 | System version
           description: |
             请提供您正在使用的系统版本。
-            
+
             Please provide the version of the System you are using. For example, `macOS 11.2.3`.
       validations:
           required: true
@@ -78,7 +78,7 @@ body:
           label: 复现步骤 | Reproduce step
           description: |
             请提供完整且简明的复现步骤，以方便及时定位并解决问题。
-            
+
             Please provide complete and concise reproduction steps to facilitate timely identification and resolution of the issue.
       validations:
           required: true
@@ -100,7 +100,7 @@ body:
           label: 你是否愿意提交一份 PR 来修改这个错误？Are you willing to submit a PR?
           description: |
             我们期待开发人员和用户的帮助，以解决在 OpenAI Translator Bob Plugin 中发现的任何问题。 如果您愿意通过提交 PR 来解决此问题，请勾选。
-            
+
             We eagerly anticipate developers' and users' support and collaboration in resolving any issues found in OpenAI Translator Bob Plugin. If you are willing to offer a solution by submitting a PR to fix this matter, kindly mark the checkbox provided.
           options:
               - label: 我愿意提供 PR! I'm willing to submit a PR!

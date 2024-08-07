@@ -5,322 +5,322 @@
       "version": "2.3.2",
       "desc": "Add support for GPT-4o mini",
       "sha256": "8990a720c38c8e23f91cacc6e320845c27f12abffefe95ca51472507ff28a7d2",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.3.2/openai-translator-2.3.2.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.3.2/openai-translator-2.3.2.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.3.1",
       "desc": "Added new models to provide more options for users",
       "sha256": "fd7e6da0062d907d27aaf932ab5c93c5daac3056eea68be2fe960390aa7e7c14",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.3.1/openai-translator-2.3.1.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.3.1/openai-translator-2.3.1.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.3.0",
       "desc": "Add temperature configuration",
       "sha256": "b82396b6f6c72e946325388ec0c93a683d5c1330a7635d7e5149d16c608533be",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.3.0/openai-translator-2.3.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.3.0/openai-translator-2.3.0.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.2.4",
       "desc": "Update 429 error code message",
       "sha256": "8f81063cc9962b01f30b0f5f0e5c481a235b55e695dc29d5ce7618611298ac5e",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.4/openai-translator-2.2.4.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.2.4/openai-translator-2.2.4.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.2.3",
       "desc": "Replace Completions with Chat in Azure OpenAI key validation",
       "sha256": "1b072b4ee23cec060e748d8e9cc5cea4345246de5661d09c2ad2d714d6e0a9fa",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.3/openai-translator-2.2.3.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.2.3/openai-translator-2.2.3.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.2.2",
       "desc": "Update API version query in Azure OpenAI key validation",
       "sha256": "f7b0b7a756d54b9ee97889ddde16e1d332e6382e49d6c75096acdd09a40e9f57",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.2/openai-translator-2.2.2.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.2.2/openai-translator-2.2.2.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.2.0",
       "desc": "Added Custom API Key Validation and Stream Output Settings",
       "sha256": "f34651fdead53927d366af2f0968c2d78b5f96992a480256adf249fc1f6fb612",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.2.0/openai-translator-2.2.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.2.0/openai-translator-2.2.0.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.1.3",
       "desc": "Simplify JSON parsing and response handling in the streaming process.",
       "sha256": "526074b41a5296f2b0cd450ecb6ce726c5dab611f6f5de44cdc80eb4e2bfcf94",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.1.3/openai-translator-2.1.3.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.1.3/openai-translator-2.1.3.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.1.2",
       "desc": "Compress the logo",
       "sha256": "98cc3116f451050792ce2338e819641f55c78146f3c92b1a23c8f6b23c6803cb",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.1.2/openai-translator-2.1.2.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.1.2/openai-translator-2.1.2.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.1.1",
       "desc": "Update logo",
       "sha256": "38d58027894be6df22a9e90286a67c918c23bc90ad901d5b102585d688addc9f",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.1.1/openai-translator-2.1.1.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.1.1/openai-translator-2.1.1.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.1.0",
       "desc": "Support Cloudflare AI Gateway and update default Azure API version",
       "sha256": "8724ab8305ab09e241e60cab072cefb8d93385863e9ecdd62d7606ea089f8d71",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.1.0/openai-translator-2.1.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.1.0/openai-translator-2.1.0.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "2.0.0",
       "desc": "Support for custom models, drop of support for v1/completions",
       "sha256": "c515fe5ee1e6602a2f879fc8ae76ef586b85d854badad87143c1c7cde639b754",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v2.0.0/openai-translator-2.0.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v2.0.0/openai-translator-2.0.0.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "1.1.4",
       "desc": "Fixed a bad judgment about a model issue",
       "sha256": "6408b89c3e1f5406616716ca743c2dd8231c5326c5b40179bac8771a571bda36",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.4/openai-translator-1.1.4.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v1.1.4/openai-translator-1.1.4.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "1.1.3",
       "desc": "Supports the latest GPT-3.5 Turbo model",
       "sha256": "830554d6751a759aab65d6358452e9e2a98cc0a0e1d65d3b8599a182ddd12ee2",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.3/openai-translator-1.1.3.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v1.1.3/openai-translator-1.1.3.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "1.1.2",
       "desc": "优化 HTTP Error 429 的错误信息",
       "sha256": "8fa7ec7e5686ac1940ac4caf165dfeb3857cb417105d6b1b6533c42f06993f37",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.2/openai-translator-1.1.2.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v1.1.2/openai-translator-1.1.2.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "1.1.1",
       "desc": "Supports the latest GPT-4 and 3.5 Turbo models",
       "sha256": "eac85470b36bf3766ab225859198f0d3c8245d4e32695bf99db091eb7ee48cac",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.1/openai-translator-1.1.1.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v1.1.1/openai-translator-1.1.1.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "1.1.0",
       "desc": "Handle fragmented stream data from OpenAI API",
       "sha256": "4dd2f5f30c6571c82134d48f2502bd524e768480ba5b2c99bb32d8ced7ad090e",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.1.0/openai-translator-1.1.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v1.1.0/openai-translator-1.1.0.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "1.0.1",
       "desc": "Update the error handling logic",
       "sha256": "9b2c2f0e2afe844f0fd19952fbebdb41a3715f838e701f25ee58860fc7f367d0",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.0.1/openai-translator-1.0.1.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v1.0.1/openai-translator-1.0.1.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "1.0.0",
       "desc": "Supports streaming output, requires Bob version >= 1.8.0",
       "sha256": "6a5843cd08244554f2e07f6ac5a57c6ff508fce6e70f0fc0f635e0a25055fecf",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v1.0.0/openai-translator-1.0.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v1.0.0/openai-translator-1.0.0.bobplugin",
       "minBobVersion": "1.8.0"
     },
     {
       "version": "0.4.0",
       "desc": "Support custom prompts",
       "sha256": "74791057b4d804137105ecdf0e26abe25f972db1372416ba8ff1cc8a0f8debc0",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.4.0/openai-translator-0.4.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.4.0/openai-translator-0.4.0.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.3.3",
       "desc": "If you have not set API domain, use api.openai.com",
       "sha256": "dd8f54b35daf214749c9174c9d01e7f3b2cf600101ab2e0fc7b32ddb16a3eea1",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.3.3/openai-translator-0.3.3.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.3.3/openai-translator-0.3.3.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.3.2",
       "desc": "Remove trailing comma and handle empty API keys error",
       "sha256": "87ad8574c9663595eefabe3c5497b19aeaee13f5353986557262f21345e023df",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.3.2/openai-translator-0.3.2.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.3.2/openai-translator-0.3.2.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.3.1",
       "desc": "Improve compatibility handling for API URL",
       "sha256": "94e250270acaf70d3cf12e339e1dbd843ce470dc2a1ed78257bee2dd03f6f552",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.3.1/openai-translator-0.3.1.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.3.1/openai-translator-0.3.1.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.3.0",
       "desc": "Remove extra symbols from translation results",
       "sha256": "ba6d79293c9091c368d5b720479f4729403c1a71486320ed6df36818f947621a",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.3.0/openai-translator-0.3.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.3.0/openai-translator-0.3.0.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.9",
       "desc": "Updated the format of Prompt",
       "sha256": "49f3d84f5831c745bdf28abe16baacf77c35ff796e81f055167a35a43cacb2c8",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.9/openai-translator-0.2.9.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.9/openai-translator-0.2.9.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.8",
       "desc": "Fix the issue of incorrect release version",
       "sha256": "71df49c99dfa3a26cf615088144d67371086d449a636d23c969c83ef4468d918",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.8/openai-translator-0.2.8.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.8/openai-translator-0.2.8.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.7",
       "desc": "Add support for gpt-4 and Azure OpenAI service",
       "sha256": "3e0a7b41ae117f95f3b2f9070bb59fc3a1bce4fd5ff7ac7e749617013ad026bd",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.7/openai-translator-0.2.7.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.7/openai-translator-0.2.7.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.6",
       "desc": "Fix incorrect polishing result",
       "sha256": "3cfbcd66d47ef41a9842d3d4e8bf156e9879842b8134f5d075aaa1cb8cc45b87",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.6/openai-translator-0.2.6.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.6/openai-translator-0.2.6.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.5",
       "desc": "Improve the prompt to avoid many failed translation cases.",
       "sha256": "dd846ab0e9ec23fb23fc0829174d0bb8006da60dbc2742cd09da73b3f0d54d38",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.5/openai-translator-0.2.5.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.5/openai-translator-0.2.5.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.4",
       "desc": "Support specify the OpenAI domain",
       "sha256": "0b46246db77c3f714b9fed703204e4d558d275805e61d6a369b94ac3a0b3461f",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.4/openai-translator-0.2.4.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.4/openai-translator-0.2.4.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.3",
       "desc": "optimize: save token count",
       "sha256": "31823ea32290783939ad5f69ea48137816479c127278664d741bfbc352ab2182",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.3/openai-translator-0.2.3.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.3/openai-translator-0.2.3.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.2",
       "desc": "Remove Chinese quotation marks prefix and suffix.",
       "sha256": "eecf1248874f3b71a5884405d17c82320e0a3770af6dafe7249bad33defb567c",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.2/openai-translator-0.2.2.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.2/openai-translator-0.2.2.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.1",
       "desc": "Fixed an issue with some sentences not translating",
       "sha256": "8b847e9a33b2278d6ee8894e99c767f53166ab683e075a8ea5f6b43c5de7ef1f",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.1/openai-translator-0.2.1.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.1/openai-translator-0.2.1.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.2.0",
       "desc": "With the ability to use Grammarly, you can polish your sentences and correct grammar errors!",
       "sha256": "ee2165c49e82ffe553c66dff732b3ff8f2e9807b6e08629bba91f0827975147b",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.2.0/openai-translator-0.2.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.2.0/openai-translator-0.2.0.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.1.4",
       "desc": "Recommend gpt-3.5-turbo model",
       "sha256": "56c56ff74e8902317b5554a29ecbb906f54bd0b48cc08e48d44ec3425efc7592",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.4/openai-translator-0.1.4.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.1.4/openai-translator-0.1.4.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.1.3",
       "desc": "Fine-tune the prompt to eliminate unnecessary symbols in the translation result.",
       "sha256": "99a41cd9cb660c0389463dde5bf3c1a3077c3d45a54eec94b48f90927902fe25",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.3/openai-translator-0.1.3.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.1.3/openai-translator-0.1.3.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.1.2",
       "desc": "Support Classical Chinese to Simple Chinese",
       "sha256": "61f270491fd8b46cb67ae62c7fdec8aaa8d2e5942364b9ddb051621e18caecf9",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.2/openai-translator-0.1.2.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.1.2/openai-translator-0.1.2.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.1.1",
       "desc": "Fix buggy ChatGPT model detection logic",
       "sha256": "a2831405a2c2e5381ef89a9af2636a396645159b8f7e40294d77c209683b4e8d",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.1/openai-translator-0.1.1.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.1.1/openai-translator-0.1.1.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.1.0",
       "desc": "feat: support ChatGPT API!!! Please change the model to \"gpt-3.5-turbo\" or \"gpt-3.5-turbo-0301\"",
       "sha256": "9f08257b46f864f514b1963f27fc240db654c355eb9bae3c25feef8b177202c4",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.1.0/openai-translator-0.1.0.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.1.0/openai-translator-0.1.0.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.0.12",
-      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.12",
+      "desc": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/tag/v0.0.12",
       "sha256": "ce9f60c9a9282c083459af55719521cb7abd9b618681674290fe26f3d78b2b75",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.12/openai-translator-0.0.12.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.0.12/openai-translator-0.0.12.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.0.11",
-      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.11",
+      "desc": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/tag/v0.0.11",
       "sha256": "a274fe29119ce4a5a4fb522f79f71db5a0867befd12d807a7f14d15643dc3481",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.11/openai-translator-0.0.11.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.0.11/openai-translator-0.0.11.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.0.10",
-      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.10",
+      "desc": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/tag/v0.0.10",
       "sha256": "784c9c304a2b4b76aa6abd023dd897c29924331a9b29ecc7cadb60a18d48f8b5",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.10/openai-translator-0.0.10.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.0.10/openai-translator-0.0.10.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.0.9",
-      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.9",
+      "desc": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/tag/v0.0.9",
       "sha256": "57e07d15a5654abf41ade482b0f76d024b371dc40de4df8cb80f3d93530b1811",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.9/openai-translator-0.0.9.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.0.9/openai-translator-0.0.9.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.0.8",
-      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.8",
+      "desc": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/tag/v0.0.8",
       "sha256": "a5acb2971f31fd5989092ead4ed21757d409256ad5c3a0ca80d9ee1db8450a09",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.8/openai-translator-0.0.8.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.0.8/openai-translator-0.0.8.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.0.7",
-      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.7",
+      "desc": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/tag/v0.0.7",
       "sha256": "a2738659384fde997ce222655a841ac7f2184e702a1eb7230071c7edbb4d7214",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.7/openai-translator-0.0.7.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.0.7/openai-translator-0.0.7.bobplugin",
       "minBobVersion": "0.5.0"
     },
     {
       "version": "0.0.6",
-      "desc": "https://github.com/yetone/bob-plugin-openai-translator/releases/tag/v0.0.6",
+      "desc": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/tag/v0.0.6",
       "sha256": "979a3db1a4ebde0475a79b267f8d05f7f940f38325daabdf0cecb73030102ca6",
-      "url": "https://github.com/yetone/bob-plugin-openai-translator/releases/download/v0.0.6/openai-translator-0.0.6.bobplugin",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v0.0.6/openai-translator-0.0.6.bobplugin",
       "minBobVersion": "0.5.0"
     }
   ]
