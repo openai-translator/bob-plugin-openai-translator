@@ -1,59 +1,51 @@
-type BobHttpResponse = import('./types').BobHttpResponse;
-type DataObject = import('./types').DataObject;
+/**
+ * @description Upstream update time: 10/13/23, 3:27 PM
+ * @remarks Bob 1.6.0+ 可用
+ */
+declare const $env: import('./types/env.type').Env;
 
-type HttpMethod =
-  | 'GET'
-  | 'DELETE'
-  | 'HEAD'
-  | 'OPTIONS'
-  | 'POST'
-  | 'PUT';
+/**
+ * @description Upstream update time: 5/22/22, 11:45 PM
+ */
+declare const $info: import('./types/info.type').Info;
 
-interface HttpRequestFiles {
-  data: DataObject; // Binary data
-  name: string; // Name in the upload form
-  filename: string; // Filename after upload
-  contentType: string; // File format
-}
+/**
+ * @description Upstream update time: 10/13/23, 3:27 PM
+ */
+declare const $option: import('./types/option.type').Option;
 
-interface HttpRequestConfig {
-  url: string;
-  method?: HttpMethod;
-  header?: Record<string, string>; // Define as a record for headers
-  params?: Record<string, any>; // Define as a record for query parameters
-  body?: any; // Specify a more detailed type if possible
-  files?: HttpRequestFiles;
-  handler?: (resp: BobHttpResponse) => void;
-  timeout?: number; // Timeout in milliseconds
-}
+/**
+ * @description Upstream update time: 5/22/22, 11:45 PM
+ */
+declare const $log: import('./types/log.type').Log;
 
-interface HttpStreamRequestConfig extends HttpRequestConfig {
-  cancelSignal?: Signal; // AbortSignal if using the Fetch API
-  streamHandler?: (stream: { text: string; rawData: DataObject }) => void;
-}
+/**
+ * @description Upstream update time: 10/13/23, 3:27 PM
+ */
+declare const $http: import('./types/http.type').Http;
 
-type HttpResponsePromise<T = any> = Promise<BobHttpResponse<T>>;
+/**
+ * @description Upstream update time: 10/13/23, 3:27 PM
+ * @remarks Bob 1.6.0+ 可用
+ */
+declare const $websocket: import('./types/websocket.type').WebSocketConstructor;
 
-interface Http {
-  request<T = any, R = HttpResponsePromise<T>>(config: HttpRequestConfig): Promise<R>;
-  get<T = any, R = HttpResponsePromise<T>>(config: HttpRequestConfig): Promise<R>;
-  post<T = any, R = HttpResponsePromise<T>>(config: HttpRequestConfig): Promise<R>;
-  streamRequest<T = any, R = HttpResponsePromise<T>>(config: HttpStreamRequestConfig): Promise<R>;
-}
+/**
+ * @description Upstream update time: 10/13/23, 3:27 PM
+ */
+declare const $file: import('./types/file.type').FileConstructor;
 
-declare const $http: Http;
+/**
+ * @description Upstream update time: 3/14/23, 11:59 AM
+ */
+declare const $data: import('./types/data.type').DataConstructor;
 
-interface Options {
-  apiKeys: string;
-  apiUrl: string;
-  apiVersion: string;
-  customModel: string;
-  customSystemPrompt: string;
-  customUserPrompt: string;
-  deploymentName: string;
-  model: string;
-  stream: string;
-  temperature: string;
-}
+/**
+ * @description Upstream update time: 10/13/23, 3:27 PM
+ */
+declare const $timer: import('./types/timer.type').Timer;
 
-declare const $option: Options;
+/**
+ * @description Upstream update time: 10/13/23, 3:27 PM
+ */
+declare const $signal: import('./types/signal.type').SignalConstructor;

@@ -1,10 +1,9 @@
 import { HTTP_ERROR_CODES } from "./const";
-import type {
-  BobHttpResponse,
-  BobServiceError,
-  BobTranslateQuery,
-  BobValidateCompletion
-} from "./types";
+import { HttpResponse } from "./types/http.type";
+import type { ValidationCompletion } from "./types/plugin-validate.type";
+import type { ServiceError } from "./types/service-error.type";
+import type { TextTranslateQuery } from "./types/text-translate.type";
+
 
 function buildHeader(isAzureServiceProvider: boolean, apiKey: string): {
   "Content-Type": string;
@@ -34,8 +33,8 @@ function getApiKey(apiKeys: string): string {
 }
 
 function handleGeneralError(
-  query: BobTranslateQuery,
-  error: BobServiceError | BobHttpResponse
+  query: TextTranslateQuery,
+  error: ServiceError | HttpResponse
 ) {
   if ("response" in error) {
     // Handle HTTP response error
@@ -61,8 +60,8 @@ function handleGeneralError(
 }
 
 function handleValidateError(
-  completion: BobValidateCompletion,
-  error: BobServiceError
+  completion: ValidationCompletion,
+  error: ServiceError
 ) {
   completion({
     result: false,
@@ -76,7 +75,7 @@ function handleValidateError(
 
 function replacePromptKeywords(
   prompt: string,
-  query: BobTranslateQuery
+  query: TextTranslateQuery
 ): string {
   if (!prompt) return prompt;
   return prompt

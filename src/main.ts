@@ -1,11 +1,10 @@
 import { SYSTEM_PROMPT } from "./const";
 import { langMap, supportLanguageList } from "./lang";
-import type {
-  BobHttpResponse,
-  BobServiceError,
-  BobTranslateQuery,
-  BobValidateCompletion
-} from "./types";
+import { ChatCompletion, ModelList } from "./types";
+import { HttpResponse } from "./types/http.type";
+import type { PluginValidate } from "./types/plugin-validate.type";
+import type { ServiceError } from "./types/service-error.type";
+import type { TextTranslate, TextTranslateQuery } from "./types/text-translate.type";
 import {
   buildHeader,
   ensureHttpsAndNoTrailingSlash,
@@ -15,19 +14,19 @@ import {
   replacePromptKeywords
 } from "./utils";
 
-function isBobServiceError(error: unknown): error is BobServiceError {
+const isServiceError = (error: unknown): error is ServiceError => {
   return (
     typeof error === 'object' &&
     error !== null &&
     'message' in error &&
-    typeof (error as BobServiceError).message === 'string'
+    typeof (error as ServiceError).message === 'string'
   );
 }
 
-function generatePrompts(query: BobTranslateQuery): {
+const generatePrompts = (query: TextTranslateQuery): {
   generatedSystemPrompt: string,
   generatedUserPrompt: string
-} {
+} => {
   let generatedSystemPrompt = null;
   const { detectFrom, detectTo } = query;
   const sourceLang = langMap.get(detectFrom) || detectFrom;
@@ -69,7 +68,7 @@ function generatePrompts(query: BobTranslateQuery): {
   };
 }
 
-function buildRequestBody(model: string, query: BobTranslateQuery) {
+const buildRequestBody = (model: string, query: TextTranslateQuery) => {
   let { customSystemPrompt, customUserPrompt, temperature } = $option;
   const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
 
@@ -106,7 +105,11 @@ function buildRequestBody(model: string, query: BobTranslateQuery) {
   };
 }
 
-function handleStreamResponse(query: BobTranslateQuery, targetText: string, textFromResponse: string) {
+const handleStreamResponse = (
+  query: TextTranslateQuery,
+  targetText: string,
+  textFromResponse: string
+) => {
   if (textFromResponse !== '[DONE]') {
     try {
       const dataObj = JSON.parse(textFromResponse);
@@ -124,7 +127,7 @@ function handleStreamResponse(query: BobTranslateQuery, targetText: string, text
         });
       }
     } catch (error) {
-      if (isBobServiceError(error)) {
+      if (isServiceError(error)) {
         handleGeneralError(query, {
           type: error.type || 'param',
           message: error.message || 'Failed to parse JSON',
@@ -141,8 +144,11 @@ function handleStreamResponse(query: BobTranslateQuery, targetText: string, text
   return targetText;
 }
 
-function handleGeneralResponse(query: BobTranslateQuery, result: BobHttpResponse) {
-  const { choices } = result.data;
+const handleGeneralResponse = (
+  query: TextTranslateQuery,
+  result: HttpResponse<ChatCompletion>
+) => {
+  const { choices } = result.data as ChatCompletion;
 
   if (!choices || choices.length === 0) {
     handleGeneralError(query, {
@@ -153,13 +159,13 @@ function handleGeneralResponse(query: BobTranslateQuery, result: BobHttpResponse
     return;
   }
 
-  let targetText = choices[0].message.content.trim();
+  let targetText = choices[0].message.content?.trim();
 
   // 使用正则表达式删除字符串开头和结尾的特殊字符
-  targetText = targetText.replace(/^(『|「|"|“)|(』|」|"|”)$/g, "");
+  targetText = targetText?.replace(/^(『|「|"|“)|(』|」|"|”)$/g, "");
 
   // 判断并删除字符串末尾的 `" =>`
-  if (targetText.endsWith('" =>')) {
+  if (targetText?.endsWith('" =>')) {
     targetText = targetText.slice(0, -4);
   }
 
@@ -167,12 +173,12 @@ function handleGeneralResponse(query: BobTranslateQuery, result: BobHttpResponse
     result: {
       from: query.detectFrom,
       to: query.detectTo,
-      toParagraphs: targetText.split("\n"),
+      toParagraphs: targetText!.split("\n"),
     },
   });
 }
 
-function translate(query: BobTranslateQuery) {
+const translate: TextTranslate = (query) => {
   if (!langMap.get(query.detectTo)) {
     handleGeneralError(query, {
       type: "unsupportedLanguage",
@@ -305,7 +311,7 @@ function translate(query: BobTranslateQuery) {
   });
 }
 
-function pluginValidate(completion: BobValidateCompletion) {
+const pluginValidate: PluginValidate = (completion) => {
   const { apiKeys, apiUrl, deploymentName } = $option;
   if (!apiKeys) {
     handleValidateError(completion, {
@@ -353,17 +359,20 @@ function pluginValidate(completion: BobValidateCompletion) {
           max_tokens: 5
         },
         handler: function (resp) {
-          if (resp.data.error) {
+          const data = resp.data as {
+            error: string;
+          }
+          if (data.error) {
             const { statusCode } = resp.response;
             const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
             handleValidateError(completion, {
               type: reason,
-              message: resp.data.error,
+              message: data.error,
               troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
             });
             return;
           }
-          if (resp.data.choices.length > 0) {
+          if ((resp.data as ChatCompletion).choices.length > 0) {
             completion({
               result: true,
             })
@@ -376,17 +385,20 @@ function pluginValidate(completion: BobValidateCompletion) {
         url: baseUrl + apiUrlPath,
         header: header,
         handler: function (resp) {
-          if (resp.data.error) {
+          const data = resp.data as {
+            error: string;
+          }
+          if (data.error) {
             const { statusCode } = resp.response;
             const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
             handleValidateError(completion, {
               type: reason,
-              message: resp.data.error,
+              message: data.error,
               troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html"
             });
             return;
           }
-          const modelList = resp.data
+          const modelList = resp.data as ModelList;
           if (modelList.data?.length > 0) {
             completion({
               result: true,
@@ -400,9 +412,7 @@ function pluginValidate(completion: BobValidateCompletion) {
   });
 }
 
-function pluginTimeoutInterval() {
-  return 60;
-}
+const pluginTimeoutInterval = () => 60;
 
 function supportLanguages() {
   return supportLanguageList.map(([standardLang]) => standardLang);
