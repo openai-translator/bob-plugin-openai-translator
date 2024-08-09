@@ -12,6 +12,9 @@
     "strict": true,
     "target": "ES5",
     "useDefineForClassFields": false,
+    "types": [
+      "@bob-translate/types"
+    ]
   },
   "exclude": [
     "dist",

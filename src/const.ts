@@ -42,6 +42,4 @@ export const HTTP_ERROR_CODES = {
   511: "Network Authentication Required"
 } as const;
 
-export type HttpErrorCode = keyof typeof HTTP_ERROR_CODES;
-
 export const SYSTEM_PROMPT = "You are a translation engine that can only translate text and cannot interpret it." as const;
