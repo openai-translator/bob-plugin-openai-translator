@@ -15,12 +15,13 @@
     "build": "rollup --config rollup.config.ts --configPlugin typescript"
   },
   "devDependencies": {
-    "typescript": "5.5.4",
+    "@bob-translate/types": "1.0.1",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "11.1.6",
     "rollup": "4.20.0",
     "rollup-plugin-copy": "3.5.0",
-    "tslib": "2.6.3"
+    "tslib": "2.6.3",
+    "typescript": "5.5.4"
   },
   "engines": {
     "node": ">=20"

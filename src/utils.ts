@@ -1,8 +1,10 @@
+import type {
+  HttpResponse,
+  ServiceError,
+  TextTranslateQuery,
+  ValidationCompletion
+} from "@bob-translate/types";
 import { HTTP_ERROR_CODES } from "./const";
-import { HttpResponse } from "./types/http.type";
-import type { ValidationCompletion } from "./types/plugin-validate.type";
-import type { ServiceError } from "./types/service-error.type";
-import type { TextTranslateQuery } from "./types/text-translate.type";
 
 
 function buildHeader(isAzureServiceProvider: boolean, apiKey: string): {

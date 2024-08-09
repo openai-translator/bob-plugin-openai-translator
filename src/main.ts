@@ -1,10 +1,13 @@
 import { SYSTEM_PROMPT } from "./const";
 import { langMap, supportLanguageList } from "./lang";
-import { ChatCompletion, ModelList } from "./types";
-import { HttpResponse } from "./types/http.type";
-import type { PluginValidate } from "./types/plugin-validate.type";
-import type { ServiceError } from "./types/service-error.type";
-import type { TextTranslate, TextTranslateQuery } from "./types/text-translate.type";
+import type { ChatCompletion, ModelList } from "./types";
+import type {
+  HttpResponse,
+  PluginValidate,
+  ServiceError,
+  TextTranslate,
+  TextTranslateQuery
+} from "@bob-translate/types";
 import {
   buildHeader,
   ensureHttpsAndNoTrailingSlash,
