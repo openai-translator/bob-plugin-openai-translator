@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "3.0.0",
+      "desc": "Service Provider Refactoring",
+      "sha256": "299e2a5f13f37a96a7a98fb5f7ef25fd6c7ba72b5b537a6c83115d234ecc7053",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v3.0.0/openai-translator-3.0.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "2.4.2",
       "desc": "Refactor OpenAI Translator Bob Plugin to improve performance and maintainability",
       "sha256": "0e928eb70da9e7b421ef5af46f15d3330136bc4f8edd1be3db4cc0de90c1467f",
