@@ -35,7 +35,7 @@
   - Custom: Required, complete API URL, for example when using Cloudflare AI Gateway:
 
     ```
-    https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${GATEWAY_ID}/openai/chat/completions
+    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions
     ```
 
 ### API KEY

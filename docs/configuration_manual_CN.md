@@ -28,13 +28,13 @@
   - Azure OpenAI: 必填，完整的 API URL，格式为：
 
      ```
-     https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
+     https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
      ```
 
   - Custom: 必填，值为完整的 API URL，例如使用 Cloudflare AI Gateway 时，需填入：
 
     ```
-    https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/${GATEWAY_ID}/openai/chat/completions
+    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions
     ```
 
 ### API KEY
