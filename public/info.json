@@ -11,33 +11,33 @@
   "minBobVersion": "1.8.0",
   "options": [
     {
+      "identifier": "serviceProvider",
+      "type": "menu",
+      "title": "Service Provider",
+      "defaultValue": "openai",
+      "menuValues": [
+        {
+          "title": "OpenAI",
+          "value": "openai"
+        },
+        {
+          "title": "Azure OpenAI",
+          "value": "azure-openai"
+        },
+        {
+          "title": "Custom",
+          "value": "custom"
+        }
+      ]
+    },
+    {
       "identifier": "apiUrl",
       "type": "text",
       "title": "API URL",
-      "defaultValue": "https://api.openai.com",
-      "desc": "可选项。如果您的网络环境需要代理才能访问 OpenAI API, 可在这里修改为反代 API 的地址",
+      "desc": "OpenAI: https://api.openai.com\n\nAzure OpenAI: https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION\n\nCustom: 您的完整 API 地址，例如：https://gateway.ai.cloudflare.com/v1/CF_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions",
       "textConfig": {
         "type": "visible",
         "placeholderText": "https://api.openai.com"
-      }
-    },
-    {
-      "identifier": "deploymentName",
-      "type": "text",
-      "title": "Dep. Name",
-      "desc": "可选项。此值为在部署 Azure 模型时为部署选择的自定义名称，可在 Azure 门户中的 “资源管理”＞“部署” 下查看",
-      "textConfig": {
-        "type": "visible"
-      }
-    },
-    {
-      "identifier": "apiVersion",
-      "type": "text",
-      "title": "API Version",
-      "desc": "可选项。此值为在使用 Azure 模型时采用的 Chat completions API 版本，不支持 2023-03-15-preview 之前的版本",
-      "textConfig": {
-        "type": "visible",
-        "placeholderText": "2023-03-15-preview"
       }
     },
     {
@@ -135,15 +135,15 @@
       "identifier": "stream",
       "type": "menu",
       "title": "流式输出",
-      "defaultValue": "1",
+      "defaultValue": "enable",
       "menuValues": [
         {
           "title": "Enable",
-          "value": "1"
+          "value": "enable"
         },
         {
           "title": "Disable",
-          "value": ""
+          "value": "disable"
         }
       ]
     },

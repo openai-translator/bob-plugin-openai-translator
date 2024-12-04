@@ -91,3 +91,5 @@ export interface ModelList {
   object: string,
   data: Model[]
 }
+
+export type ServiceProvider = 'openai' | 'azure-openai' | 'custom';

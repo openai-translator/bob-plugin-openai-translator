@@ -24,15 +24,17 @@
 >
 > Important update: Non-macOS users can use my browser extension based on OpenAI API for word translation [openai-translator](https://github.com/yetone/openai-translator) to solve urgent needs.
 
-
-## Demonstration
-
-![demo](https://user-images.githubusercontent.com/1206493/221086195-f1ed941d-4dfa-4aa0-9d47-56c258a8f854.gif)
-
-"""
 ## Introduction
 
 ChatGPT showcases the greatness of GPT models, so I have implemented the Bob translation + polishing + grammar modification plugin using OpenAI's API, with outstanding results!
+
+<details>
+
+<summary>Demonstration 👀</summary>
+
+![demo](https://user-images.githubusercontent.com/1206493/219937398-8e5bb8d2-7dc8-404a-96e7-a937e08c939f.gif)
+
+</details>
 
 ### Polishing Feature
 
@@ -40,33 +42,41 @@ This plugin supports polishing sentences and modifying grammar using the OpenAI 
 
 If you don't like combining translation functionality and text polishing, a separate plugin specifically for text polishing and grammar correction is available: [bob-plugin-openai-polisher](https://github.com/yetone/bob-plugin-openai-polisher). This polishing plugin has more advanced polishing features, such as explaining the modification reasons, etc.
 
-### Language Model
-
-To use the OpenAI API, go to Bob's settings page and change the plugin model to `gpt-3.5-turbo-0301` or `gpt-3.5-turbo`:
-
-![how to use OpenAI API](https://user-images.githubusercontent.com/1206493/222339607-d8f05042-4b65-495c-af58-849891de7434.png)
-
 ## Usage
 
 1. Install [Bob](https://bobtranslate.com/guide/#%E5%AE%89%E8%A3%85) (version >= 0.50), a macOS translation and OCR software
 
 2. Download this plugin: [openai-translator.bobplugin](https://github.com/openai-translator/bob-plugin-openai-translator/releases/latest)
 
-3. Install this plugin:
+3. <details>
 
-    ![Installation Steps](https://user-images.githubusercontent.com/1206493/219937302-6be8d362-1520-4906-b8d6-284d01012837.gif)
+   <summary>Install this plugin 👀</summary>
+
+   ![Installation Steps](https://user-images.githubusercontent.com/1206493/219937302-6be8d362-1520-4906-b8d6-284d01012837.gif)
+
+   </details>
 
 4. Get your API KEY from [OpenAI](https://platform.openai.com/account/api-keys)
 
 5. Enter the API KEY in Bob Preferences > Services > This plugin configuration interface's API KEY input box:
     - If you would like to learn more about other settings, please refer to the [Configuration Manual](./docs/configuration_manual_EN.md)
 
+      <details>
+
+      <summary>Settings Steps 👀</summary>
+
       ![Settings Steps](https://user-images.githubusercontent.com/1206493/219937398-8e5bb8d2-7dc8-404a-96e7-a937e08c939f.gif)
 
+      </details>
 
-6. Install [PopClip](https://bobtranslate.com/guide/integration/popclip.html) for highlighted text mouse proximity floating icon:
+6. <details>
 
-    ![PopClip](https://user-images.githubusercontent.com/1206493/219933584-d0c2b6cf-8fa0-40a6-858f-8f4bf05f38ef.gif)
+   <summary>Install PopClip for highlighted text mouse proximity floating icon 👀</summary>
+
+   [![PopClip](https://user-images.githubusercontent.com/1206493/219933584-d0c2b6cf-8fa0-40a6-858f-8f4bf05f38ef.gif)](https://bobtranslate.com/guide/integration/popclip.html)
+
+   </details>
+
 
 ## Contributing
 

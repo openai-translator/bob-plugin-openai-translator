@@ -1,6 +1,6 @@
 import { SYSTEM_PROMPT } from "./const";
 import { langMap, supportLanguageList } from "./lang";
-import type { ChatCompletion, ModelList } from "./types";
+import type { ChatCompletion, ModelList, ServiceProvider } from "./types";
 import type {
   HttpResponse,
   PluginValidate,
@@ -16,6 +16,83 @@ import {
   handleValidateError,
   replacePromptKeywords
 } from "./utils";
+
+function validateConfig(
+  serviceProvider: ServiceProvider,
+  apiKeys?: string,
+  apiUrl?: string,
+  model?: string,
+  customModel?: string
+): ServiceError | null {
+
+  if (serviceProvider !== 'openai' && !apiUrl) {
+    return {
+      type: "param",
+      message: "配置错误 - 请填写 API URL",
+      addition: "请在插件配置中填写完整的 API URL"
+    };
+  }
+
+  if (serviceProvider === 'azure-openai' && apiUrl) {
+    const parts = {
+      domain: /^https:\/\/[^\/]+\.openai\.azure\.com/,
+      path: /\/openai\/deployments\/[^\/]+\/chat\/completions/,
+      version: /\?api-version=\d{4}-\d{2}-\d{2}(?:-preview)?$/
+    };
+
+    const isValidUrl = Object.values(parts).every(pattern => pattern.test(apiUrl));
+    if (!isValidUrl) {
+      return {
+        type: "param",
+        message: "配置错误 - API URL 格式不正确",
+        addition: "Azure OpenAI 的 API URL 格式应为：https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION",
+        troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
+      };
+    }
+  }
+
+  if (!apiKeys) {
+    return {
+      type: "secretKey",
+      message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
+      addition: "请在插件配置中填写 API Keys",
+    };
+  }
+
+  if (model === "custom" && !customModel) {
+    return {
+      type: "param",
+      message: "配置错误 - 请确保您在插件配置中填入了正确的自定义模型名称",
+      addition: "请在插件配置中填写自定义模型名称",
+    };
+  }
+
+  return null;
+}
+
+function getServiceConfig(serviceProvider: ServiceProvider, apiUrl?: string) {
+  switch (serviceProvider) {
+    case 'azure-openai':
+      return {
+        chatCompletionsUrl: apiUrl!,
+        isAzureOpenAi: true,
+        validateUrl: apiUrl!,
+      };
+    case 'custom':
+      return {
+        chatCompletionsUrl: apiUrl!,
+        isAzureOpenAi: false,
+        validateUrl: apiUrl!.replace(/\/chat\/completions$/, '/models'),
+      };
+    default: // openai
+      const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
+      return {
+        chatCompletionsUrl: `${baseUrl}/v1/chat/completions`,
+        isAzureOpenAi: false,
+        validateUrl: `${baseUrl}/v1/models`,
+      };
+  }
+}
 
 const isServiceError = (error: unknown): error is ServiceError => {
   return (
@@ -182,73 +259,36 @@ const handleGeneralResponse = (
 }
 
 const translate: TextTranslate = (query) => {
-  if (!langMap.get(query.detectTo)) {
-    handleGeneralError(query, {
-      type: "unsupportedLanguage",
-      message: "不支持该语种",
-      addition: "不支持该语种",
-    });
-  }
+  const { apiKeys, apiUrl, customModel, model, serviceProvider, stream } = $option;
 
-  const {
+  const error = validateConfig(
+    serviceProvider as ServiceProvider,
     apiKeys,
     apiUrl,
-    apiVersion,
-    customModel,
-    deploymentName,
     model,
-    stream,
-  } = $option;
+    customModel
+  );
 
-  const isCustomModelRequired = model === "custom";
-  if (isCustomModelRequired && !customModel) {
-    handleGeneralError(query, {
-      type: "param",
-      message: "配置错误 - 请确保您在插件配置中填入了正确的自定义模型名称",
-      addition: "请在插件配置中填写自定义模型名称",
-    });
+  if (error) {
+    handleGeneralError(query, error);
+    return;
   }
 
-  if (!apiKeys) {
-    handleGeneralError(query, {
-      type: "secretKey",
-      message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
-      addition: "请在插件配置中填写 API Keys",
-    });
-  }
+  const serviceConfig = getServiceConfig(serviceProvider as ServiceProvider, apiUrl);
+  const { chatCompletionsUrl, isAzureOpenAi } = serviceConfig;
 
-  const modelValue = isCustomModelRequired ? customModel : model;
-
-  const apiKey = getApiKey($option.apiKeys);
-
-  const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
-  let apiUrlPath = baseUrl.includes("gateway.ai.cloudflare.com") ? "/chat/completions" : "/v1/chat/completions";
-  const apiVersionQuery = apiVersion ? `?api-version=${apiVersion}` : "?api-version=2023-03-15-preview";
-
-  const isAzureServiceProvider = baseUrl.includes("openai.azure.com");
-  if (isAzureServiceProvider) {
-    if (deploymentName) {
-      apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions${apiVersionQuery}`;
-    } else {
-      handleGeneralError(query, {
-        type: "secretKey",
-        message: "配置错误 - 未填写 Deployment Name",
-        addition: "请在插件配置中填写 Deployment Name",
-        troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
-      });
-    }
-  }
-
-  const header = buildHeader(isAzureServiceProvider, apiKey);
+  const modelValue = model === "custom" ? customModel : model;
+  const apiKey = getApiKey(apiKeys);
+  const header = buildHeader(isAzureOpenAi, apiKey);
   const body = buildRequestBody(modelValue, query);
 
   let targetText = ""; // 初始化拼接结果变量
   let buffer = ""; // 新增 buffer 变量
   (async () => {
-    if (stream) {
+    if (stream === "enable") {
       await $http.streamRequest({
         method: "POST",
-        url: baseUrl + apiUrlPath,
+        url: chatCompletionsUrl,
         header,
         body: {
           ...body,
@@ -298,7 +338,7 @@ const translate: TextTranslate = (query) => {
     } else {
       const result = await $http.request({
         method: "POST",
-        url: baseUrl + apiUrlPath,
+        url: chatCompletionsUrl,
         header,
         body,
       });
@@ -315,41 +355,31 @@ const translate: TextTranslate = (query) => {
 }
 
 const pluginValidate: PluginValidate = (completion) => {
-  const { apiKeys, apiUrl, deploymentName } = $option;
-  if (!apiKeys) {
-    handleValidateError(completion, {
-      type: "secretKey",
-      message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
-      addition: "请在插件配置中填写正确的 API Keys",
-      troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html"
-    });
+  const { apiKeys, apiUrl, customModel, model, serviceProvider } = $option;
+
+  const error = validateConfig(
+    serviceProvider as ServiceProvider,
+    apiKeys,
+    apiUrl,
+    model,
+    customModel
+  );
+
+  if (error) {
+    handleValidateError(completion, error);
     return;
   }
 
+  const serviceConfig = getServiceConfig(serviceProvider as ServiceProvider, apiUrl);
+  const { isAzureOpenAi, validateUrl } = serviceConfig;
   const apiKey = getApiKey(apiKeys);
-  const baseUrl = ensureHttpsAndNoTrailingSlash(apiUrl || "https://api.openai.com");
-  let apiUrlPath = baseUrl.includes("gateway.ai.cloudflare.com") ? "/models" : "/v1/models";
+  const header = buildHeader(isAzureOpenAi, apiKey);
 
-  const isAzureServiceProvider = apiUrl.includes("openai.azure.com");
-  if (isAzureServiceProvider) {
-    if (!deploymentName) {
-      handleValidateError(completion, {
-        type: "secretKey",
-        message: "配置错误 - 未填写 Deployment Name",
-        addition: "请在插件配置中填写 Deployment Name",
-        troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
-      });
-      return;
-    }
-    apiUrlPath = `/openai/deployments/${deploymentName}/chat/completions?api-version=2023-05-15`;
-  }
-
-  const header = buildHeader(isAzureServiceProvider, apiKey);
   (async () => {
-    if (isAzureServiceProvider) {
+    if (isAzureOpenAi) {
       $http.request({
         method: "POST",
-        url: baseUrl + apiUrlPath,
+        url: validateUrl,
         header: header,
         body: {
           "messages": [{
@@ -385,7 +415,7 @@ const pluginValidate: PluginValidate = (completion) => {
     } else {
       $http.request({
         method: "GET",
-        url: baseUrl + apiUrlPath,
+        url: validateUrl,
         header: header,
         handler: function (resp) {
           const data = resp.data as {
