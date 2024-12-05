@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "3.1.0",
+      "desc": "Add Google Gemini Support and Service Provider Refactoring.",
+      "sha256": "ee04e8ce3e81d191952561c05fe5f4326bcd948b47035690bbbf6226940a8afa",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v3.1.0/openai-translator-3.1.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "3.0.0",
       "desc": "Service Provider Refactoring",
       "sha256": "299e2a5f13f37a96a7a98fb5f7ef25fd6c7ba72b5b537a6c83115d234ecc7053",
