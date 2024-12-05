@@ -10,13 +10,15 @@
 
   - OpenAI: Use official OpenAI service
 
-  - Azure OpenAI: Use [Azure OpenAI Service](https://learn.microsoft.com/zh-cn/azure/ai-services/Translator/quickstart-text-rest-api)
+  - OpenAI Compatible: Use OpenAI compatible service, such as [Ollama](https://ollama.com/blog/openai-compatibility) service; or custom/third-party reverse proxy service, such as [Cloudflare AI Gateway](https://developers.cloudflare.com/ai-gateway/)
 
-  - Custom: Use custom service, such as [Cloudflare AI Gateway](https://developers.cloudflare.com/ai-gateway/) or [Ollama](https://ollama.com/blog/openai-compatibility)
+  - Azure OpenAI: Use [Azure OpenAI Service](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/chatgpt-quickstart)
+
+  - Google Gemini: Use [Google Gemini](https://ai.google.dev/gemini-api/docs) service
 
 ### API URL
 
-- Optional (OpenAI) / Required (Azure OpenAI and Custom)
+- Optional (OpenAI and Google Gemini) / Required (Azure OpenAI and OpenAI Compatible)
 
 - Default value: None
 
@@ -24,19 +26,19 @@
 
   - OpenAI: Optional, default value: `https://api.openai.com`
 
+  - OpenAI Compatible: Required, complete API URL, for example when using Cloudflare AI Gateway:
+
+    ```
+    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions
+    ```
+
   - Azure OpenAI: Required, complete API URL in format:
 
      ```
      https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
      ```
 
-     - For more information, please refer to [Cloudflare AI Gateway Official Documentation](https://developers.cloudflare.com/ai-gateway/).
-
-  - Custom: Required, complete API URL, for example when using Cloudflare AI Gateway:
-
-    ```
-    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions
-    ```
+  - Google Gemini: Optional, default value: `https://generativelanguage.googleapis.com/v1beta/models`
 
 ### API KEY
 

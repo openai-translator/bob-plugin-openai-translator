@@ -26,7 +26,7 @@ export const HTTP_ERROR_CODES = {
   425: "Too Early",
   426: "Upgrade Required",
   428: "Precondition Required",
-  429: "请求过于频繁，请慢一点。OpenAI 对您在 API 上的请求实施速率限制。或是您的 API credits 已超支，需要充值。好消息是您仍然可以使用官方的 Web 端聊天页面",
+  429: "Too Many Requests",
   431: "Request Header Fields Too Large",
   451: "Unavailable For Legal Reasons",
   500: "Internal Server Error",
