@@ -4,44 +4,48 @@
 
 - 必选项
 
-- 默认值: OpenAI
+- 默认值：OpenAI
 
 - 说明
 
-  - OpenAI: 使用 OpenAI 官方服务
+  - OpenAI：使用 OpenAI 官方服务
 
-  - Azure OpenAI: 使用 [Azure OpenAI Service](https://learn.microsoft.com/zh-cn/azure/ai-services/Translator/quickstart-text-rest-api)
+  - OpenAI Compatible：使用与 OpenAI 兼容的服务，如 [Ollama](https://ollama.com/blog/openai-compatibility) 等服务；或是自定义/第三方反代服务，如 [Cloudflare AI Gateway](https://developers.cloudflare.com/ai-gateway/) 或者 [Ollama](https://ollama.com/blog/openai-compatibility) 等服务
 
-  - Custom: 使用自定义服务，如 [Cloudflare AI Gateway](https://developers.cloudflare.com/ai-gateway/) 或者 [Ollama](https://ollama.com/blog/openai-compatibility) 等服务商
+  - Azure OpenAI：使用 [Azure OpenAI Service](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/chatgpt-quickstart)
+
+  - Google Gemini：使用 [Google Gemini](https://ai.google.dev/gemini-api/docs) 服务
 
 
 ### API URL
 
-- 可选项（OpenAI）/ 必填项（Azure OpenAI 和 Custom）
+- 可选项（OpenAI 和 Google Gemini）/ 必填项（Azure OpenAI 和 OpenAI Compatible）
 
-- 默认值: 无
+- 默认值：无
 
 - 说明
 
-  - OpenAI: 可选，默认为: `https://api.openai.com`
+  - OpenAI：可选，默认为：`https://api.openai.com`
 
-  - Azure OpenAI: 必填，完整的 API URL，格式为：
-
-     ```
-     https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
-     ```
-
-  - Custom: 必填，值为完整的 API URL，例如使用 Cloudflare AI Gateway 时，需填入：
+  - OpenAI Compatible：必填，需填入完整的 API URL，例如使用 Cloudflare AI Gateway 时，填入：
 
     ```
     https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions
     ```
 
+  - Azure OpenAI：必填，需填入完整的 API URL，格式为：
+
+     ```
+     https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
+     ```
+
+  - Google Gemini：可选，默认为：`https://generativelanguage.googleapis.com/v1beta/models`
+
 ### API KEY
 
 - 必填项
 
-- 默认值: 无
+- 默认值：无
 
 - 说明
 
@@ -51,7 +55,7 @@
 
 - 必选项
 
-- 默认值: `gpt-3.5-turbo`
+- 默认值：`gpt-3.5-turbo`
 
 - 说明
 
@@ -61,7 +65,7 @@
 
 - 可选项
 
-- 默认值: `gpt-3.5-turbo`
+- 默认值：`gpt-3.5-turbo`
 
 - 说明
 
@@ -71,7 +75,7 @@
 
 - 可选项
 
-- 默认值: `You are a translation engine that can only translate text and cannot interpret it.`
+- 默认值：`You are a translation engine that can only translate text and cannot interpret it.`
 
 - 说明
 
@@ -89,7 +93,7 @@
 
 - 可选项
 
-- 默认值: `translate from $sourceLang to $targetLang:\n\n$text`
+- 默认值：`translate from $sourceLang to $targetLang:\n\n$text`
 
 - 说明
 
@@ -101,7 +105,7 @@
 
 - 可选项
 
-- 默认值: `Enable`
+- 默认值：`Enable`
 
 - 说明
 
@@ -113,7 +117,7 @@
 
 - 可选项
 
-- 默认值: `0.2`
+- 默认值：`0.2`
 
 - 说明
 

@@ -1,73 +1,65 @@
 {
-  "identifier": "yetone.openai.translator",
-  "version": "3.0.0",
-  "category": "translate",
-  "name": "OpenAI Translator",
-  "summary": "GPT powered translator",
-  "icon": "",
-  "author": "yetone <yetoneful@gmail.com>",
-  "homepage": "https://github.com/openai-translator/bob-plugin-openai-translator",
   "appcast": "https://raw.githubusercontent.com/openai-translator/bob-plugin-openai-translator/main/appcast.json",
+  "author": "yetone <yetoneful@gmail.com>",
+  "category": "translate",
+  "homepage": "https://github.com/openai-translator/bob-plugin-openai-translator",
+  "icon": "",
+  "identifier": "yetone.openai.translator",
   "minBobVersion": "1.8.0",
+  "name": "OpenAI Translator",
   "options": [
     {
-      "identifier": "serviceProvider",
-      "type": "menu",
-      "title": "Service Provider",
       "defaultValue": "openai",
+      "identifier": "serviceProvider",
       "menuValues": [
         {
           "title": "OpenAI",
           "value": "openai"
         },
         {
+          "title": "OpenAI Compatible",
+          "value": "openai-compatible"
+        },
+        {
           "title": "Azure OpenAI",
           "value": "azure-openai"
         },
         {
-          "title": "Custom",
-          "value": "custom"
+          "title": "Google Gemini",
+          "value": "gemini"
         }
-      ]
+      ],
+      "title": "Service Provider",
+      "type": "menu"
     },
     {
+      "desc": "OpenAI: https://api.openai.com\n\nOpenAI Compatible: 完整的 API 地址，例如：https://gateway.ai.cloudflare.com/v1/CF_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions\n\nAzure OpenAI: https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION\n\nGoogle Gemini: https://generativelanguage.googleapis.com/v1beta/models",
       "identifier": "apiUrl",
-      "type": "text",
+      "textConfig": {
+        "placeholderText": "https://api.openai.com",
+        "type": "visible"
+      },
       "title": "API URL",
-      "desc": "OpenAI: https://api.openai.com\n\nAzure OpenAI: https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION\n\nCustom: 您的完整 API 地址，例如：https://gateway.ai.cloudflare.com/v1/CF_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions",
-      "textConfig": {
-        "type": "visible",
-        "placeholderText": "https://api.openai.com"
-      }
+      "type": "text"
     },
     {
-      "identifier": "apiKeys",
-      "type": "text",
-      "title": "API KEY",
       "desc": "必填项。可以用英文逗号分割多个 API KEY 以实现额度加倍及负载均衡",
+      "identifier": "apiKeys",
       "textConfig": {
-        "type": "secure",
         "height": "40",
-        "placeholderText": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-      }
+        "placeholderText": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "type": "secure"
+      },
+      "title": "API KEY",
+      "type": "text"
     },
     {
-      "identifier": "model",
-      "type": "menu",
-      "title": "模型",
       "defaultValue": "gpt-3.5-turbo",
+      "identifier": "model",
       "menuValues": [
         {
           "title": "Custom",
           "value": "custom"
-        },
-        {
-          "title": "GPT-3.5 Turbo",
-          "value": "gpt-3.5-turbo"
-        },
-        {
-          "title": "GPT-4",
-          "value": "gpt-4"
         },
         {
           "title": "GPT-4o",
@@ -82,60 +74,72 @@
           "value": "gpt-4-turbo"
         },
         {
-          "title": "GPT-4 32K",
-          "value": "gpt-4-32k"
+          "title": "GPT-4",
+          "value": "gpt-4"
+        },
+        {
+          "title": "GPT-3.5 Turbo",
+          "value": "gpt-3.5-turbo"
+        },
+        {
+          "title": "Gemini 1.5 Pro",
+          "value": "gemini-1.5-pro"
+        },
+        {
+          "title": "Gemini 1.5 Flash",
+          "value": "gemini-1.5-flash"
         }
-      ]
+      ],
+      "title": "模型",
+      "type": "menu"
     },
     {
-      "identifier": "customModel",
-      "type": "text",
-      "title": "自定义模型",
       "desc": "可选项。当 Model 选择 Custom 时，此项为必填项。请填写有效的模型名称",
+      "identifier": "customModel",
       "textConfig": {
-        "type": "visible",
-        "placeholderText": "gpt-3.5-turbo"
-      }
+        "placeholderText": "gpt-3.5-turbo",
+        "type": "visible"
+      },
+      "title": "自定义模型",
+      "type": "text"
     },
     {
-      "identifier": "customSystemPrompt",
-      "type": "text",
-      "title": "系统指令",
       "defaultValue": "You are a translation engine that can only translate text and cannot interpret it.",
-      "desc": "可选项。自定义 System Prompt，填写则会覆盖默认的 System Prompt。自定义 Prompt可使用以下变量：\n\n`$text` - 需要翻译的文本，即翻译窗口输入框内的文本 `$sourceLang` - 原文语言，即翻译窗口输入框内文本的语言，比如「简体中文」\n\n`$targetLang` - 目标语言，即需要翻译成的语言，可以在翻译窗口中手动选择或自动检测，比如「English」",
+      "desc": "可选项。自定义 System Prompt，填写则会覆盖默认的 System Prompt。自定义 Prompt可使用以下变量：\n\n`$text` - 需要翻译的文本，即翻译窗口输入框内的文本 `$sourceLang` - 原文语言，即翻译窗口输入框内文本的语言，比如「简体中文」\n\n`$targetLang` - 目标语言，即需要翻译成的语言，可以在翻译窗口中手动选择或自动检测，例如「English」",
+      "identifier": "customSystemPrompt",
       "textConfig": {
-        "type": "visible",
         "height": "100",
-        "placeholderText": "You are a translation engine that can only translate text and cannot interpret it.",
         "keyWords": [
           "$text",
           "$sourceLang",
           "$targetLang"
-        ]
-      }
+        ],
+        "placeholderText": "You are a translation engine that can only translate text and cannot interpret it.",
+        "type": "visible"
+      },
+      "title": "系统指令",
+      "type": "text"
     },
     {
-      "identifier": "customUserPrompt",
-      "type": "text",
-      "title": "用户指令",
       "defaultValue": "translate from $sourceLang to $targetLang:\n\n$text",
       "desc": "可选项。自定义 User Prompt，填写则会覆盖默认的 User Prompt，默认值为`$text`（即翻译窗口输入框内的文本）。\n\n自定义 Prompt 中可以使用与系统指令中相同的变量",
+      "identifier": "customUserPrompt",
       "textConfig": {
-        "type": "visible",
         "height": "100",
-        "placeholderText": "translate from $sourceLang to $targetLang:\n\n$text",
         "keyWords": [
           "$text",
           "$sourceLang",
           "$targetLang"
-        ]
-      }
+        ],
+        "placeholderText": "translate from $sourceLang to $targetLang:\n\n$text",
+        "type": "visible"
+      },
+      "title": "用户指令",
+      "type": "text"
     },
     {
-      "identifier": "stream",
-      "type": "menu",
-      "title": "流式输出",
       "defaultValue": "enable",
+      "identifier": "stream",
       "menuValues": [
         {
           "title": "Enable",
@@ -145,18 +149,22 @@
           "title": "Disable",
           "value": "disable"
         }
-      ]
+      ],
+      "title": "流式输出",
+      "type": "menu"
     },
     {
-      "identifier": "temperature",
-      "type": "text",
-      "title": "温度",
       "defaultValue": "0.2",
       "desc": "可选项。温度值越高，生成的文本越随机。默认值为 0.2",
+      "identifier": "temperature",
       "textConfig": {
-        "type": "visible",
-        "placeholderText": "0.2"
-      }
+        "placeholderText": "0.2",
+        "type": "visible"
+      },
+      "title": "温度",
+      "type": "text"
     }
-  ]
+  ],
+  "summary": "AI powered translator",
+  "version": "3.0.0"
 }
