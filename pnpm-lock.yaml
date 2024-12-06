@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@bob-translate/types':
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.0.2
+        version: 1.0.2
       '@rollup/plugin-terser':
         specifier: 0.4.4
         version: 0.4.4(rollup@4.20.0)
@@ -32,8 +32,8 @@ importers:
 
 packages:
 
-  '@bob-translate/types@1.0.1':
-    resolution: {integrity: sha512-QwaLIZ1bbuGCo66IzzN5HOQxEQloq2P9ZQIezaSA3KvA7UePyK1X49TSCM9VJTKNt/haE2ciYwgN9QquXz8YNA==}
+  '@bob-translate/types@1.0.2':
+    resolution: {integrity: sha512-eYy10j8iJ5o6xq0wknH4RUVhnRQJQA+qRMV83LxuAOB289s0qSyxh/LAXmE8RjJanN1ZItiqb5s0aTkbPHPzZA==}
 
   '@jridgewell/gen-mapping@0.3.5':
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
@@ -419,7 +419,7 @@ packages:
 
 snapshots:
 
-  '@bob-translate/types@1.0.1': {}
+  '@bob-translate/types@1.0.2': {}
 
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:
