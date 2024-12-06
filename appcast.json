@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "3.2.0",
+      "desc": "Improve error messages and optimize code structure.",
+      "sha256": "a4a3b93a0b612fc39db8162a6defbe735986057b8ea30eeb13ba99fb8c8e3247",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v3.2.0/openai-translator-3.2.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "3.1.0",
       "desc": "Add Google Gemini Support and Service Provider Refactoring.",
       "sha256": "ee04e8ce3e81d191952561c05fe5f4326bcd948b47035690bbbf6226940a8afa",
