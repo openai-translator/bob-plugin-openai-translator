@@ -17,7 +17,7 @@
   "devDependencies": {
     "@bob-translate/types": "1.0.2",
     "@rollup/plugin-terser": "0.4.4",
-    "@rollup/plugin-typescript": "11.1.6",
+    "@rollup/plugin-typescript": "12.1.1",
     "rollup": "4.28.1",
     "rollup-plugin-copy": "3.5.0",
     "tslib": "2.8.1",
