@@ -25,7 +25,11 @@
 
 - 说明
 
-  - OpenAI：可选，默认为：`https://api.openai.com`
+  - OpenAI：可选，默认为：
+
+    ```
+    https://api.openai.com
+    ```
 
   - OpenAI Compatible：必填，需填入完整的 API URL，例如使用 Cloudflare AI Gateway 时，填入：
 
@@ -35,11 +39,15 @@
 
   - Azure OpenAI：必填，需填入完整的 API URL，格式为：
 
-     ```
-     https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
-     ```
+    ```
+    https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
+    ```
 
-  - Google Gemini：可选，默认为：`https://generativelanguage.googleapis.com/v1beta/models`
+  - Google Gemini：可选，默认为：
+
+    ```
+    https://generativelanguage.googleapis.com/v1beta/models
+    ```
 
 ### API KEY
 

@@ -5,6 +5,8 @@ import { OpenAiAdapter } from "./openai";
 
 export class AzureOpenAiAdapter extends OpenAiAdapter {
 
+  protected override troubleshootingLink = "https://bobtranslate.com/service/translate/azureopenai.html";
+
   public override buildHeaders(apiKey: string): Record<string, string> {
     return {
       "Content-Type": "application/json",
@@ -14,6 +16,30 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
 
   public override getTextGenerationUrl(apiUrl: string): string {
     return apiUrl;
+  }
+
+  protected override extractErrorFromResponse(response: any): ServiceError {
+    const errorData = response.data?.error;
+    if (errorData) {
+      const isAuthError = errorData.code === "401" ||
+        errorData.code === "403" ||
+        errorData.message?.toLowerCase().includes("key") ||
+        errorData.message?.toLowerCase().includes("auth");
+
+      return {
+        type: isAuthError ? "secretKey" : "api",
+        message: errorData.message || "Unknown Azure OpenAI API error",
+        addition: errorData.code,
+        troubleshootingLink: this.troubleshootingLink
+      };
+    }
+
+    return {
+      type: "api",
+      message: "Azure OpenAI API error",
+      addition: JSON.stringify(response.data),
+      troubleshootingLink: this.troubleshootingLink
+    };
   }
 
   public override async testApiConnection(
@@ -41,13 +67,7 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
       });
 
       if (resp.data.error) {
-        const { statusCode } = resp.response;
-        const reason = (statusCode >= 400 && statusCode < 500) ? "param" : "api";
-        handleValidateError(completion, {
-          type: reason,
-          message: resp.data.error,
-          troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
-        });
+        handleValidateError(completion, this.extractErrorFromResponse(resp));
         return;
       }
 
@@ -55,7 +75,7 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
         completion({ result: true });
       }
     } catch (error) {
-      handleValidateError(completion, error as ServiceError);
+      handleValidateError(completion, error);
     }
   }
 }

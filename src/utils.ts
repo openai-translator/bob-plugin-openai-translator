@@ -4,7 +4,7 @@ import type {
   TextTranslateQuery,
   ValidationCompletion
 } from "@bob-translate/types";
-import { HTTP_ERROR_CODES, SYSTEM_PROMPT } from "./const";
+import { SYSTEM_PROMPT } from "./const";
 import { langMap } from "./lang";
 
 export const ensureHttpsAndNoTrailingSlash = (url: string): string => {
@@ -20,6 +20,34 @@ export const getApiKey = (apiKeys: string): string => {
     : apiKeys;
   const apiKeySelection = trimmedApiKeys.split(",").map((key) => key.trim());
   return apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
+}
+
+export const convertToServiceError = (error: unknown, defaultMessage = "未知错误"): ServiceError => {
+  const generalServiceError: ServiceError = {
+    type: "api",
+    message: defaultMessage,
+    addition: JSON.stringify(error)
+  }
+
+  if (error && typeof error === "object") {
+    if ("type" in error && typeof error.type === "string") {
+      return error as ServiceError;
+    }
+
+    if (error instanceof Error) {
+      return {
+        ...generalServiceError,
+        message: error.message,
+      };
+    }
+
+    return generalServiceError;
+  }
+
+  return {
+    ...generalServiceError,
+    type: "unknown",
+  };
 }
 
 export const generatePrompts = (query: TextTranslateQuery): {
@@ -69,42 +97,46 @@ export const generatePrompts = (query: TextTranslateQuery): {
 
 export const handleGeneralError = (
   query: TextTranslateQuery,
-  error: ServiceError | HttpResponse
+  error: unknown | ServiceError | HttpResponse
 ) => {
-  if ("response" in error) {
-    // Handle HTTP response error
-    const { statusCode } = error.response;
-    const reason = statusCode >= 400 && statusCode < 500 ? "param" : "api";
-    query.onCompletion({
-      error: {
-        type: reason,
-        message: `接口响应错误 - ${HTTP_ERROR_CODES[statusCode]}`,
-        addition: `${JSON.stringify(error)}`,
-      },
-    });
-  } else {
-    // Handle general error
-    query.onCompletion({
-      error: {
-        ...error,
-        type: error.type || "unknown",
-        message: error.message || "Unknown error",
-      },
-    });
+  if (error && typeof error === "object" && "response" in error) {
+    // 如果是 HttpResponse，创建包含详细错误信息的 ServiceError
+    const httpError = error as HttpResponse;
+    const serviceError: ServiceError = {
+      type: "api",
+      message: "API 返回了错误响应",
+      addition: JSON.stringify({
+        status: httpError.response.statusCode,
+        data: httpError.data
+      })
+    };
+    query.onCompletion({ error: serviceError });
+    return;
   }
+
+  query.onCompletion({
+    error: isServiceError(error) ? error : convertToServiceError(error)
+  });
+}
+
+export const isServiceError = (error: unknown): error is ServiceError => {
+  return (
+    error !== null &&
+    typeof error === "object" &&
+    "type" in error &&
+    typeof (error as ServiceError).type === "string" &&
+    "message" in error &&
+    typeof (error as ServiceError).message === "string"
+  );
 }
 
 export const handleValidateError = (
   completion: ValidationCompletion,
-  error: ServiceError
+  error: unknown
 ) => {
   completion({
     result: false,
-    error: {
-      ...error,
-      type: error.type || "unknown",
-      message: error.message || "Unknown error",
-    },
+    error: isServiceError(error) ? error : convertToServiceError(error)
   });
 }
 

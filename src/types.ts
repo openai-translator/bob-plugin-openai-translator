@@ -113,30 +113,39 @@ export interface GeminiResponse {
   }>;
 }
 
-interface StreamHandler {
-  handleStream: (
-    streamData: { text: string },
-    query: TextTranslateQuery,
-    targetText: string
-  ) => string;
-}
-
 export interface ServiceAdapter {
   buildHeaders: (apiKey: string) => Record<string, string>;
-
-  buildRequestBody: (query: TextTranslateQuery) => unknown;
-
+  buildRequestBody: (query: TextTranslateQuery) => Record<string, unknown>;
   parseResponse: (response: HttpResponse<GeminiResponse | OpenAiChatCompletion>) => string;
-
   getTextGenerationUrl: (apiUrl: string) => string;
-
   testApiConnection: (
     apiKey: string,
     apiUrl: string,
     completion: ValidationCompletion,
   ) => Promise<void>;
-
-  handleStream: StreamHandler['handleStream'];
+  handleStream: (
+    streamData: { text: string },
+    query: TextTranslateQuery,
+    targetText: string
+  ) => string;
+  makeStreamRequest: (
+    url: string,
+    header: Record<string, string>,
+    body: Record<string, unknown>,
+    query: TextTranslateQuery,
+  ) => Promise<void>;
+  makeRequest: (
+    url: string,
+    header: Record<string, string>,
+    body: Record<string, unknown>,
+    query: TextTranslateQuery,
+  ) => Promise<void>;
+  translate: (
+    query: TextTranslateQuery,
+    apiKey: string,
+    apiUrl: string,
+    isStream: boolean
+  ) => Promise<void>;
 }
 
 export type ServiceProvider = 'azure-openai' | 'gemini' | 'openai' | 'openai-compatible';

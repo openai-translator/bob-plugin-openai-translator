@@ -1,11 +1,9 @@
 import { supportLanguageList } from "./lang";
-import type { ServiceAdapter, ServiceProvider } from "./types";
+import type { ServiceProvider } from "./types";
 import type {
-  HttpResponse,
   PluginValidate,
   ServiceError,
-  TextTranslate,
-  TextTranslateQuery
+  TextTranslate
 } from "@bob-translate/types";
 import {
   getApiKey,
@@ -18,11 +16,12 @@ import { ensureHttpsAndNoTrailingSlash } from "./utils";
 const validatePluginConfig = (): ServiceError | null => {
   const { apiKeys, apiUrl, customModel, model, serviceProvider } = $option;
 
-  if (serviceProvider !== 'openai' && !apiUrl) {
+  if (["openai-compatible", "azure-openai"].includes(serviceProvider) && !apiUrl) {
     return {
       type: "param",
       message: "配置错误 - 请填写 API URL",
-      addition: "请在插件配置中填写完整的 API URL"
+      addition: "请在插件配置中填写有效的 API URL",
+      troubleshootingLink: "https://github.com/openai-translator/bob-plugin-openai-translator/blob/main/docs/configuration_manual_CN.md#api-url"
     };
   }
 
@@ -55,7 +54,7 @@ const validatePluginConfig = (): ServiceError | null => {
   if (model === "custom" && !customModel) {
     return {
       type: "param",
-      message: "配置错误 - 请确保您在插件配置中填入了正确的自定义模型名称",
+      message: "配置错误 - 请确保你在插件配置中填入了正确的自定义模型名称",
       addition: "请在插件配置中填写自定义模型名称",
     };
   }
@@ -63,30 +62,7 @@ const validatePluginConfig = (): ServiceError | null => {
   return null;
 }
 
-const handleGeneralResponse = (
-  query: TextTranslateQuery,
-  result: HttpResponse<any>,
-  adapter: ServiceAdapter
-) => {
-  try {
-    const text = adapter.parseResponse(result);
-    query.onCompletion({
-      result: {
-        from: query.detectFrom,
-        to: query.detectTo,
-        toParagraphs: text.split("\n"),
-      },
-    });
-  } catch (error) {
-    handleGeneralError(query, {
-      type: "api",
-      message: `接口未返回结果`,
-      addition: JSON.stringify(result),
-    });
-  }
-}
-
-const translate: TextTranslate = (query) => {
+export const translate: TextTranslate = (query) => {
   const {
     apiKeys,
     apiUrl,
@@ -98,82 +74,22 @@ const translate: TextTranslate = (query) => {
   const apiKey = getApiKey(apiKeys);
 
   const error = validatePluginConfig();
-
   if (error) {
     handleGeneralError(query, error);
     return;
   }
 
-  const textGenerationUrl = serviceAdapter.getTextGenerationUrl(ensureHttpsAndNoTrailingSlash(apiUrl));
-  const header = serviceAdapter.buildHeaders(apiKey);
-  const body = serviceAdapter.buildRequestBody(query);
-
-  let targetText = "";
-  (async () => {
-    if (stream === "enable") {
-      await $http.streamRequest({
-        method: "POST",
-        url: textGenerationUrl,
-        header,
-        body: {
-          ...body as Record<string, unknown>,
-        },
-        cancelSignal: query.cancelSignal,
-        streamHandler: (streamData) => {
-          if (streamData.text?.includes("Invalid token")) {
-            handleGeneralError(query, {
-              type: "secretKey",
-              message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
-              addition: "请在插件配置中填写正确的 API Keys",
-              troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html"
-            });
-            return;
-          }
-
-          if (!streamData.text) {
-            return;
-          }
-
-          targetText = serviceAdapter.handleStream(
-            { text: streamData.text },
-            query,
-            targetText
-          );
-        },
-        handler: (result) => {
-          if (result.response.statusCode >= 400) {
-            handleGeneralError(query, result);
-          } else {
-            query.onCompletion({
-              result: {
-                from: query.detectFrom,
-                to: query.detectTo,
-                toParagraphs: [targetText],
-              },
-            });
-          }
-        }
-      });
-    } else {
-      const result = await $http.request({
-        method: "POST",
-        url: textGenerationUrl,
-        header,
-        body: body as Record<string, unknown>,
-      });
-
-      if (result.error) {
-        handleGeneralError(query, result);
-      } else {
-        handleGeneralResponse(query, result, serviceAdapter);
-      }
-    }
-  })().catch((error) => {
+  serviceAdapter.translate(
+    query,
+    apiKey,
+    ensureHttpsAndNoTrailingSlash(apiUrl),
+    stream === "enable"
+  ).catch((error: unknown) => {
     handleGeneralError(query, error);
   });
 }
 
-const pluginValidate: PluginValidate = (completion) => {
+export const pluginValidate: PluginValidate = (completion) => {
   const { apiKeys, apiUrl, serviceProvider } = $option;
   const apiKey = getApiKey(apiKeys);
   const pluginConfigError = validatePluginConfig();
@@ -184,18 +100,16 @@ const pluginValidate: PluginValidate = (completion) => {
     return;
   }
 
-  serviceAdapter.testApiConnection(apiKey, ensureHttpsAndNoTrailingSlash(apiUrl), completion).catch((error) => {
+  serviceAdapter.testApiConnection(
+    apiKey,
+    ensureHttpsAndNoTrailingSlash(apiUrl),
+    completion
+  ).catch((error: unknown) => {
+    $log.error(`pluginValidate error: ${JSON.stringify(error)}`);
     handleValidateError(completion, error);
   });
 }
 
-const pluginTimeoutInterval = () => 60;
+export const pluginTimeoutInterval = () => 60;
 
-const supportLanguages = () => supportLanguageList.map(([standardLang]) => standardLang);
-
-export {
-  pluginTimeoutInterval,
-  pluginValidate,
-  supportLanguages,
-  translate,
-}
+export const supportLanguages = () => supportLanguageList.map(([standardLang]) => standardLang);

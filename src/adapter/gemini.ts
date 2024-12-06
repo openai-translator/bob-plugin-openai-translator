@@ -1,12 +1,38 @@
 import { HttpResponse, ServiceError, TextTranslateQuery, ValidationCompletion } from "@bob-translate/types";
-import type { OpenAiChatCompletion, GeminiResponse, ServiceAdapter } from "../types";
+import type { OpenAiChatCompletion, GeminiResponse } from "../types";
 import { generatePrompts, handleValidateError } from "../utils";
+import { BaseAdapter } from "./base";
 
-export class GeminiAdapter implements ServiceAdapter {
+export class GeminiAdapter extends BaseAdapter {
 
   private model = $option.model === "custom" ? $option.customModel : $option.model;
 
   private baseUrl = $option.apiUrl || 'https://generativelanguage.googleapis.com/v1beta/models';
+
+  protected troubleshootingLink = "https://bobtranslate.com/service/translate/gemini.html";
+
+  protected extractErrorFromResponse(response: HttpResponse<any>): ServiceError {
+    const errorData = response.data?.error;
+    if (errorData) {
+      const isAuthError = errorData.status === "UNAUTHENTICATED" ||
+        errorData.status === "PERMISSION_DENIED" ||
+        errorData.message?.includes("API key");
+
+      return {
+        type: isAuthError ? "secretKey" : "api",
+        message: errorData.message || "Unknown Gemini API error",
+        addition: errorData.status,
+        troubleshootingLink: this.troubleshootingLink
+      };
+    }
+
+    return {
+      type: "api",
+      message: "Gemini API error",
+      addition: JSON.stringify(response.data),
+      troubleshootingLink: this.troubleshootingLink
+    };
+  }
 
   public buildHeaders(apiKey: string): Record<string, string> {
     return {
@@ -15,9 +41,8 @@ export class GeminiAdapter implements ServiceAdapter {
     };
   }
 
-  public buildRequestBody(query: TextTranslateQuery): unknown {
+  public buildRequestBody(query: TextTranslateQuery): Record<string, unknown> {
     const { temperature } = $option;
-
     const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
 
     return {
@@ -43,7 +68,6 @@ export class GeminiAdapter implements ServiceAdapter {
 
   public getTextGenerationUrl(_apiUrl: string): string {
     const { stream } = $option;
-
     const operationName = stream === "enable" ? 'streamGenerateContent' : 'generateContent';
     return `${this.baseUrl}/${this.model}:${operationName}`;
   }
@@ -68,26 +92,22 @@ export class GeminiAdapter implements ServiceAdapter {
     const header = this.buildHeaders(apiKey);
 
     try {
-      const resp = await $http.request({
+      const response = await $http.request({
         method: "GET",
         url: apiUrl,
         header
       });
 
-      if (resp.data.error) {
-        handleValidateError(completion, {
-          type: "param",
-          message: resp.data.error,
-          troubleshootingLink: "https://bobtranslate.com/service/translate/gemini.html"
-        });
+      if (response.data.error) {
+        handleValidateError(completion, this.extractErrorFromResponse(response));
         return;
       }
 
-      if (resp.data.models?.length > 0) {
+      if (response.data.models?.length > 0) {
         completion({ result: true });
       }
     } catch (error) {
-      handleValidateError(completion, error as ServiceError);
+      handleValidateError(completion, error);
     }
   }
 
