@@ -94,6 +94,18 @@ export interface OpenAiModelList {
   data: OpenAiModel[]
 }
 
+export interface OpenAiErrorResponse {
+  error: OpenAiErrorDetail;
+}
+
+export interface OpenAiErrorDetail {
+  param: string | null;
+  message: string;
+  code: string;
+  type: string;
+}
+
+
 export interface GeminiResponse {
   usageMetadata: {
     promptTokenCount: number;
@@ -148,4 +160,19 @@ export interface ServiceAdapter {
   ) => Promise<void>;
 }
 
+
+export interface ServiceAdapterConfig {
+  troubleshootingLink: string;
+  baseUrl?: string;
+}
+
 export type ServiceProvider = 'azure-openai' | 'gemini' | 'openai' | 'openai-compatible';
+
+export interface TypeCheckConfig {
+  [key: string]: {
+    type: 'string' | 'object' | 'null';
+    optional?: boolean;
+    nullable?: boolean;
+  }
+}
+

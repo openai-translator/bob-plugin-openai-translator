@@ -36,7 +36,7 @@
       "desc": "OpenAI: https://api.openai.com\n\nOpenAI Compatible: 完整的 API 地址，例如：https://gateway.ai.cloudflare.com/v1/CF_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions\n\nAzure OpenAI: https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION\n\nGoogle Gemini: https://generativelanguage.googleapis.com/v1beta/models",
       "identifier": "apiUrl",
       "textConfig": {
-        "height": "40",
+        "height": "55",
         "placeholderText": "https://api.openai.com",
         "type": "visible"
       },

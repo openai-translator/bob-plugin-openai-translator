@@ -1,8 +1,21 @@
 import { HttpResponse, ServiceError, TextTranslateQuery, ValidationCompletion } from "@bob-translate/types";
 import { handleGeneralError, convertToServiceError } from "../utils";
-import type { GeminiResponse, OpenAiChatCompletion, ServiceAdapter } from "../types";
+import type { GeminiResponse, OpenAiChatCompletion, ServiceAdapter, ServiceAdapterConfig } from "../types";
 
 export abstract class BaseAdapter implements ServiceAdapter {
+  protected constructor(protected readonly config: ServiceAdapterConfig) { }
+
+  protected getTemperature(): number {
+    return Number($option.temperature) ?? 0.2;
+  }
+
+  protected isStreamEnabled(): boolean {
+    return $option.stream === "enable";
+  }
+
+  protected getModel(): string {
+    return $option.model === "custom" ? $option.customModel : $option.model;
+  }
 
   abstract buildHeaders(apiKey: string): Record<string, string>;
 
@@ -16,8 +29,6 @@ export abstract class BaseAdapter implements ServiceAdapter {
 
   abstract testApiConnection(apiKey: string, apiUrl: string, completion: ValidationCompletion): Promise<void>;
 
-  protected abstract troubleshootingLink: string;
-
   protected abstract extractErrorFromResponse(response: HttpResponse<any>): ServiceError;
 
   protected handleInvalidToken(query: TextTranslateQuery) {
@@ -25,7 +36,7 @@ export abstract class BaseAdapter implements ServiceAdapter {
       type: "secretKey",
       message: "配置错误 - 请确保您在插件配置中填入了正确的 API Keys",
       addition: "请在插件配置中填写正确的 API Keys",
-      troubleshootingLink: this.troubleshootingLink
+      troubleshootingLink: this.config.troubleshootingLink
     });
   }
 
@@ -52,7 +63,7 @@ export abstract class BaseAdapter implements ServiceAdapter {
   protected handleRequestError(query: TextTranslateQuery, error: unknown) {
     const serviceError = convertToServiceError(error);
     if (serviceError.troubleshootingLink === undefined) {
-      serviceError.troubleshootingLink = this.troubleshootingLink;
+      serviceError.troubleshootingLink = this.config.troubleshootingLink;
     }
     handleGeneralError(query, serviceError);
   }

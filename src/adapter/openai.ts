@@ -1,34 +1,47 @@
 import { HttpResponse, ServiceError, TextTranslateQuery, ValidationCompletion } from "@bob-translate/types";
-import type { OpenAiChatCompletion, GeminiResponse, OpenAiModelList } from "../types";
-import { generatePrompts, handleValidateError, isServiceError, replacePromptKeywords } from "../utils";
+import type { OpenAiChatCompletion, GeminiResponse, OpenAiModelList, ServiceAdapterConfig, OpenAiErrorDetail, OpenAiErrorResponse } from "../types";
+import { generatePrompts, handleValidateError, isServiceError, replacePromptKeywords, createTypeGuard } from "../utils";
 import { BaseAdapter } from "./base";
 
+const hasOpenAiErrorShape = createTypeGuard<OpenAiErrorResponse>({
+  error: {
+    type: 'object'
+  }
+});
+
+const hasOpenAiErrorDetailShape = createTypeGuard<OpenAiErrorDetail>({
+  message: { type: 'string' },
+  code: { type: 'string' },
+  type: { type: 'string' },
+  param: { type: 'string', nullable: true }
+});
+
 export class OpenAiAdapter extends BaseAdapter {
-
-  private baseUrl = $option.apiUrl || "https://api.openai.com";
-
   private buffer = '';
 
-  private model = $option.model === "custom" ? $option.customModel : $option.model;
+  constructor(config?: ServiceAdapterConfig) {
+    super(config || {
+      troubleshootingLink: "https://bobtranslate.com/service/translate/openai.html",
+      baseUrl: $option.apiUrl || "https://api.openai.com"
+    });
+  }
 
-  protected troubleshootingLink = "https://bobtranslate.com/service/translate/openai.html";
-
-  protected extractErrorFromResponse(response: HttpResponse<any>): ServiceError {
-    const errorData = response.data?.error;
-    if (errorData) {
+  protected extractErrorFromResponse(errorResponse: HttpResponse<unknown>): ServiceError {
+    if (hasOpenAiErrorShape(errorResponse.data) && hasOpenAiErrorDetailShape(errorResponse.data.error)) {
+      const { error: errorDetail } = errorResponse.data;
       return {
-        type: errorData.code === "invalid_api_key" ? "secretKey" : "api",
-        message: errorData.message || "Unknown OpenAI API error",
-        addition: errorData.type,
-        troubleshootingLink: this.troubleshootingLink
+        type: errorDetail.code === "invalid_api_key" ? "secretKey" : "api",
+        message: errorDetail.message || "Unknown OpenAI API error",
+        addition: errorDetail.type,
+        troubleshootingLink: this.config.troubleshootingLink
       };
     }
 
     return {
       type: "api",
-      message: "OpenAI API error",
-      addition: JSON.stringify(response.data),
-      troubleshootingLink: this.troubleshootingLink
+      message: errorResponse.response.statusCode === 401 ? "Invalid API key" : "OpenAI API error",
+      addition: JSON.stringify(errorResponse.data),
+      troubleshootingLink: this.config.troubleshootingLink
     };
   }
 
@@ -40,22 +53,20 @@ export class OpenAiAdapter extends BaseAdapter {
   }
 
   public buildRequestBody(query: TextTranslateQuery): Record<string, unknown> {
-    const { customSystemPrompt, customUserPrompt, temperature, stream } = $option;
+    const { customSystemPrompt, customUserPrompt } = $option;
     const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
 
     const systemPrompt = replacePromptKeywords(customSystemPrompt, query) || generatedSystemPrompt;
     const userPrompt = replacePromptKeywords(customUserPrompt, query) || generatedUserPrompt;
 
-    const modelTemperature = Number(temperature) ?? 0.2;
-
     return {
-      model: this.model,
-      temperature: modelTemperature,
+      model: this.getModel(),
+      temperature: this.getTemperature(),
       max_tokens: 1000,
       top_p: 1,
       frequency_penalty: 1,
       presence_penalty: 1,
-      stream: stream === "enable",
+      stream: this.isStreamEnabled(),
       messages: [
         {
           role: "system",
@@ -91,14 +102,14 @@ export class OpenAiAdapter extends BaseAdapter {
   }
 
   public getTextGenerationUrl(_apiUrl: string): string {
-    return `${this.baseUrl}/v1/chat/completions`;
+    return `${this.config.baseUrl}/v1/chat/completions`;
   }
 
   protected getValidationUrl(_apiUrl: string): string {
-    return `${this.baseUrl}/v1/models`;
+    return `${this.config.baseUrl}/v1/models`;
   }
 
-  private parseStreamResponse(text: string): string | null {
+  protected parseStreamResponse(text: string): string | null {
     if (text === '[DONE]') {
       return null;
     }
@@ -142,14 +153,14 @@ export class OpenAiAdapter extends BaseAdapter {
               type: type || 'param',
               message: message || 'Failed to parse JSON',
               addition,
-              troubleshootingLink: this.troubleshootingLink
+              troubleshootingLink: this.config.troubleshootingLink
             };
           } else {
             throw {
               type: 'param',
               message: 'An unknown error occurred',
               addition: JSON.stringify(error),
-              troubleshootingLink: this.troubleshootingLink
+              troubleshootingLink: this.config.troubleshootingLink
             };
           }
         }
@@ -171,18 +182,18 @@ export class OpenAiAdapter extends BaseAdapter {
     const validationUrl = this.getValidationUrl(apiUrl);
 
     try {
-      const resp = await $http.request({
+      const response = await $http.request({
         method: "GET",
         url: validationUrl,
         header
       });
 
-      if (resp.data.error) {
-        handleValidateError(completion, this.extractErrorFromResponse(resp));
+      if (hasOpenAiErrorShape(response.data)) {
+        handleValidateError(completion, this.extractErrorFromResponse(response));
         return;
       }
 
-      const modelList = resp.data as OpenAiModelList;
+      const modelList = response.data as OpenAiModelList;
       if (modelList.data?.length > 0) {
         completion({ result: true });
       }
@@ -190,8 +201,4 @@ export class OpenAiAdapter extends BaseAdapter {
       handleValidateError(completion, error);
     }
   }
-}
-
-export class OpenAiCompatibleAdapter extends OpenAiAdapter {
-  protected override troubleshootingLink = "https://bobtranslate.com/service/translate/openai-compatible.html";
 }

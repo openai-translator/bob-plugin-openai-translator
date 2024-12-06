@@ -4,8 +4,11 @@ import { OpenAiChatCompletion } from "../types";
 import { OpenAiAdapter } from "./openai";
 
 export class AzureOpenAiAdapter extends OpenAiAdapter {
-
-  protected override troubleshootingLink = "https://bobtranslate.com/service/translate/azureopenai.html";
+  constructor() {
+    super({
+      troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
+    });
+  }
 
   public override buildHeaders(apiKey: string): Record<string, string> {
     return {
@@ -30,7 +33,7 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
         type: isAuthError ? "secretKey" : "api",
         message: errorData.message || "Unknown Azure OpenAI API error",
         addition: errorData.code,
-        troubleshootingLink: this.troubleshootingLink
+        troubleshootingLink: this.config.troubleshootingLink
       };
     }
 
@@ -38,7 +41,7 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
       type: "api",
       message: "Azure OpenAI API error",
       addition: JSON.stringify(response.data),
-      troubleshootingLink: this.troubleshootingLink
+      troubleshootingLink: this.config.troubleshootingLink
     };
   }
 
@@ -50,7 +53,7 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
     const header = this.buildHeaders(apiKey);
 
     try {
-      const resp = await $http.request({
+      const response = await $http.request({
         method: "POST",
         url: apiUrl,
         header,
@@ -66,12 +69,12 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
         }
       });
 
-      if (resp.data.error) {
-        handleValidateError(completion, this.extractErrorFromResponse(resp));
+      if (response.data.error) {
+        handleValidateError(completion, this.extractErrorFromResponse(response));
         return;
       }
 
-      if ((resp.data as OpenAiChatCompletion).choices.length > 0) {
+      if ((response.data as OpenAiChatCompletion).choices.length > 0) {
         completion({ result: true });
       }
     } catch (error) {

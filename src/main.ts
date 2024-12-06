@@ -16,7 +16,7 @@ import { ensureHttpsAndNoTrailingSlash } from "./utils";
 const validatePluginConfig = (): ServiceError | null => {
   const { apiKeys, apiUrl, customModel, model, serviceProvider } = $option;
 
-  if (["openai-compatible", "azure-openai"].includes(serviceProvider) && !apiUrl) {
+  if (["azure-openai", "openai-compatible"].includes(serviceProvider) && !apiUrl) {
     return {
       type: "param",
       message: "配置错误 - 请填写 API URL",

@@ -4,50 +4,72 @@ import type {
   TextTranslateQuery,
   ValidationCompletion
 } from "@bob-translate/types";
-import { SYSTEM_PROMPT } from "./const";
 import { langMap } from "./lang";
+import { TypeCheckConfig } from "./types";
 
-export const ensureHttpsAndNoTrailingSlash = (url: string): string => {
-  const hasProtocol = /^[a-z]+:\/\//i.test(url);
-  const modifiedUrl = hasProtocol ? url : "https://" + url;
+const SYSTEM_PROMPT = "You are a translation engine that can only translate text and cannot interpret it." as const;
 
-  return modifiedUrl.endsWith("/") ? modifiedUrl.slice(0, -1) : modifiedUrl;
-}
+export const createTypeGuard = <T>(config: TypeCheckConfig) => {
+  return (value: unknown): value is T => {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
 
-export const getApiKey = (apiKeys: string): string => {
-  const trimmedApiKeys = apiKeys.endsWith(",")
-    ? apiKeys.slice(0, -1)
-    : apiKeys;
-  const apiKeySelection = trimmedApiKeys.split(",").map((key) => key.trim());
-  return apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
-}
+    return Object.entries(config).every(([key, check]) => {
+      if (!(key in value)) {
+        return check.optional ?? false;
+      }
+
+      const fieldValue = (value as any)[key];
+      if (check.nullable && fieldValue === null) {
+        return true;
+      }
+
+      return typeof fieldValue === check.type;
+    });
+  };
+};
+
+const hasServiceErrorShape = createTypeGuard<ServiceError>({
+  type: { type: 'string' },
+  message: { type: 'string' },
+  addition: { type: 'string', optional: true },
+  troubleshootingLink: { type: 'string', optional: true }
+});
 
 export const convertToServiceError = (error: unknown, defaultMessage = "未知错误"): ServiceError => {
   const generalServiceError: ServiceError = {
     type: "api",
     message: defaultMessage,
     addition: JSON.stringify(error)
-  }
-
-  if (error && typeof error === "object") {
-    if ("type" in error && typeof error.type === "string") {
-      return error as ServiceError;
-    }
-
-    if (error instanceof Error) {
-      return {
-        ...generalServiceError,
-        message: error.message,
-      };
-    }
-
-    return generalServiceError;
-  }
-
-  return {
-    ...generalServiceError,
-    type: "unknown",
   };
+
+  if (!error || typeof error !== 'object') {
+    return {
+      ...generalServiceError,
+      type: "unknown",
+    };
+  }
+
+  if (hasServiceErrorShape(error)) {
+    return error;
+  }
+
+  if (error instanceof Error) {
+    return {
+      ...generalServiceError,
+      message: error.message,
+    };
+  }
+
+  return generalServiceError;
+};
+
+export const ensureHttpsAndNoTrailingSlash = (url: string): string => {
+  const hasProtocol = /^[a-z]+:\/\//i.test(url);
+  const modifiedUrl = hasProtocol ? url : "https://" + url;
+
+  return modifiedUrl.endsWith("/") ? modifiedUrl.slice(0, -1) : modifiedUrl;
 }
 
 export const generatePrompts = (query: TextTranslateQuery): {
@@ -95,6 +117,14 @@ export const generatePrompts = (query: TextTranslateQuery): {
   };
 }
 
+export const getApiKey = (apiKeys: string): string => {
+  const trimmedApiKeys = apiKeys.endsWith(",")
+    ? apiKeys.slice(0, -1)
+    : apiKeys;
+  const apiKeySelection = trimmedApiKeys.split(",").map((key) => key.trim());
+  return apiKeySelection[Math.floor(Math.random() * apiKeySelection.length)];
+}
+
 export const handleGeneralError = (
   query: TextTranslateQuery,
   error: unknown | ServiceError | HttpResponse
@@ -119,17 +149,6 @@ export const handleGeneralError = (
   });
 }
 
-export const isServiceError = (error: unknown): error is ServiceError => {
-  return (
-    error !== null &&
-    typeof error === "object" &&
-    "type" in error &&
-    typeof (error as ServiceError).type === "string" &&
-    "message" in error &&
-    typeof (error as ServiceError).message === "string"
-  );
-}
-
 export const handleValidateError = (
   completion: ValidationCompletion,
   error: unknown
@@ -139,6 +158,11 @@ export const handleValidateError = (
     error: isServiceError(error) ? error : convertToServiceError(error)
   });
 }
+
+export const isServiceError = createTypeGuard<ServiceError>({
+  type: { type: 'string' },
+  message: { type: 'string' }
+});
 
 export const replacePromptKeywords = (
   prompt: string,

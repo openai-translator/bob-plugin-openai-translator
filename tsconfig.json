@@ -1,20 +1,24 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
     "noUnusedParameters": true,
     "pretty": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "ES5",
-    "useDefineForClassFields": false,
     "types": [
       "@bob-translate/types"
-    ]
+    ],
+    "useDefineForClassFields": false,
   },
   "exclude": [
     "dist",

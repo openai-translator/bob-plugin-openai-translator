@@ -4,12 +4,12 @@ import { generatePrompts, handleValidateError } from "../utils";
 import { BaseAdapter } from "./base";
 
 export class GeminiAdapter extends BaseAdapter {
-
-  private model = $option.model === "custom" ? $option.customModel : $option.model;
-
-  private baseUrl = $option.apiUrl || 'https://generativelanguage.googleapis.com/v1beta/models';
-
-  protected troubleshootingLink = "https://bobtranslate.com/service/translate/gemini.html";
+  constructor() {
+    super({
+      troubleshootingLink: "https://bobtranslate.com/service/translate/gemini.html",
+      baseUrl: $option.apiUrl || 'https://generativelanguage.googleapis.com/v1beta/models'
+    });
+  }
 
   protected extractErrorFromResponse(response: HttpResponse<any>): ServiceError {
     const errorData = response.data?.error;
@@ -22,7 +22,7 @@ export class GeminiAdapter extends BaseAdapter {
         type: isAuthError ? "secretKey" : "api",
         message: errorData.message || "Unknown Gemini API error",
         addition: errorData.status,
-        troubleshootingLink: this.troubleshootingLink
+        troubleshootingLink: this.config.troubleshootingLink
       };
     }
 
@@ -30,7 +30,7 @@ export class GeminiAdapter extends BaseAdapter {
       type: "api",
       message: "Gemini API error",
       addition: JSON.stringify(response.data),
-      troubleshootingLink: this.troubleshootingLink
+      troubleshootingLink: this.config.troubleshootingLink
     };
   }
 
@@ -42,7 +42,6 @@ export class GeminiAdapter extends BaseAdapter {
   }
 
   public buildRequestBody(query: TextTranslateQuery): Record<string, unknown> {
-    const { temperature } = $option;
     const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
 
     return {
@@ -57,7 +56,7 @@ export class GeminiAdapter extends BaseAdapter {
         }
       },
       generationConfig: {
-        temperature: Number(temperature) ?? 0.2,
+        temperature: this.getTemperature(),
         topK: 40,
         topP: 0.95,
         maxOutputTokens: 8192,
@@ -67,9 +66,8 @@ export class GeminiAdapter extends BaseAdapter {
   }
 
   public getTextGenerationUrl(_apiUrl: string): string {
-    const { stream } = $option;
-    const operationName = stream === "enable" ? 'streamGenerateContent' : 'generateContent';
-    return `${this.baseUrl}/${this.model}:${operationName}`;
+    const operationName = this.isStreamEnabled() ? 'streamGenerateContent' : 'generateContent';
+    return `${this.config.baseUrl}/${this.getModel()}:${operationName}`;
   }
 
   public parseResponse(response: HttpResponse<GeminiResponse | OpenAiChatCompletion>): string {
@@ -134,7 +132,7 @@ export class GeminiAdapter extends BaseAdapter {
           },
         });
       }
-    } catch (error) {
+    } catch (_error) {
       throw new Error('Failed to parse Gemini stream response');
     }
 
