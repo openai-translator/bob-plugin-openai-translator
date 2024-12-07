@@ -6,10 +6,10 @@ import { OpenAiCompatibleAdapter } from './openai-compatible';
 
 export const getServiceAdapter = (serviceProvider: ServiceProvider): ServiceAdapter => {
   switch (serviceProvider) {
-    case 'gemini':
-      return new GeminiAdapter();
     case 'azure-openai':
       return new AzureOpenAiAdapter();
+    case 'gemini':
+      return new GeminiAdapter();
     case 'openai-compatible':
       return new OpenAiCompatibleAdapter();
     default:

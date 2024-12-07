@@ -6,16 +6,16 @@
   <h1 align="center">OpenAI Translator Bob Plugin</h1>
   <p align="center">
     <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases" target="_blank">
-        <img src="https://github.com/openai-translator/bob-plugin-openai-translator/actions/workflows/release.yaml/badge.svg" alt="release">
+        <img alt="release" src="https://github.com/openai-translator/bob-plugin-openai-translator/actions/workflows/release.yaml/badge.svg">
     </a>
     <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases">
         <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/openai-translator/bob-plugin-openai-translator?style=flat">
     </a>
     <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases">
-        <img alt="GitHub Repo stars" src="https://img.shields.io/badge/openai-Bob-brightgreen?style=flat">
+        <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/openai-translator/bob-plugin-openai-translator/total">
     </a>
     <a href="https://github.com/openai-translator/bob-plugin-openai-translator/releases">
-        <img alt="GitHub Repo stars" src="https://img.shields.io/badge/langurage-JavaScript-brightgreen?style=flat&color=blue">
+        <img alt="language" src="https://img.shields.io/badge/language-TypeScript-brightgreen?style=flat&color=blue">
     </a>
   </p>
 </div>

@@ -105,7 +105,6 @@ export const pluginValidate: PluginValidate = (completion) => {
     ensureHttpsAndNoTrailingSlash(apiUrl),
     completion
   ).catch((error: unknown) => {
-    $log.error(`pluginValidate error: ${JSON.stringify(error)}`);
     handleValidateError(completion, error);
   });
 }
