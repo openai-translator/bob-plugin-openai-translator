@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "3.3.0",
+      "desc": "Fix Gemini streaming text loss and improve stability",
+      "sha256": "31fe359ed4ca49d297dd5fbce5f6c6b4f9e7bde32ad0bea60a911d3acd5101ea",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v3.3.0/openai-translator-3.3.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "3.2.0",
       "desc": "Improve error messages and optimize code structure.",
       "sha256": "a4a3b93a0b612fc39db8162a6defbe735986057b8ea30eeb13ba99fb8c8e3247",
