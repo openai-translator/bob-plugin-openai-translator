@@ -60,14 +60,14 @@ export class GeminiAdapter extends BaseAdapter {
         topK: 40,
         topP: 0.95,
         maxOutputTokens: 8192,
-        responseMimeType: "text/plain"
       }
     };
   }
 
   public getTextGenerationUrl(_apiUrl: string): string {
     const operationName = this.isStreamEnabled() ? 'streamGenerateContent' : 'generateContent';
-    return `${this.config.baseUrl}/${this.getModel()}:${operationName}`;
+    const baseUrl = `${this.config.baseUrl}/${this.getModel()}:${operationName}`;
+    return this.isStreamEnabled() ? `${baseUrl}?alt=sse` : baseUrl;
   }
 
   public parseResponse(response: HttpResponse<GeminiResponse | OpenAiChatCompletion>): string {
@@ -115,15 +115,23 @@ export class GeminiAdapter extends BaseAdapter {
     targetText: string
   ): string {
     try {
-      const cleanedText = streamData.text.startsWith(',')
-        ? streamData.text.slice(1)
-        : streamData.text;
+      let cleanedText = streamData.text;
+
+      // Remove "data: " prefix if present
+      if (cleanedText.startsWith('data: ')) {
+        cleanedText = cleanedText.slice(5);
+      }
+      // Remove leading comma if present
+      if (cleanedText.startsWith(',')) {
+        cleanedText = cleanedText.slice(1);
+      }
 
       const parsedChunk = JSON.parse(cleanedText);
       const text = parsedChunk.candidates?.[0]?.content?.parts?.[0]?.text;
 
       if (text) {
         targetText += text;
+
         query.onStream({
           result: {
             from: query.detectFrom,
