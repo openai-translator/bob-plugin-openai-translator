@@ -84,7 +84,7 @@ export class GeminiAdapter extends BaseAdapter {
 
   public async testApiConnection(
     apiKey: string,
-    apiUrl: string,
+    _apiUrl: string,
     completion: ValidationCompletion,
   ): Promise<void> {
     const header = this.buildHeaders(apiKey);
@@ -92,7 +92,7 @@ export class GeminiAdapter extends BaseAdapter {
     try {
       const response = await $http.request({
         method: "GET",
-        url: apiUrl,
+        url: this.config.baseUrl!,
         header
       });
 
