@@ -86,3 +86,9 @@ ChatGPT 向我们展示了 GPT 模型的伟大之处，所以我使用 OpenAI �
 ## 感谢
 
 我这只是个小小的 Bob 插件，强大的是 Bob 本身，向它的开发者 [ripperhe](https://github.com/ripperhe) 致敬！
+
+<!--
+<a href="https://api.gitsponsors.com/api/badge/link?p=CCTAcO52X68ppJ/My08020IxahBsfD6PUbrqKuOwPrq9S62VS6Ws2GohPnu+c7iLZCl1VMGgi9XUBFCbUqSf5Tu5kxKOygBDoLTUpUqbpET/qDO3asPc9qXuWMW4025U5MHsXaE0VScm35uM38/z0w==">
+  <img src="https://api.gitsponsors.com/api/badge/img?id=603668088" height="90">
+</a>
+-->
