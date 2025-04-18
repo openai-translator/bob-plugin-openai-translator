@@ -55,7 +55,7 @@
       "type": "text"
     },
     {
-      "defaultValue": "gpt-3.5-turbo",
+      "defaultValue": "gpt-4.1-nano",
       "identifier": "model",
       "menuValues": [
         {
@@ -63,32 +63,32 @@
           "value": "custom"
         },
         {
+          "title": "GPT-4.1",
+          "value": "gpt-4.1"
+        },
+        {
+          "title": "GPT-4.1 mini",
+          "value": "gpt-4.1-mini"
+        },
+        {
+          "title": "GPT-4.1 nano",
+          "value": "gpt-4.1-nano"
+        },
+        {
           "title": "GPT-4o",
           "value": "gpt-4o"
         },
         {
-          "title": "GPT-4o mini",
-          "value": "gpt-4o-mini"
+          "title": "o4-mini",
+          "value": "o4-mini"
         },
         {
-          "title": "GPT-4 Turbo",
-          "value": "gpt-4-turbo"
+          "title": "Gemini 2.5 Pro Preview 03-25",
+          "value": "gemini-2.5-pro-preview-03-25"
         },
         {
-          "title": "GPT-4",
-          "value": "gpt-4"
-        },
-        {
-          "title": "GPT-3.5 Turbo",
-          "value": "gpt-3.5-turbo"
-        },
-        {
-          "title": "Gemini 1.5 Pro",
-          "value": "gemini-1.5-pro"
-        },
-        {
-          "title": "Gemini 1.5 Flash",
-          "value": "gemini-1.5-flash"
+          "title": "Gemini 2.5 Flash Preview 04-17",
+          "value": "gemini-2.5-flash-preview-04-17"
         }
       ],
       "title": "模型",
@@ -98,7 +98,7 @@
       "desc": "可选项。当 Model 选择 Custom 时，此项为必填项。请填写有效的模型名称",
       "identifier": "customModel",
       "textConfig": {
-        "placeholderText": "gpt-3.5-turbo",
+        "placeholderText": "gpt-4.1-nano",
         "type": "visible"
       },
       "title": "自定义模型",
