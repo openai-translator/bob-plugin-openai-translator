@@ -15,7 +15,7 @@
     "build": "rollup --config rollup.config.ts --configPlugin typescript"
   },
   "devDependencies": {
-    "@bob-translate/types": "1.0.2",
+    "@bob-translate/types": "1.1.0",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.2",
     "rollup": "4.31.0",
