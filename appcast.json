@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "3.3.2",
+      "desc": "对于 Azure OpenAI Service 不再要求域名部分一定包含 \"openai.azure.com\"",
+      "sha256": "75e27ed10816e9bbcfd75dc34710b6a68123e16f72a30ba241ac5f8cc0c71903",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v3.3.2/openai-translator-3.3.2.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "3.3.1",
       "desc": "Update model options",
       "sha256": "8aa2aa1b8c318aa261be24447a737e4d30dec8b2e01b68976e361a159d43ad57",
