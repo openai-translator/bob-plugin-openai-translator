@@ -27,7 +27,6 @@ const validatePluginConfig = (): ServiceError | null => {
 
   if (serviceProvider === 'azure-openai' && apiUrl) {
     const parts = {
-      domain: /^https:\/\/[^\/]+\.openai\.azure\.com/,
       path: /\/openai\/deployments\/[^\/]+\/chat\/completions/,
       version: /\?api-version=\d{4}-\d{2}-\d{2}(?:-preview)?$/
     };
