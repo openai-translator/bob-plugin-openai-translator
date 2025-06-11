@@ -75,6 +75,15 @@ body:
           required: true
     - type: textarea
       attributes:
+          label: OpenAI Translator 配置截图 | OpenAI Translator Configuration Screenshot
+          description: |
+            请提供 Bob 偏好设置 > 服务 > OpenAI Translator 配置页面的完整截图。这有助于我们更好地了解您的配置并解决问题。
+
+            Please provide a complete screenshot of Bob Preferences > Services > OpenAI Translator configuration page. This will help us better understand your configuration and resolve the issue.
+      validations:
+          required: true
+    - type: textarea
+      attributes:
           label: 复现步骤 | Reproduce step
           description: |
             请提供完整且简明的复现步骤，以方便及时定位并解决问题。
