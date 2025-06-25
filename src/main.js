@@ -417,7 +417,7 @@ function fillChatResult(rawResult) {
 }
 
 function sendRequest(prompt, query, frequencyPenalty, presencePenalty, callback) {
-    const ChatGPTModels = ["gpt-3.5-turbo", "gpt-3.5-turbo-0301"];
+    const ChatGPTModels = ["gpt-3.5-turbo", "gpt-3.5-turbo-0301", "gpt-4.1-nano"];
     const isChatGPTModel = ChatGPTModels.indexOf($option.model) > -1;
     const api_keys = $option.api_keys.split(",").map((key) => key.trim());
     const api_key = api_keys[Math.floor(Math.random() * api_keys.length)];
