@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "4.0.0",
+      "desc": "Supports the latest GPT-5 series models and migrates to the OpenAI Responses API",
+      "sha256": "fedd10632b00ed4d065b5bfd1bd09760b6cc5f32a6dd4783c1f1ae1e5a5212c8",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v4.0.0/openai-translator-4.0.0.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "3.3.2",
       "desc": "对于 Azure OpenAI Service 不再要求域名部分一定包含 \"openai.azure.com\"",
       "sha256": "75e27ed10816e9bbcfd75dc34710b6a68123e16f72a30ba241ac5f8cc0c71903",
