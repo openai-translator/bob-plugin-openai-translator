@@ -1,5 +1,5 @@
 import { HttpResponse, ServiceError, TextTranslateQuery, ValidationCompletion } from "@bob-translate/types";
-import type { OpenAiChatCompletion, GeminiResponse } from "../types";
+import type { OpenAiResponse, GeminiResponse } from "../types";
 import { generatePrompts, handleValidateError } from "../utils";
 import { BaseAdapter } from "./base";
 
@@ -70,7 +70,7 @@ export class GeminiAdapter extends BaseAdapter {
     return this.isStreamEnabled() ? `${baseUrl}?alt=sse` : baseUrl;
   }
 
-  public parseResponse(response: HttpResponse<GeminiResponse | OpenAiChatCompletion>): string {
+  public parseResponse(response: HttpResponse<GeminiResponse | OpenAiResponse>): string {
     const { data } = response;
     if (typeof data === 'object' && 'candidates' in data) {
       if (!data?.candidates?.[0]?.content?.parts?.[0]?.text) {

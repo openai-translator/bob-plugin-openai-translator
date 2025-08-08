@@ -26,17 +26,20 @@ const validatePluginConfig = (): ServiceError | null => {
   }
 
   if (serviceProvider === 'azure-openai' && apiUrl) {
-    const parts = {
-      path: /\/openai\/deployments\/[^\/]+\/chat\/completions/,
-      version: /\?api-version=\d{4}-\d{2}-\d{2}(?:-preview)?$/
-    };
+    // Azure OpenAI Responses API supports two URL patterns:
+    // 1. With deployment: /openai/deployments/{deployment}/responses?api-version=preview
+    // 2. Base endpoint: /openai/v1/responses?api-version=preview
+    const validPatterns = [
+      /\/openai\/deployments\/[^\/]+\/responses\?api-version=preview$/,
+      /\/openai\/v1\/responses\?api-version=preview$/
+    ];
 
-    const isValidUrl = Object.values(parts).every(pattern => pattern.test(apiUrl));
+    const isValidUrl = validPatterns.some(pattern => pattern.test(apiUrl));
     if (!isValidUrl) {
       return {
         type: "param",
         message: "配置错误 - API URL 格式不正确",
-        addition: "Azure OpenAI 的 API URL 格式应为：https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION",
+        addition: "Azure OpenAI 的 API URL 格式应为：https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/responses?api-version=preview 或 https://RESOURCE_NAME.openai.azure.com/openai/v1/responses?api-version=preview",
         troubleshootingLink: "https://bobtranslate.com/service/translate/azureopenai.html"
       };
     }
@@ -69,14 +72,14 @@ export const translate: TextTranslate = (query) => {
     stream,
   } = $option;
 
-  const serviceAdapter = getServiceAdapter(serviceProvider as ServiceProvider);
-  const apiKey = getApiKey(apiKeys);
-
   const error = validatePluginConfig();
   if (error) {
     handleGeneralError(query, error);
     return;
   }
+
+  const serviceAdapter = getServiceAdapter(serviceProvider as ServiceProvider);
+  const apiKey = getApiKey(apiKeys)
 
   serviceAdapter.translate(
     query,
@@ -90,14 +93,15 @@ export const translate: TextTranslate = (query) => {
 
 export const pluginValidate: PluginValidate = (completion) => {
   const { apiKeys, apiUrl, serviceProvider } = $option;
-  const apiKey = getApiKey(apiKeys);
+  
   const pluginConfigError = validatePluginConfig();
-  const serviceAdapter = getServiceAdapter(serviceProvider as ServiceProvider);
-
   if (pluginConfigError) {
     handleValidateError(completion, pluginConfigError);
     return;
   }
+
+  const apiKey = getApiKey(apiKeys);
+  const serviceAdapter = getServiceAdapter(serviceProvider as ServiceProvider)
 
   serviceAdapter.testApiConnection(
     apiKey,
@@ -108,6 +112,6 @@ export const pluginValidate: PluginValidate = (completion) => {
   });
 }
 
-export const pluginTimeoutInterval = () => 60;
+export const pluginTimeoutInterval = () => 120;
 
 export const supportLanguages = () => supportLanguageList.map(([standardLang]) => standardLang);

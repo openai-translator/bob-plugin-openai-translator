@@ -3,6 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
+    "lib": ["ESNext", "DOM"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmitOnError": true,

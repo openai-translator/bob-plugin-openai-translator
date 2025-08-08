@@ -12,7 +12,8 @@
   ],
   "homepage": "https://github.com/openai-translator/bob-plugin-openai-translator",
   "scripts": {
-    "build": "rollup --config rollup.config.ts --configPlugin typescript"
+    "build": "rollup --config rollup.config.ts --configPlugin typescript",
+    "build:test": "node scripts/build-test.mjs"
   },
   "devDependencies": {
     "@bob-translate/types": "1.1.0",

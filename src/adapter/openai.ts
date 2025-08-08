@@ -1,20 +1,7 @@
 import { HttpResponse, ServiceError, TextTranslateQuery, ValidationCompletion } from "@bob-translate/types";
-import type { OpenAiChatCompletion, GeminiResponse, OpenAiModelList, ServiceAdapterConfig, OpenAiErrorDetail, OpenAiErrorResponse } from "../types";
-import { generatePrompts, handleValidateError, isServiceError, replacePromptKeywords, createTypeGuard } from "../utils";
+import type { OpenAiResponse, GeminiResponse, ServiceAdapterConfig } from "../types";
+import { generatePrompts, handleValidateError, replacePromptKeywords } from "../utils";
 import { BaseAdapter } from "./base";
-
-const hasOpenAiErrorShape = createTypeGuard<OpenAiErrorResponse>({
-  error: {
-    type: 'object'
-  }
-});
-
-const hasOpenAiErrorDetailShape = createTypeGuard<OpenAiErrorDetail>({
-  message: { type: 'string' },
-  code: { type: 'string' },
-  type: { type: 'string' },
-  param: { type: 'string', nullable: true }
-});
 
 export class OpenAiAdapter extends BaseAdapter {
   private buffer = '';
@@ -27,22 +14,38 @@ export class OpenAiAdapter extends BaseAdapter {
   }
 
   protected extractErrorFromResponse(errorResponse: HttpResponse<unknown>): ServiceError {
-    if (hasOpenAiErrorShape(errorResponse.data) && hasOpenAiErrorDetailShape(errorResponse.data.error)) {
-      const { error: errorDetail } = errorResponse.data;
-      return {
-        type: errorDetail.code === "invalid_api_key" ? "secretKey" : "api",
-        message: errorDetail.message || "Unknown OpenAI API error",
-        addition: errorDetail.type,
-        troubleshootingLink: this.config.troubleshootingLink
-      };
-    }
-
-    return {
-      type: "api",
-      message: errorResponse.response.statusCode === 401 ? "Invalid API key" : "OpenAI API error",
-      addition: JSON.stringify(errorResponse.data),
+    const data = errorResponse.data as any;
+    const statusCode = errorResponse.response?.statusCode;
+    
+    const baseError: ServiceError = {
+      type: statusCode === 401 ? "secretKey" : "api",
+      message: "API request failed",
+      addition: JSON.stringify(data),
       troubleshootingLink: this.config.troubleshootingLink
     };
+    
+    // Case 1: error is string
+    if (typeof data?.error === 'string') {
+      return {
+        ...baseError,
+        message: data.error,
+      };
+    }
+    
+    // Case 2: error is object with message
+    if (data?.error?.message) {
+      let errorMessage = data.error.message;
+      if (data.error.param) {
+        errorMessage = `${errorMessage} (parameter: ${data.error.param})`;
+      }
+      return {
+        ...baseError,
+        message: errorMessage,
+      };
+    }
+    
+    // Case 3: Generic error
+    return baseError;
   }
 
   public buildHeaders(apiKey: string): Record<string, string> {
@@ -56,53 +59,54 @@ export class OpenAiAdapter extends BaseAdapter {
     const { customSystemPrompt, customUserPrompt } = $option;
     const { generatedSystemPrompt, generatedUserPrompt } = generatePrompts(query);
 
-    const systemPrompt = replacePromptKeywords(customSystemPrompt, query) || generatedSystemPrompt;
+    let systemPrompt = replacePromptKeywords(customSystemPrompt, query) || generatedSystemPrompt;
     const userPrompt = replacePromptKeywords(customUserPrompt, query) || generatedUserPrompt;
+    
+    const formattingInstructions = "\n\nIMPORTANT: Output the translation directly without any quotation marks or special characters wrapping. Do not add quotes like 『』「」\"\" around the result.";
+    systemPrompt += formattingInstructions;
 
     return {
       model: this.getModel(),
       temperature: this.getTemperature(),
-      max_tokens: 1000,
-      top_p: 1,
-      frequency_penalty: 1,
-      presence_penalty: 1,
       stream: this.isStreamEnabled(),
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt,
-        },
-        {
-          role: "user",
-          content: userPrompt,
-        },
-      ],
+      instructions: systemPrompt,
+      input: userPrompt,
     };
   }
 
-  public parseResponse(response: HttpResponse<GeminiResponse | OpenAiChatCompletion>): string {
+  public parseResponse(response: HttpResponse<GeminiResponse | OpenAiResponse>): string {
     const { data } = response;
-    if (typeof data === 'object' && 'choices' in data) {
-      const { choices } = data;
-      if (!choices || choices.length === 0) {
-        throw new Error("No choices returned from API");
+    
+    // Handle Responses API format
+    if (typeof data === 'object' && 'output' in data) {
+      const openAiResponse = data as OpenAiResponse;
+      // Use the helper field if available
+      if (openAiResponse.output_text) {
+        return openAiResponse.output_text.trim();
       }
-      let text = choices[0].message.content?.trim();
-
-      // 使用正则表达式删除字符串开头和结尾的特殊字符
-      text = text?.replace(/^(『|「|"|")|(』|」|"|")$/g, "");
-
-      // 判断并删除字符串末尾的 `" =>`
-      if (text?.endsWith('" =>')) {
-        text = text.slice(0, -4);
+      // Otherwise extract from output array
+      if (openAiResponse.output && openAiResponse.output.length > 0) {
+        // Look for message type items in the output array
+        for (const item of openAiResponse.output) {
+          if (item.type === 'message' && item.content && item.content.length > 0) {
+            const text = item.content
+              .filter((c: any) => c.type === 'output_text')
+              .map((c: any) => c.text)
+              .join('');
+            if (text) {
+              return text.trim();
+            }
+          }
+        }
       }
-      return text || '';
+      throw new Error("No output returned from Responses API");
     }
+    
     throw new Error("Unsupported response type");
   }
 
   public getTextGenerationUrl(_apiUrl: string): string {
-    return `${this.config.baseUrl}/v1/chat/completions`;
+    return `${this.config.baseUrl}/v1/responses`;
   }
 
   protected getValidationUrl(_apiUrl: string): string {
@@ -116,8 +120,25 @@ export class OpenAiAdapter extends BaseAdapter {
 
     try {
       const dataObj = JSON.parse(text);
-      const { choices } = dataObj;
-      return choices[0]?.delta?.content || null;
+      
+      // Handle new Responses API event stream format
+      // Look for response.output_text.delta events which contain the actual text chunks
+      if (dataObj.type === 'response.output_text.delta' && dataObj.delta) {
+        return dataObj.delta;
+      }
+      
+      // Handle old Responses API stream format (if still used)
+      if (dataObj.object === 'response.chunk' && dataObj.delta?.output) {
+        const output = dataObj.delta.output;
+        if (output.length > 0 && output[0].content) {
+          return output[0].content
+            .filter((c: any) => c.type === 'output_text' && c.text)
+            .map((c: any) => c.text)
+            .join('') || null;
+        }
+      }
+      
+      return null;
     } catch (error) {
       throw error;
     }
@@ -128,16 +149,58 @@ export class OpenAiAdapter extends BaseAdapter {
     query: TextTranslateQuery,
     targetText: string
   ): string {
+    // Check if the entire response is a JSON error (not SSE format)
+    if (!streamData.text.includes('event:') && !streamData.text.startsWith('data: ') && streamData.text.includes('"error"')) {
+      try {
+        const errorObj = JSON.parse(streamData.text);
+        if (errorObj.error) {
+          const errorDetail = errorObj.error;
+          throw {
+            type: errorDetail.type || 'api',
+            message: errorDetail.message || 'API request failed',
+            addition: errorDetail.param ? `Parameter: ${errorDetail.param}` : undefined,
+            troubleshootingLink: this.config.troubleshootingLink
+          };
+        }
+      } catch (parseError) {
+        // If it's not valid JSON, continue with SSE processing
+        if (parseError && typeof parseError === 'object' && 'message' in parseError) {
+          // Re-throw if it's our error object
+          throw parseError;
+        }
+      }
+    }
+    
     this.buffer += streamData.text;
 
-    while (true) {
-      const match = this.buffer.match(/data: (.*?})\n/);
-      if (match) {
-        const textFromResponse = match[1].trim();
+    // SSE events are separated by double newlines
+    const events = this.buffer.split('\n\n');
+    
+    // Keep the last incomplete event in the buffer
+    this.buffer = events.pop() || '';
+    
+    for (const event of events) {
+      if (!event.trim()) continue;
+      
+      // Parse the event
+      const lines = event.split('\n');
+      let eventType = '';
+      let eventData = '';
+      
+      for (const line of lines) {
+        if (line.startsWith('event:')) {
+          eventType = line.slice(6).trim();
+        } else if (line.startsWith('data:')) {
+          eventData = line.slice(5).trim();
+        }
+      }
+      
+      // Only process response.output_text.delta events
+      if (eventType === 'response.output_text.delta' && eventData) {
         try {
-          const delta = this.parseStreamResponse(textFromResponse);
-          if (delta) {
-            targetText += delta;
+          const dataObj = JSON.parse(eventData);
+          if (dataObj.delta) {
+            targetText += dataObj.delta;
             query.onStream({
               result: {
                 from: query.detectFrom,
@@ -147,26 +210,11 @@ export class OpenAiAdapter extends BaseAdapter {
             });
           }
         } catch (error) {
-          if (isServiceError(error)) {
-            const { type, message, addition } = error;
-            throw {
-              type: type || 'param',
-              message: message || 'Failed to parse JSON',
-              addition,
-              troubleshootingLink: this.config.troubleshootingLink
-            };
-          } else {
-            throw {
-              type: 'param',
-              message: 'An unknown error occurred',
-              addition: JSON.stringify(error),
-              troubleshootingLink: this.config.troubleshootingLink
-            };
+          // Log error for debugging but continue processing
+          if (error instanceof Error) {
+            console.error('Failed to parse SSE data:', error.message, 'Data:', eventData);
           }
         }
-        this.buffer = this.buffer.slice(match[0].length);
-      } else {
-        break;
       }
     }
 
@@ -185,17 +233,17 @@ export class OpenAiAdapter extends BaseAdapter {
       const response = await $http.request({
         method: "GET",
         url: validationUrl,
-        header
+        header,
       });
 
-      if (hasOpenAiErrorShape(response.data)) {
-        handleValidateError(completion, this.extractErrorFromResponse(response));
-        return;
+      const responseData = response.data;
+      if (responseData?.error) {
+        return handleValidateError(completion, this.extractErrorFromResponse(response));
       }
 
-      const modelList = response.data as OpenAiModelList;
-      if (modelList.data?.length > 0) {
-        completion({ result: true });
+      // Check if we got a valid models list response
+      if (responseData && (responseData.data || responseData.object === 'list')) {
+        return completion({ result: true });
       }
     } catch (error) {
       handleValidateError(completion, error);

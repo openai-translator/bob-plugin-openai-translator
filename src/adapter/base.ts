@@ -1,6 +1,6 @@
 import { HttpResponse, ServiceError, TextTranslateQuery, ValidationCompletion } from "@bob-translate/types";
 import { handleGeneralError, convertToServiceError } from "../utils";
-import type { GeminiResponse, OpenAiChatCompletion, ServiceAdapter, ServiceAdapterConfig } from "../types";
+import type { GeminiResponse, OpenAiResponse, ServiceAdapter, ServiceAdapterConfig } from "../types";
 
 export abstract class BaseAdapter implements ServiceAdapter {
   protected constructor(protected readonly config: ServiceAdapterConfig) { }
@@ -25,7 +25,7 @@ export abstract class BaseAdapter implements ServiceAdapter {
 
   abstract handleStream(streamData: { text: string }, query: TextTranslateQuery, targetText: string): string;
 
-  abstract parseResponse(response: HttpResponse<GeminiResponse | OpenAiChatCompletion>): string;
+  abstract parseResponse(response: HttpResponse<GeminiResponse | OpenAiResponse>): string;
 
   abstract testApiConnection(apiKey: string, apiUrl: string, completion: ValidationCompletion): Promise<void>;
 
@@ -96,6 +96,8 @@ export abstract class BaseAdapter implements ServiceAdapter {
     query: TextTranslateQuery,
   ): Promise<void> {
     let targetText = "";
+    let streamError: ServiceError | null = null;
+    
     await $http.streamRequest({
       method: "POST",
       url,
@@ -112,14 +114,24 @@ export abstract class BaseAdapter implements ServiceAdapter {
           return;
         }
 
-        targetText = this.handleStream(
-          { text: streamData.text },
-          query,
-          targetText
-        );
+        try {
+          targetText = this.handleStream(
+            { text: streamData.text },
+            query,
+            targetText
+          );
+        } catch (error) {
+          // Save the error to be handled later
+          if (error && typeof error === 'object' && 'message' in error) {
+            streamError = error as ServiceError;
+          }
+        }
       },
       handler: (result) => {
-        if (result.response.statusCode >= 400) {
+        // If we caught an error from the stream, use that
+        if (streamError) {
+          handleGeneralError(query, streamError);
+        } else if (result.response.statusCode >= 400) {
           handleGeneralError(query, this.extractErrorFromResponse(result));
         } else {
           this.handleStreamCompletion(query, targetText);

@@ -30,17 +30,27 @@
     https://api.openai.com
     ```
 
-  - OpenAI Compatible: Required, complete API URL, for example when using Cloudflare AI Gateway:
+  - OpenAI Compatible: Required, complete API URL. Currently only supports Responses API endpoint (ending with `/responses`):
 
     ```
-    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions
+    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/responses
     ```
 
-  - Azure OpenAI: Required, complete API URL in format:
+    Note: This plugin currently only supports OpenAI compatible services that use the Responses API
 
+  - Azure OpenAI: Required, complete API URL. Currently only supports Responses API with the following two formats:
+
+    With deployment name:
     ```
-    https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
+    https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/responses?api-version=preview
     ```
+
+    Base endpoint (model specified in request body):
+    ```
+    https://RESOURCE_NAME.openai.azure.com/openai/v1/responses?api-version=preview
+    ```
+
+    Note: This plugin currently only supports Azure OpenAI's Responses API with preview API version
 
   - Google Gemini: Optional, default value:
 

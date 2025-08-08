@@ -31,17 +31,27 @@
     https://api.openai.com
     ```
 
-  - OpenAI Compatible：必填，需填入完整的 API URL，例如使用 Cloudflare AI Gateway 时，填入：
+  - OpenAI Compatible：必填，需填入完整的 API URL。目前仅支持 Responses API 端点（以 `/responses` 结尾）：
 
     ```
-    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/chat/completions
+    https://gateway.ai.cloudflare.com/v1/CLOUDFLARE_ACCOUNT_ID/GATEWAY_ID/openai/responses
     ```
 
-  - Azure OpenAI：必填，需填入完整的 API URL，格式为：
+    注：本插件目前仅支持使用 Responses API 的 OpenAI 兼容服务
 
+  - Azure OpenAI：必填，需填入完整的 API URL。目前仅支持 Responses API，支持以下两种格式：
+
+    带部署名称：
     ```
-    https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/chat/completions?api-version=API_VERSION
+    https://RESOURCE_NAME.openai.azure.com/openai/deployments/DEPLOYMENT_NAME/responses?api-version=preview
     ```
+
+    基础端点（模型在请求体中指定）：
+    ```
+    https://RESOURCE_NAME.openai.azure.com/openai/v1/responses?api-version=preview
+    ```
+
+    注：本插件目前仅支持 Azure OpenAI 的 Responses API，需使用 preview API 版本
 
   - Google Gemini：可选，默认为：
 

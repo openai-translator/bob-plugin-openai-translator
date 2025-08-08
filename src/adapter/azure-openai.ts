@@ -1,6 +1,5 @@
 import { ServiceError, ValidationCompletion } from "@bob-translate/types";
 import { handleValidateError } from "../utils";
-import { OpenAiChatCompletion } from "../types";
 import { OpenAiAdapter } from "./openai";
 
 export class AzureOpenAiAdapter extends OpenAiAdapter {
@@ -22,25 +21,13 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
   }
 
   protected override extractErrorFromResponse(response: any): ServiceError {
-    const errorData = response.data?.error;
-    if (errorData) {
-      const isAuthError = errorData.code === "401" ||
-        errorData.code === "403" ||
-        errorData.message?.toLowerCase().includes("key") ||
-        errorData.message?.toLowerCase().includes("auth");
-
-      return {
-        type: isAuthError ? "secretKey" : "api",
-        message: errorData.message || "Unknown Azure OpenAI API error",
-        addition: errorData.code,
-        troubleshootingLink: this.config.troubleshootingLink
-      };
+    const result = super.extractErrorFromResponse(response);
+    // Azure uses 403 for auth errors too
+    if (response.response?.statusCode === 403) {
+      result.type = "secretKey";
     }
-
     return {
-      type: "api",
-      message: "Azure OpenAI API error",
-      addition: JSON.stringify(response.data),
+      ...result,
       troubleshootingLink: this.config.troubleshootingLink
     };
   }
@@ -53,29 +40,28 @@ export class AzureOpenAiAdapter extends OpenAiAdapter {
     const header = this.buildHeaders(apiKey);
 
     try {
+      // Extract model from URL if it's in deployment format
+      // Format: /openai/deployments/{deployment}/responses?api-version=preview
+      const deploymentMatch = apiUrl.match(/\/deployments\/([^\/]+)\/responses/);
+      const model = deploymentMatch ? deploymentMatch[1] : "gpt-5-nano";
+
       const response = await $http.request({
         method: "POST",
         url: apiUrl,
         header,
         body: {
-          messages: [{
-            content: "You are a helpful assistant.",
-            role: "system",
-          }, {
-            content: "Test connection.",
-            role: "user",
-          }],
-          max_tokens: 5
-        }
+          model: model,
+          input: "Test connectivity. You ONLY need to reply 'OK'.",
+        },
       });
 
       if (response.data.error) {
-        handleValidateError(completion, this.extractErrorFromResponse(response));
-        return;
+        return handleValidateError(completion, this.extractErrorFromResponse(response));
       }
 
-      if ((response.data as OpenAiChatCompletion).choices.length > 0) {
-        completion({ result: true });
+      // Accept any successful response from Azure OpenAI
+      if (response.data && !response.data.error) {
+        return completion({ result: true });
       }
     } catch (error) {
       handleValidateError(completion, error);
