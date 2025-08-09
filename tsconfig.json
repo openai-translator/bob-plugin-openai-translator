@@ -3,7 +3,7 @@
     "allowSyntheticDefaultImports": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmitOnError": true,
@@ -11,18 +11,15 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "pretty": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES5",
-    "types": [
-      "@bob-translate/types"
-    ],
+    "target": "ESNext",
+    "types": ["@bob-translate/types", "bun"],
     "useDefineForClassFields": false,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force"
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-  ]
+  "exclude": ["dist", "node_modules"]
 }

@@ -1,10 +1,12 @@
-import { OpenAiAdapter } from './openai';
-import { GeminiAdapter } from './gemini';
 import type { ServiceAdapter, ServiceProvider } from '../types';
 import { AzureOpenAiAdapter } from './azure-openai';
+import { GeminiAdapter } from './gemini';
+import { OpenAiAdapter } from './openai';
 import { OpenAiCompatibleAdapter } from './openai-compatible';
 
-export const getServiceAdapter = (serviceProvider: ServiceProvider): ServiceAdapter => {
+export const getServiceAdapter = (
+  serviceProvider: ServiceProvider,
+): ServiceAdapter => {
   switch (serviceProvider) {
     case 'azure-openai':
       return new AzureOpenAiAdapter();
@@ -15,4 +17,4 @@ export const getServiceAdapter = (serviceProvider: ServiceProvider): ServiceAdap
     default:
       return new OpenAiAdapter();
   }
-}
+};

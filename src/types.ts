@@ -1,4 +1,8 @@
-import { HttpResponse, TextTranslateQuery, ValidationCompletion } from "@bob-translate/types";
+import type {
+  HttpResponse,
+  TextTranslateQuery,
+  ValidationCompletion,
+} from '@bob-translate/types';
 
 export interface OpenAiErrorResponse {
   error: OpenAiErrorDetail;
@@ -18,7 +22,7 @@ export interface OpenAiResponseMessage {
   content: Array<{
     type: 'output_text';
     text: string;
-    annotations?: any[];
+    annotations?: unknown[];
   }>;
 }
 
@@ -51,7 +55,6 @@ export interface OpenAiResponseStreamChunk {
   };
 }
 
-
 export interface GeminiResponse {
   usageMetadata: {
     promptTokenCount: number;
@@ -74,7 +77,9 @@ export interface GeminiResponse {
 export interface ServiceAdapter {
   buildHeaders: (apiKey: string) => Record<string, string>;
   buildRequestBody: (query: TextTranslateQuery) => Record<string, unknown>;
-  parseResponse: (response: HttpResponse<GeminiResponse | OpenAiResponse>) => string;
+  parseResponse: (
+    response: HttpResponse<GeminiResponse | OpenAiResponse>,
+  ) => string;
   getTextGenerationUrl: (apiUrl: string) => string;
   testApiConnection: (
     apiKey: string,
@@ -84,7 +89,7 @@ export interface ServiceAdapter {
   handleStream: (
     streamData: { text: string },
     query: TextTranslateQuery,
-    targetText: string
+    targetText: string,
   ) => string;
   makeStreamRequest: (
     url: string,
@@ -102,22 +107,25 @@ export interface ServiceAdapter {
     query: TextTranslateQuery,
     apiKey: string,
     apiUrl: string,
-    isStream: boolean
+    isStream: boolean,
   ) => Promise<void>;
 }
-
 
 export interface ServiceAdapterConfig {
   troubleshootingLink: string;
   baseUrl?: string;
 }
 
-export type ServiceProvider = 'azure-openai' | 'gemini' | 'openai' | 'openai-compatible';
+export type ServiceProvider =
+  | 'azure-openai'
+  | 'gemini'
+  | 'openai'
+  | 'openai-compatible';
 
 export interface TypeCheckConfig {
   [key: string]: {
     type: 'string' | 'object' | 'null';
     optional?: boolean;
     nullable?: boolean;
-  }
+  };
 }

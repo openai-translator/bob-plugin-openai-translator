@@ -12,20 +12,19 @@
   ],
   "homepage": "https://github.com/openai-translator/bob-plugin-openai-translator",
   "scripts": {
-    "build": "rollup --config rollup.config.ts --configPlugin typescript",
-    "build:test": "node scripts/build-test.mjs"
+    "build": "bun scripts/build.mts",
+    "dev": "bun scripts/package.mts",
+    "release": "bun scripts/package.mts release",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write --unsafe ."
   },
   "devDependencies": {
+    "@biomejs/biome": "2.1.4",
     "@bob-translate/types": "1.1.0",
-    "@rollup/plugin-terser": "0.4.4",
-    "@rollup/plugin-typescript": "12.1.4",
-    "rollup": "4.46.2",
-    "rollup-plugin-copy": "3.5.0",
-    "tslib": "2.8.1",
+    "@types/bun": "latest",
     "typescript": "5.9.2"
   },
   "engines": {
-    "node": "22.15.0"
-  },
-  "packageManager": "pnpm@10.14.0"
+    "bun": "1.2.19"
+  }
 }

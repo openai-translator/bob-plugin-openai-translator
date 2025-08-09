@@ -102,11 +102,7 @@
       "identifier": "customSystemPrompt",
       "textConfig": {
         "height": "100",
-        "keyWords": [
-          "$text",
-          "$sourceLang",
-          "$targetLang"
-        ],
+        "keyWords": ["$text", "$sourceLang", "$targetLang"],
         "placeholderText": "You are a translation engine that can only translate text and cannot interpret it.",
         "type": "visible"
       },
@@ -119,11 +115,7 @@
       "identifier": "customUserPrompt",
       "textConfig": {
         "height": "100",
-        "keyWords": [
-          "$text",
-          "$sourceLang",
-          "$targetLang"
-        ],
+        "keyWords": ["$text", "$sourceLang", "$targetLang"],
         "placeholderText": "translate from $sourceLang to $targetLang:\n\n$text",
         "type": "visible"
       },

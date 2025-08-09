@@ -1,24 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    ":pinVersions"
-  ],
+  "extends": ["config:recommended", ":pinVersions"],
   "packageRules": [
     {
       "groupName": "all non-major dependencies",
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true,
-      "excludePackageNames": ["node", "@types/node"]
-    },
-    {
-      "groupName": "Node.js",
-      "matchManagers": ["npm", "nodenv"],
-      "matchDepTypes": ["engines"],
-      "matchPackageNames": ["node", "@types/node"],
-      "versioning": "node",
-      "allowedVersions": "/^[0-9]*[02468]([.-].*)?$/",
-      "rangeStrategy": "replace"
+      "automerge": true
     }
   ]
 }

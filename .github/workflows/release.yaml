@@ -44,26 +44,21 @@ jobs:
           OLD_VERSION=$(grep '"version":' public/info.json | awk -F\" '{print $4}')
           sed -i "s/$OLD_VERSION/${{ env.VERSION_NUMBER }}/" public/info.json
 
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version-file: .node-version
-          cache: pnpm
+          bun-version: latest
 
-      - run: pnpm install
-      - run: pnpm run build
+      - run: bun install
 
-      - name: Package plugin
-        run: |
-          zip -j -r dist/openai-translator-${{ env.VERSION_NUMBER }}.bobplugin ./dist/*
-          echo "Packaged file: dist/openai-translator-${{ env.VERSION_NUMBER }}.bobplugin"
+      - name: Run Biome checks
+        run: bun run lint
 
-      - name: Update appcast.json
+      - name: Package plugin and update appcast
         env:
           VERSION_NUMBER: ${{ env.VERSION_NUMBER }}
           MESSAGE: ${{ github.event.inputs.message }}
         run: |
-          python3 scripts/update_appcast.py "$VERSION_NUMBER" "$MESSAGE"
+          bun run release "$VERSION_NUMBER" "$MESSAGE"
 
       - name: Commit files
         run: |
