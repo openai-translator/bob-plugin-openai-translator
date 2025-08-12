@@ -50,9 +50,6 @@ jobs:
 
       - run: bun install
 
-      - name: Run Biome checks
-        run: bun run lint
-
       - name: Package plugin and update appcast
         env:
           VERSION_NUMBER: ${{ env.VERSION_NUMBER }}

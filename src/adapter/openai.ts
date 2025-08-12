@@ -19,6 +19,7 @@ import { BaseAdapter } from './base';
 
 export class OpenAiAdapter extends BaseAdapter {
   private buffer = '';
+  private dataBuffer = ''; // Buffer for incomplete JSON data within a single data: line
 
   constructor(config?: ServiceAdapterConfig) {
     super(
@@ -182,6 +183,40 @@ export class OpenAiAdapter extends BaseAdapter {
     return null;
   }
 
+  private isLikelyIncompleteJSON(str: string): boolean {
+    // Simple heuristic: if parsing fails, check if we have unmatched brackets
+    // This avoids complex parsing and handles most streaming JSON cases
+    try {
+      JSON.parse(str);
+      return false; // Valid JSON, not incomplete
+    } catch {
+      // Check for common incomplete JSON patterns
+      // Remove all escaped characters and strings to simplify bracket counting
+      const simplified = str
+        .replace(/\\./g, '') // Remove escaped characters
+        .replace(/"[^"]*"/g, '""'); // Replace string contents with empty strings
+
+      // Count unmatched brackets
+      const openBraces = (simplified.match(/{/g) || []).length;
+      const closeBraces = (simplified.match(/}/g) || []).length;
+      const openBrackets = (simplified.match(/\[/g) || []).length;
+      const closeBrackets = (simplified.match(/]/g) || []).length;
+
+      // Also check if string ends with incomplete patterns
+      const endsWithIncomplete =
+        /[,:]\s*$/.test(str) || // Ends with comma or colon
+        /"\s*$/.test(str) || // Ends with quote
+        /\\$/.test(str); // Ends with escape
+
+      // Likely incomplete if brackets don't match or has incomplete ending
+      return (
+        openBraces !== closeBraces ||
+        openBrackets !== closeBrackets ||
+        endsWithIncomplete
+      );
+    }
+  }
+
   public handleStream(
     streamData: { text: string },
     query: TextTranslateQuery,
@@ -245,8 +280,12 @@ export class OpenAiAdapter extends BaseAdapter {
 
       // Only process response.output_text.delta events
       if (eventType === 'response.output_text.delta' && eventData) {
+        // Combine with any buffered data from previous incomplete JSON
+        const dataToProcess = this.dataBuffer + eventData;
+        this.dataBuffer = '';
+
         try {
-          const dataObj = JSON.parse(eventData);
+          const dataObj = JSON.parse(dataToProcess);
           if (dataObj.delta) {
             targetText += dataObj.delta;
             query.onStream({
@@ -258,14 +297,25 @@ export class OpenAiAdapter extends BaseAdapter {
             });
           }
         } catch (error) {
-          // Log error for debugging but continue processing
-          if (error instanceof Error) {
-            console.error(
-              'Failed to parse SSE data:',
-              error.message,
-              'Data:',
-              eventData,
-            );
+          // Check if this might be incomplete JSON
+          if (
+            error instanceof SyntaxError &&
+            this.isLikelyIncompleteJSON(dataToProcess)
+          ) {
+            // Buffer the incomplete JSON for next iteration
+            this.dataBuffer = dataToProcess;
+          } else {
+            // This is a real parsing error, log it but continue
+            if (error instanceof Error) {
+              console.error(
+                'Failed to parse SSE data:',
+                error.message,
+                'Data:',
+                dataToProcess,
+              );
+            }
+            // Clear the buffer on real errors
+            this.dataBuffer = '';
           }
         }
       }

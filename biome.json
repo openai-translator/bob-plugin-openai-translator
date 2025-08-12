@@ -5,6 +5,10 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": ["**", "!appcast.json"]
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space"
