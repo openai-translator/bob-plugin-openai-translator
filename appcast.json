@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "4.0.2",
+      "desc": "修复流式响应过程中偶发的解析错误问题",
+      "sha256": "a7cc8a632a0d93afccc269d13675837c45407870166519db2cab61798ea17c91",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v4.0.2/openai-translator-4.0.2.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "4.0.1",
       "desc": "Migrate from pnpm to Bun for improved build performance",
       "sha256": "585dbae9baf36e558c1bce5d41cad36ad59c883318e8940556fca75bbae5d97a",
