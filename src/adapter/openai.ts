@@ -15,11 +15,12 @@ import {
   handleValidateError,
   replacePromptKeywords,
 } from '../utils';
+import { LineDecoder, SseDecoder, type SseMessage } from '../utils/sse';
 import { BaseAdapter } from './base';
 
 export class OpenAiAdapter extends BaseAdapter {
-  private buffer = '';
-  private dataBuffer = ''; // Buffer for incomplete JSON data within a single data: line
+  private sseDecoder = new SseDecoder();
+  private lineDecoder = new LineDecoder();
 
   constructor(config?: ServiceAdapterConfig) {
     super(
@@ -152,68 +153,93 @@ export class OpenAiAdapter extends BaseAdapter {
     return `${this.config.baseUrl}/v1/models`;
   }
 
-  protected parseStreamResponse(text: string): string | null {
-    if (text === '[DONE]') {
-      return null;
-    }
-    const dataObj = JSON.parse(text);
-
+  private extractDeltaFromData(
+    dataObj: Record<string, unknown>,
+  ): string | null {
     // Handle new Responses API event stream format
-    // Look for response.output_text.delta events which contain the actual text chunks
-    if (dataObj.type === 'response.output_text.delta' && dataObj.delta) {
+    if (
+      dataObj.type === 'response.output_text.delta' &&
+      typeof dataObj.delta === 'string'
+    ) {
       return dataObj.delta;
     }
 
     // Handle old Responses API stream format (if still used)
-    if (dataObj.object === 'response.chunk' && dataObj.delta?.output) {
-      const output = dataObj.delta.output;
-      if (output.length > 0 && output[0].content) {
-        return (
-          output[0].content
-            .filter(
-              (c: { type?: string; text?: string }) =>
-                c.type === 'output_text' && c.text,
-            )
-            .map((c: { text?: string }) => c.text)
-            .join('') || null
-        );
+    if (
+      dataObj.object === 'response.chunk' &&
+      dataObj.delta &&
+      typeof dataObj.delta === 'object'
+    ) {
+      const delta = dataObj.delta as Record<string, unknown>;
+      if (Array.isArray(delta.output)) {
+        const output = delta.output;
+        if (output.length > 0 && output[0] && typeof output[0] === 'object') {
+          const firstOutput = output[0] as Record<string, unknown>;
+          if (Array.isArray(firstOutput.content)) {
+            return (
+              firstOutput.content
+                .filter(
+                  (
+                    content: unknown,
+                  ): content is { type?: string; text?: string } =>
+                    typeof content === 'object' &&
+                    content !== null &&
+                    'type' in content &&
+                    content.type === 'output_text' &&
+                    'text' in content &&
+                    typeof content.text === 'string',
+                )
+                .map((content) => content.text)
+                .join('') || null
+            );
+          }
+        }
       }
     }
 
     return null;
   }
 
-  private isLikelyIncompleteJSON(str: string): boolean {
-    // Simple heuristic: if parsing fails, check if we have unmatched brackets
-    // This avoids complex parsing and handles most streaming JSON cases
+  private parseSseMessage(sse: SseMessage): string | null {
+    // Handle [DONE] message
+    if (sse.data === '[DONE]' || sse.data.startsWith('[DONE]')) {
+      return null;
+    }
+
     try {
-      JSON.parse(str);
-      return false; // Valid JSON, not incomplete
-    } catch {
-      // Check for common incomplete JSON patterns
-      // Remove all escaped characters and strings to simplify bracket counting
-      const simplified = str
-        .replace(/\\./g, '') // Remove escaped characters
-        .replace(/"[^"]*"/g, '""'); // Replace string contents with empty strings
+      const dataObj = JSON.parse(sse.data);
 
-      // Count unmatched brackets
-      const openBraces = (simplified.match(/{/g) || []).length;
-      const closeBraces = (simplified.match(/}/g) || []).length;
-      const openBrackets = (simplified.match(/\[/g) || []).length;
-      const closeBrackets = (simplified.match(/]/g) || []).length;
+      // Check for errors in the data
+      if (dataObj.error) {
+        throw {
+          type: dataObj.error.type || 'api',
+          message: dataObj.error.message || 'API request failed',
+          addition: dataObj.error.param
+            ? `Parameter: ${dataObj.error.param}`
+            : undefined,
+          troubleshootingLink: this.config.troubleshootingLink,
+        };
+      }
 
-      // Also check if string ends with incomplete patterns
-      const endsWithIncomplete =
-        /[,:]\s*$/.test(str) || // Ends with comma or colon
-        /"\s*$/.test(str) || // Ends with quote
-        /\\$/.test(str); // Ends with escape
+      // Only process response.output_text.delta events
+      if (
+        sse.event === 'response.output_text.delta' ||
+        (!sse.event && dataObj.type === 'response.output_text.delta')
+      ) {
+        return typeof dataObj.delta === 'string' ? dataObj.delta : null;
+      }
 
-      // Likely incomplete if brackets don't match or has incomplete ending
-      return (
-        openBraces !== closeBraces ||
-        openBrackets !== closeBrackets ||
-        endsWithIncomplete
-      );
+      // Try to extract delta from other formats
+      return this.extractDeltaFromData(dataObj);
+    } catch (error) {
+      // If it's our custom error object, re-throw it
+      if (error && typeof error === 'object' && 'type' in error) {
+        throw error;
+      }
+
+      // Log parsing errors but don't throw
+      console.error('Failed to parse SSE message:', sse.data, error);
+      return null;
     }
   }
 
@@ -222,72 +248,16 @@ export class OpenAiAdapter extends BaseAdapter {
     query: TextTranslateQuery,
     targetText: string,
   ): string {
-    // Check if the entire response is a JSON error (not SSE format)
-    if (
-      !streamData.text.includes('event:') &&
-      !streamData.text.startsWith('data: ') &&
-      streamData.text.includes('"error"')
-    ) {
-      try {
-        const errorObj = JSON.parse(streamData.text);
-        if (errorObj.error) {
-          const errorDetail = errorObj.error;
-          throw {
-            type: errorDetail.type || 'api',
-            message: errorDetail.message || 'API request failed',
-            addition: errorDetail.param
-              ? `Parameter: ${errorDetail.param}`
-              : undefined,
-            troubleshootingLink: this.config.troubleshootingLink,
-          };
-        }
-      } catch (parseError) {
-        // If it's not valid JSON, continue with SSE processing
-        if (
-          parseError &&
-          typeof parseError === 'object' &&
-          'message' in parseError
-        ) {
-          // Re-throw if it's our error object
-          throw parseError;
-        }
-      }
-    }
+    // Process the incoming chunk through the line decoder
+    const lines = this.lineDecoder.decode(streamData.text);
 
-    this.buffer += streamData.text;
-
-    // SSE events are separated by double newlines
-    const events = this.buffer.split('\n\n');
-
-    // Keep the last incomplete event in the buffer
-    this.buffer = events.pop() || '';
-
-    for (const event of events) {
-      if (!event.trim()) continue;
-
-      // Parse the event
-      const lines = event.split('\n');
-      let eventType = '';
-      let eventData = '';
-
-      for (const line of lines) {
-        if (line.startsWith('event:')) {
-          eventType = line.slice(6).trim();
-        } else if (line.startsWith('data:')) {
-          eventData = line.slice(5).trim();
-        }
-      }
-
-      // Only process response.output_text.delta events
-      if (eventType === 'response.output_text.delta' && eventData) {
-        // Combine with any buffered data from previous incomplete JSON
-        const dataToProcess = this.dataBuffer + eventData;
-        this.dataBuffer = '';
-
+    for (const line of lines) {
+      const sse = this.sseDecoder.decode(line);
+      if (sse) {
         try {
-          const dataObj = JSON.parse(dataToProcess);
-          if (dataObj.delta) {
-            targetText += dataObj.delta;
+          const delta = this.parseSseMessage(sse);
+          if (delta) {
+            targetText += delta;
             query.onStream({
               result: {
                 from: query.detectFrom,
@@ -297,26 +267,12 @@ export class OpenAiAdapter extends BaseAdapter {
             });
           }
         } catch (error) {
-          // Check if this might be incomplete JSON
-          if (
-            error instanceof SyntaxError &&
-            this.isLikelyIncompleteJSON(dataToProcess)
-          ) {
-            // Buffer the incomplete JSON for next iteration
-            this.dataBuffer = dataToProcess;
-          } else {
-            // This is a real parsing error, log it but continue
-            if (error instanceof Error) {
-              console.error(
-                'Failed to parse SSE data:',
-                error.message,
-                'Data:',
-                dataToProcess,
-              );
-            }
-            // Clear the buffer on real errors
-            this.dataBuffer = '';
+          // Handle errors from parseSseMessage
+          if (error && typeof error === 'object' && 'type' in error) {
+            throw error; // Re-throw API errors
           }
+          // Log other errors but continue processing
+          console.error('Error processing SSE message:', error);
         }
       }
     }

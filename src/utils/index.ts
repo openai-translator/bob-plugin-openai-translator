@@ -4,13 +4,13 @@ import type {
   TextTranslateQuery,
   ValidationCompletion,
 } from '@bob-translate/types';
-import { langMap } from './lang';
-import type { TypeCheckConfig } from './types';
+import { langMap } from '../lang';
+import type { TypeCheckConfig } from '../types';
 
 const SYSTEM_PROMPT =
   'You are a translation engine that can only translate text and cannot interpret it.' as const;
 
-export const createTypeGuard = <T>(config: TypeCheckConfig) => {
+const createTypeGuard = <T>(config: TypeCheckConfig) => {
   return (value: unknown): value is T => {
     if (!value || typeof value !== 'object') {
       return false;
