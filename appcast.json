@@ -2,6 +2,13 @@
   "identifier": "yetone.openai.translator",
   "versions": [
     {
+      "version": "4.0.3",
+      "desc": "重构流式响应处理逻辑，采用更健壮的 SSE 解析器实现，提升代码可维护性。",
+      "sha256": "59b00b5d8fb1a04f742e8766c83a67d0be96485da091a5da2e68598e494ccb9b",
+      "url": "https://github.com/openai-translator/bob-plugin-openai-translator/releases/download/v4.0.3/openai-translator-4.0.3.bobplugin",
+      "minBobVersion": "1.8.0"
+    },
+    {
       "version": "4.0.2",
       "desc": "修复流式响应过程中偶发的解析错误问题",
       "sha256": "a7cc8a632a0d93afccc269d13675837c45407870166519db2cab61798ea17c91",
